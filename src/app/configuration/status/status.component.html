@@ -1,0 +1,439 @@
+<form nz-form class="ant-advanced-search-form">
+    <div class="searchList">
+            <div nz-row [nzGutter]="24">
+                <div nz-col [nzSpan]="2"  style="width:8%;text-align: right;padding: 6px 8px !important;font-weight: bolder">搜索条件</div>
+                <div nz-col [nzSpan]="3" style="width:14.5%;">
+                    <nz-form-item nzFlex>
+                    <nz-select name="listOfData.search.fieldMame" style="width: 100%;" nzPlaceHolder="请选择" [(ngModel)]="listOfData.search.fieldMame">
+                            <nz-option *ngFor="let option of listTypeOption" [nzLabel]="option.label" [nzValue]="option.value">
+                            </nz-option>
+                    </nz-select>
+                    </nz-form-item>
+                </div>
+                <div nz-col [nzSpan]="2">
+                    <nz-form-item nzFlex>
+                        <nz-select name="listOfData.search.fieldConditions" style="width: 100%;" nzPlaceHolder="请选择" [(ngModel)]="listOfData.search.fieldConditions">
+                            <nz-option *ngFor="let option of TypeOption" [nzLabel]="option.label" [nzValue]="option.value">
+                            </nz-option>
+                        </nz-select>
+                    </nz-form-item>
+                </div>
+                <div nz-col [nzSpan]="3" style="width:14.5%;">
+                    <nz-form-item nzFlex>
+                            <input  nz-input placeholder="请输入" ng-trim="false" name="listOfData.search.fieldValue" nzSize="default"
+                            [(ngModel)]="listOfData.search.fieldValue">
+                            
+                    </nz-form-item>
+                </div>
+                <div nz-col [nzSpan]="1" ></div>
+                <div nz-col [nzSpan]="2">
+                    <nz-form-item nzFlex>
+                        <nz-select name="listOfData.search2.fieldType" style="width: 100%;" nzPlaceHolder="请选择" [(ngModel)]="listOfData.search2.fieldType">
+                            <nz-option *ngFor="let option of statusOption" [nzLabel]="option.label" [nzValue]="option.value">
+                            </nz-option>
+                        </nz-select>
+                    </nz-form-item>
+                </div>
+            
+                <div nz-col [nzSpan]="3" style="width:14.5%;">
+                    <nz-form-item nzFlex>
+                        <nz-select name="listOfData.search2.fieldMame" style="width: 100%;" nzPlaceHolder="请选择" [(ngModel)]="listOfData.search2.fieldMame">
+                            <nz-option *ngFor="let option of listTypeOption" [nzLabel]="option.label" [nzValue]="option.value">
+                            </nz-option>
+                        </nz-select>
+                    </nz-form-item>
+                </div>
+                <div nz-col [nzSpan]="2">
+                    <nz-form-item nzFlex>
+                        <nz-select name="listOfData.search2.fieldConditions" style="width: 100%;" nzPlaceHolder="请选择" [(ngModel)]="listOfData.search2.fieldConditions">
+                            <nz-option *ngFor="let option of TypeOption" [nzLabel]="option.label" [nzValue]="option.value">
+                            </nz-option>
+                        </nz-select>
+                    </nz-form-item>
+                </div>
+                <div nz-col [nzSpan]="3">
+                    <nz-form-item nzFlex>
+                                <input  nz-input placeholder="请输入" ng-trim="false" name="listOfData.search2.fieldValue" nzSize="default"
+                            [(ngModel)]="listOfData.search2.fieldValue">
+                            
+                    </nz-form-item>
+                </div>
+            </div>
+            <div nz-row [nzGutter]="24" *ngIf="isCollapsed">
+                <div nz-col [nzSpan]="2"  style="width:8%;">
+                    <nz-form-item nzFlex>
+                        <nz-select name="listOfData.search3.fieldType" style="width: 100%;" nzPlaceHolder="请选择" [(ngModel)]="listOfData.search3.fieldType">
+                            <nz-option *ngFor="let option of statusOption" [nzLabel]="option.label" [nzValue]="option.value">
+                            </nz-option>
+                        </nz-select>
+                    </nz-form-item>
+                </div>
+                <div nz-col [nzSpan]="3">
+                    <nz-form-item nzFlex>
+                        <nz-select name="listOfData.search3.fieldMame" style="width: 100%;" nzPlaceHolder="请选择" [(ngModel)]="listOfData.search3.fieldMame">
+                            <nz-option *ngFor="let option of listTypeOption" [nzLabel]="option.label" [nzValue]="option.value">
+                            </nz-option>
+                        </nz-select>
+                    </nz-form-item>
+                </div>
+                <div nz-col [nzSpan]="2">
+                    <nz-form-item nzFlex>
+                        <nz-select name="listOfData.search3.fieldConditions" style="width: 100%;" nzPlaceHolder="请选择" [(ngModel)]="listOfData.search3.fieldConditions">
+                            <nz-option *ngFor="let option of TypeOption" [nzLabel]="option.label" [nzValue]="option.value">
+                            </nz-option>
+                        </nz-select>
+                    </nz-form-item>
+                </div>
+                <div nz-col [nzSpan]="3">
+                    <nz-form-item nzFlex>
+                                <input  nz-input placeholder="请输入" ng-trim="false" name="listOfData.search3.fieldValue" nzSize="default"
+                            [(ngModel)]="listOfData.search3.fieldValue">
+                           
+                    </nz-form-item>
+                </div>
+                <div nz-col [nzSpan]="1"></div>
+                <div nz-col [nzSpan]="2">
+                    <nz-form-item nzFlex>
+                        <nz-select name="listOfData.search4.fieldType" style="width: 100%;" nzPlaceHolder="请选择" [(ngModel)]="listOfData.search4.fieldType">
+                            <nz-option *ngFor="let option of statusOption" [nzLabel]="option.label" [nzValue]="option.value">
+                            </nz-option>
+                        </nz-select>
+                    </nz-form-item>
+                </div>
+                <div nz-col [nzSpan]="3">
+                    <nz-form-item nzFlex>
+                        <nz-select name="listOfData.search4.fieldMame" style="width: 100%;" nzPlaceHolder="请选择" [(ngModel)]="listOfData.search4.fieldMame">
+                            <nz-option *ngFor="let option of listTypeOption" [nzLabel]="option.label" [nzValue]="option.value">
+                            </nz-option>
+                        </nz-select>
+                    </nz-form-item>
+                </div>
+                <div nz-col [nzSpan]="2">
+                    <nz-form-item nzFlex>
+                        <nz-select name="listOfData.search4.fieldConditions" style="width: 100%;" nzPlaceHolder="请选择" [(ngModel)]="listOfData.search4.fieldConditions">
+                            <nz-option *ngFor="let option of TypeOption" [nzLabel]="option.label" [nzValue]="option.value">
+                            </nz-option>
+                        </nz-select>
+                    </nz-form-item>
+                </div>
+                <div nz-col [nzSpan]="3">
+                    <nz-form-item nzFlex>
+                            <input  nz-input placeholder="请输入" ng-trim="false" name="listOfData.search4.fieldValue" nzSize="default"
+                            [(ngModel)]="listOfData.search4.fieldValue">
+                           
+                    </nz-form-item>
+                </div> 
+              </div>
+              <div nz-row [nzGutter]="24" *ngIf="isCollapsed">
+                <div nz-col [nzSpan]="2"  style="width:8%;">
+                        <nz-form-item nzFlex>
+                            <nz-select name="listOfData.search5.fieldType" style="width: 100%;" nzPlaceHolder="请选择" [(ngModel)]="listOfData.search5.fieldType">
+                                <nz-option *ngFor="let option of statusOption" [nzLabel]="option.label" [nzValue]="option.value">
+                                </nz-option>
+                            </nz-select>
+                        </nz-form-item>
+                    </div>
+                    <div nz-col [nzSpan]="3">
+                        <nz-form-item nzFlex>
+                            <nz-select name="listOfData.search5.fieldMame" style="width: 100%;" nzPlaceHolder="请选择" [(ngModel)]="listOfData.search5.fieldMame">
+                                <nz-option *ngFor="let option of listTypeOption" [nzLabel]="option.label" [nzValue]="option.value">
+                                </nz-option>
+                            </nz-select>
+                        </nz-form-item>
+                    </div>
+                    <div nz-col [nzSpan]="2">
+                        <nz-form-item nzFlex>
+                            <nz-select name="listOfData.search5.fieldConditions" style="width: 100%;" nzPlaceHolder="请选择" [(ngModel)]="listOfData.search5.fieldConditions">
+                                <nz-option *ngFor="let option of TypeOption" [nzLabel]="option.label" [nzValue]="option.value">
+                                </nz-option>
+                            </nz-select>
+                        </nz-form-item>
+                    </div>
+                    <div nz-col [nzSpan]="3">
+                        <nz-form-item nzFlex>
+                                    <input  nz-input placeholder="请输入" ng-trim="false" name="listOfData.search5.fieldValue" nzSize="default"
+                                [(ngModel)]="listOfData.search5.fieldValue">
+                               
+                        </nz-form-item>
+                    </div>
+                    <div nz-col [nzSpan]="1"></div>
+                    <div nz-col [nzSpan]="2">
+                        <nz-form-item nzFlex>
+                            <nz-select name="listOfData.search6.fieldType" style="width: 100%;" nzPlaceHolder="请选择" [(ngModel)]="listOfData.search6.fieldType">
+                                <nz-option *ngFor="let option of statusOption" [nzLabel]="option.label" [nzValue]="option.value">
+                                </nz-option>
+                            </nz-select>
+                        </nz-form-item>
+                    </div>
+                    <div nz-col [nzSpan]="3">
+                        <nz-form-item nzFlex>
+                            <nz-select name="listOfData.search6.fieldMame" style="width: 100%;" nzPlaceHolder="请选择" [(ngModel)]="listOfData.search6.fieldMame">
+                                <nz-option *ngFor="let option of listTypeOption" [nzLabel]="option.label" [nzValue]="option.value">
+                                </nz-option>
+                            </nz-select>
+                        </nz-form-item>
+                    </div>
+                    <div nz-col [nzSpan]="2">
+                        <nz-form-item nzFlex>
+                            <nz-select name="listOfData.search6.fieldConditions" style="width: 100%;" nzPlaceHolder="请选择" [(ngModel)]="listOfData.search6.fieldConditions">
+                                <nz-option *ngFor="let option of TypeOption" [nzLabel]="option.label" [nzValue]="option.value">
+                                </nz-option>
+                            </nz-select>
+                        </nz-form-item>
+                    </div>
+                    <div nz-col [nzSpan]="3">
+                        <nz-form-item nzFlex>
+                                <input  nz-input placeholder="请输入" ng-trim="false" name="listOfData.search6.fieldValue" nzSize="default"
+                                [(ngModel)]="listOfData.search6.fieldValue">
+                               
+                        </nz-form-item>
+                    </div> 
+            </div> 
+        </div> 
+    <div nz-row>
+        <div nz-col [nzSpan]="24" style="text-align: center;">
+            <button nz-button [nzType]="'primary'" (click)="searchSubmit()">搜索</button>
+            <button nz-button (click)="resetForm()">清空</button>
+            <span *ngIf="!isCollapsed" class="iconfont icon icon-zhankai"  (click)="toggleCollapsed()"></span>
+            <span *ngIf="isCollapsed" class="iconfont icon icon-shouqi"  (click)="toggleCollapsed()"></span>
+        </div>
+    </div>
+</form>
+ <div class="base-table">
+   <div class="table-operations">
+     <button nz-button [nzType]="'primary'" (click)="showAdd()">新增</button>
+     <button nz-button [nzType]="'primary'" (click)="showUpdate()">修改</button>
+     <button nz-button [nzType]="'primary'" (click)="checkDelete()">删除</button>
+     <button nz-button [nzType]="'primary'" (click)="isImport=true">导入</button>
+     <button nz-button [nzType]="'primary'" nz-popover nzTitle="导出类型" [nzContent]="contentTemplate"
+       nzPlacement="bottomRight">导出</button>
+   </div>
+    
+   <nz-table #ajaxTable nzShowSizeChanger [nzFrontPagination]="false" [nzData]="dataSet" [nzLoading]="loading"
+     [nzTotal]="total" [(nzPageIndex)]="pageIndex" [(nzPageSize)]="pageSize" (nzPageIndexChange)="getList()"
+     (nzPageSizeChange)="getList(true)">
+     <thead (nzSortChange)="sort($event)" nzSingleSort>
+       <tr>
+         <th nzShowCheckbox [(nzChecked)]="allChecked" [nzIndeterminate]="indeterminate" (nzCheckedChange)="checkAll($event)"></th>
+         <th nzShowSort nzSortKey="pds.plant_name">工厂名称</th>
+         <th nzShowSort nzSortKey="sc.status_code">状态代码</th>
+         <th nzShowSort nzSortKey="sc.status_description">状态描述</th>
+         <th nzShowSort nzSortKey="sc.status_group">状态组</th>
+         <th nzShowSort nzSortKey="sc.current_revision">现行版本</th>
+         <th nzShowSort nzSortKey="sc.default_status">默认状态</th>
+         <th nzShowSort nzSortKey="sc.creation_dt">创建时间</th>
+         <th nzShowSort nzSortKey="sc.last_update_dt">更新时间</th>
+         <th nzShowSort nzSortKey="b.account_name">更新人</th>
+       </tr>
+     </thead>
+     <tbody>
+       <tr *ngFor="let data of ajaxTable.data">
+        <td nzShowCheckbox [(nzChecked)]="data.checked" (nzCheckedChange)="refreshStatus()"></td>
+        <td>{{data.plant_name}}</td>
+         <td>{{data.status_code}}</td>
+         <td>{{data.status_description}}</td>
+         <td>{{data.status_group}}</td>
+         <td>{{data.current_revision}}</td>
+         <td>{{data.default_status}}</td>
+         <td>{{data.creation_dt}}</td>
+         <td>{{data.last_update_dt}}</td>
+         <td>{{data.account_name}}</td>
+        
+       </tr>
+     </tbody>
+   </nz-table>
+ </div>
+
+ <nz-modal [(nzVisible)]="isAdd" nzTitle="新增状态" (nzOnCancel)="hideAdd()" (nzOnOk)="addSubmit()">
+   <form nz-form class="ant-advanced-search-form">
+     <div nz-row [nzGutter]="24">
+       <!-- <div nz-col [nzSpan]="24">
+         <nz-form-item nzFlex>
+           <label>工厂名称:</label>
+           <input nz-input placeholder="请输入工厂名称" maxlength="20" name="add.plant_name" nzSize="default"
+             [(ngModel)]="add.plant_name">
+         </nz-form-item>
+       </div> -->
+       <div nz-col [nzSpan]="24">
+          <nz-form-item nzFlex>
+              <label>工厂名称</label>
+              <nz-select name="add.plant_code"   nzShowSearch
+              nzAllowClear style="width: 100%;" nzPlaceHolder="请选择工厂名称"
+              [(ngModel)]="add.plant_code" >
+              <nz-option *ngFor="let option of listPlaneOption" [nzLabel]="option.plant_name"
+                  [nzValue]="option.plant_code">
+              </nz-option>
+          </nz-select>
+          </nz-form-item>
+      </div>
+       <div nz-col [nzSpan]="24">
+         <nz-form-item nzFlex>
+           <label>状态代码:</label>
+           <input nz-input placeholder="请输入状态代码" maxlength="50" name="add.status_code" nzSize="default"
+             [(ngModel)]="add.status_code">
+         </nz-form-item>
+       </div>
+       <div nz-col [nzSpan]="24">
+         <nz-form-item nzFlex>
+           <label>状态描述:</label>
+           <input nz-input placeholder="请输入状态描述" maxlength="10" name="add.status_description"
+             nzSize="default" [(ngModel)]="add.status_description">
+         </nz-form-item>
+       </div>
+       <div nz-col [nzSpan]="24">
+        <nz-form-item nzFlex>
+          <label>状态组:</label>
+          <input nz-input placeholder="请输入状态组" maxlength="10" name="add.status_group"
+             nzSize="default" [(ngModel)]="add.status_group">
+        </nz-form-item>
+      </div>
+      <div nz-col [nzSpan]="24">
+        <nz-form-item nzFlex>
+          <label>现行版本:</label>
+          <input nz-input placeholder="请输入现行版本" maxlength="10" name="add.current_revision"
+             nzSize="default" [(ngModel)]="add.current_revision">
+        </nz-form-item>
+      </div>
+       <div nz-col [nzSpan]="24">
+         <nz-form-item nzFlex>
+           <label>默认状态:</label>
+           <input nz-input placeholder="请输入默认状态" maxlength="10" name="add.default_status"
+             nzSize="default" [(ngModel)]="add.default_status">
+         </nz-form-item>
+       </div>
+     </div>
+   </form>
+ </nz-modal>
+
+ <nz-modal [(nzVisible)]="isUpdate" nzTitle="更新状态" (nzOnCancel)="hideUpdate()" (nzOnOk)="updateSubmit()">
+   <form nz-form class="ant-advanced-search-form">
+     <div nz-row [nzGutter]="24">
+       <div nz-col [nzSpan]="24">
+          <nz-form-item nzFlex>
+              <label>工厂名称</label>
+              <nz-select name="update.plant_code"   nzShowSearch
+              nzAllowClear style="width: 100%;" nzPlaceHolder="请选择工厂名称"
+              [(ngModel)]="update.plant_code" >
+              <nz-option *ngFor="let option of listPlaneOption" [nzLabel]="option.plant_name"
+                  [nzValue]="option.plant_code">
+              </nz-option>
+          </nz-select>
+          </nz-form-item>
+      </div>
+       <div nz-col [nzSpan]="24">
+         <nz-form-item nzFlex>
+           <label>状态代码:</label>
+           <input nz-input placeholder="请输入状态代码" maxlength="50" name="update.status_code" nzSize="default"
+             [(ngModel)]="update.status_code">
+         </nz-form-item>
+       </div>
+       <div nz-col [nzSpan]="24">
+         <nz-form-item nzFlex>
+           <label>状态描述:</label>
+           <input nz-input placeholder="请输入排班描述" maxlength="10" name="update.status_description"
+             nzSize="default" [(ngModel)]="update.status_description">
+         </nz-form-item>
+       </div>
+
+       <div nz-col [nzSpan]="24">
+         <nz-form-item nzFlex>
+           <label>状态组:</label>
+           <input nz-input placeholder="请输入状态描述" maxlength="10" name="update.status_group"
+             nzSize="default" [(ngModel)]="update.status_group">
+
+         </nz-form-item>
+       </div>
+       <div nz-col [nzSpan]="24">
+         <nz-form-item nzFlex>
+           <label>现行版本:</label>
+           <input nz-input placeholder="请输入现行版本" maxlength="10" name="update.current_revision"
+             nzSize="default" [(ngModel)]="update.current_revision">
+         </nz-form-item>
+       </div>
+       <div nz-col [nzSpan]="24">
+         <nz-form-item nzFlex>
+           <label>默认状态:</label>
+           <input nz-input placeholder="请输入默认状态" maxlength="10" name="update.default_status"
+           nzSize="default" [(ngModel)]="update.default_status">
+         </nz-form-item>
+       </div>
+     </div>
+   </form>
+ </nz-modal>
+
+ <nz-modal [nzVisible]="isImport" [nzFooter]="funTemplate" (nzOnCancel)="isImport=false">
+   <form nz-form class="login-form">
+     <div nz-row [nzGutter]="24">
+       <nz-form-item nzFlex>
+         <div nz-col [nzSpan]="24">
+           <nz-upload *ngIf="isImport" [(nzFileList)]="fileList" [nzBeforeUpload]="beforeUpload">
+             <button nz-button>
+               <i nz-icon type="upload"></i><span>导入文件</span>
+             </button>
+           </nz-upload>
+         </div>
+       </nz-form-item>
+       <div nz-col [nzSpan]="12">
+         <nz-form-item nzFlex>
+           <label class="lab-name">导入前清空目标数据:</label>
+           <nz-switch name="import.is_empty" [(ngModel)]="import.is_empty"></nz-switch>
+         </nz-form-item>
+       </div>
+       <div nz-col [nzSpan]="12">
+         <nz-form-item nzFlex>
+           <label class="lab-name">导入时不更新语言包:</label>
+           <nz-switch name="import.is_no_lang" (ngModelChange)="changeLang(false)" [(ngModel)]="import.is_no_lang">
+           </nz-switch>
+         </nz-form-item>
+       </div>
+       <div nz-col [nzSpan]="12">
+         <nz-form-item nzFlex>
+           <label class="lab-name">导入全部数据:</label>
+           <nz-switch name="import.is_all" (ngModelChange)="changeLang(false)" [(ngModel)]="import.is_all"></nz-switch>
+         </nz-form-item>
+       </div>
+       <div nz-col [nzSpan]="12">
+         <nz-form-item nzFlex>
+           <label class="lab-name">导入多语言数据:</label>
+           <nz-switch name="import.is_lang" (ngModelChange)="changeLang(true)" [(ngModel)]="import.is_lang"></nz-switch>
+         </nz-form-item>
+       </div>
+       <div nz-col [nzSpan]="24" *ngIf="import.is_lang==true">
+         <nz-form-item nzFlex>
+           <label>语言:</label>
+           <nz-select name="import.lang_id" style="width: 100%;" nzPlaceHolder="请选择语言" [(ngModel)]="import.lang_id">
+             <nz-option *ngFor="let option of listLangOption" [nzLabel]="option.label" [nzValue]="option.value">
+             </nz-option>
+           </nz-select>
+         </nz-form-item>
+       </div>
+       <div nz-col [nzSpan]="24" *ngIf="import.is_lang==false">
+         <nz-form-item nzFlex>
+           <label>语言:</label>
+           <nz-select disabled="disabled" name="import.lang_id" style="width: 100%;" nzPlaceHolder="请选择语言"
+             [(ngModel)]="import.lang_id">
+             <nz-option *ngFor="let option of listLangOption" [nzLabel]="option.label" [nzValue]="option.value">
+             </nz-option>
+           </nz-select>
+         </nz-form-item>
+       </div>
+     </div>
+   </form>
+ </nz-modal>
+
+ <ng-template #contentTemplate>
+   <div>
+     <p><a href="/assets/excel/shift.xls">导出模板</a></p>
+     <p><a href="{{export}}?type=1">导出样例模板</a></p>
+     <p><a href="{{export}}?type=2">导出全部数据</a></p>
+     <p><a href="{{export}}?type=3">导出语言配置表</a></p>
+   </div>
+ </ng-template>
+
+ <ng-template #funTemplate>
+   <button nz-button (click)="isImport=false">取消</button>
+   <button nz-button [nzType]="'primary'" [nzLoading]="uploading" (click)="handleUpload()"
+     [disabled]="fileList.length == 0" style="margin-top: 16px">
+     {{ uploading ? 'Uploading' : '确定' }}
+   </button>
+ </ng-template>

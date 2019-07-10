@@ -1,0 +1,263 @@
+<form nz-form   class="ant-advanced-search-form">
+    <div nz-row [nzGutter]="24">
+        <div nz-col [nzSpan]="6">
+            <nz-form-item nzFlex>
+                <label>用户名:</label>
+                <input nz-input placeholder="请输入用户名"  name="search.account_name" nzSize="default" [(ngModel)]="search.account_name">
+            </nz-form-item>
+        </div>
+        <div nz-col [nzSpan]="6">
+            <nz-form-item nzFlex>
+                <label>员工编号:</label>
+                <input nz-input placeholder="请输入员工编号"  name="search.emp_no" nzSize="default" [(ngModel)]="search.emp_no">
+            </nz-form-item>
+        </div>
+        <div nz-col [nzSpan]="6">
+            <nz-form-item nzFlex>
+                <label>员工姓名:</label>
+                <input nz-input placeholder="请输入员工姓名"  name="search.employee_name" nzSize="default" [(ngModel)]="search.employee_name">
+            </nz-form-item>
+        </div>
+        <div nz-col [nzSpan]="6">
+            <nz-form-item nzFlex>
+                <label>所属角色:</label>
+                <nz-select nzMode="multiple" name="listRoleOptions"  style="width: 100%;" nzPlaceHolder="请选择所属角色" [(ngModel)]="listRoleOptions">
+                    <nz-option *ngFor="let option of listRoleOption" [nzLabel]="option.label" [nzValue]="option.value">
+                    </nz-option>
+                </nz-select>
+            </nz-form-item>
+        </div>
+        <div nz-col [nzSpan]="6">
+            <nz-form-item nzFlex>
+                <label>创建日期:</label>
+                <nz-range-picker  name="selectDate"  [(ngModel)]="selectDate" [nzFormat]="dateFormat"></nz-range-picker>
+            </nz-form-item>
+        </div>
+        <div nz-col [nzSpan]="6">
+            <nz-form-item nzFlex>
+                <label>所属部门:</label>
+                <nz-select nzMode="multiple" name="listDepOptions"   [nzMaxMultipleCount]="3" style="width: 100%;" nzPlaceHolder="请选择所属部门" [(ngModel)]="listDepOptions">
+                    <nz-option *ngFor="let option of listDetOption" [nzLabel]="option.label" [nzValue]="option.id">
+                    </nz-option>
+                </nz-select>
+            </nz-form-item>
+        </div>
+    </div>
+    <div nz-row>
+        <div nz-col [nzSpan]="24" style="text-align: center;">
+            <button nz-button [nzType]="'primary'" (click)="searchSubmit()">搜索</button>
+            <button nz-button (click)="resetForm()">清空</button>
+        </div>
+    </div>
+</form>
+<div class="base-table">
+    <div class="table-operations">
+        <button nz-button [nzType]="'primary'"  (click)="showAddUserModule()" >新增</button>
+        <button nz-button [nzType]="'primary'"  (click)="setRole()"  >角色设置</button>
+        <button nz-button [nzType]="'primary'"   (click)="setDept()" >部门设置</button>
+    </div>
+    <nz-table   
+        #ajaxTable
+        nzShowSizeChanger
+        [nzFrontPagination]="false"
+        [nzData]="dataSet"
+        [nzLoading]="loading"
+        [nzTotal]="total"
+        [(nzPageIndex)]="pageIndex"
+        [(nzPageSize)]="pageSize"
+        (nzPageIndexChange)="searchData()"
+        (nzPageSizeChange)="searchData(true)">
+        <thead>
+            <tr>
+                <th nzShowCheckbox [(nzChecked)]="allChecked" [nzIndeterminate]="indeterminate" (nzCheckedChange)="checkAll($event)"></th>
+                <th>登录用户名</th>
+                <th>员工编号</th>
+                <th>员工姓名</th>
+                <th>部门</th>
+                <th>角色</th>
+                <th>是否锁定</th>
+                <th>过期时间</th>
+                <th>创建时间</th>
+                <th>更新时间</th>
+                <th>更新人</th>
+                <th style="width:160px">操作</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr *ngFor="let data of ajaxTable.data">
+            <td nzShowCheckbox [(nzChecked)]="data.checked" (nzCheckedChange)="refreshStatus()"></td>
+            <td>{{data.account_name}}</td>
+            <td>{{data.emp_no}}</td>
+            <td>{{data.employee_name}}</td>
+            <td>{{data.dept_name}}</td>
+            <td>{{data.role_name}}</td>
+            <td>{{data.is_locked | lockedType}}</td>
+            <td>{{data.expire_date}}</td>
+            <td>{{data.creation_date}}</td>
+            <td>{{data.last_update}}</td>
+            <td>{{data.last_update_name}}</td>
+            <td> 
+                <button nz-button [nzType]="'primary'" (click)="showUpdateUserModule(data)">修改</button>
+                <button nz-button [nzType]="'primary'" (click)="deleteUser(data.id)">删除</button>
+            </td>
+            </tr>
+        </tbody>
+    </nz-table>
+</div>
+
+<nz-modal [(nzVisible)]="isAddUser" nzTitle="新增用户" (nzOnCancel)="hideAddUserModule()" (nzOnOk)="addUserSubmit()">
+    <form nz-form   class="ant-advanced-search-form modal-from">
+        <div nz-row [nzGutter]="24">
+            <div nz-col [nzSpan]="24">
+                <div nz-col [nzSpan]="12">
+                    <nz-form-item nzFlex>
+                        <label>用户名:</label>
+                        <input nz-input placeholder="请输入登录用户名"  maxlength="50" name="add.account_name" nzSize="default" [(ngModel)]="add.account_name">
+                    </nz-form-item>
+                </div>
+                <div nz-col [nzSpan]="12">
+                    <nz-form-item nzFlex>
+                        <label>过期日期:</label>
+                        <nz-date-picker  style="width: 100%;" name="addDate"  [(ngModel)]="addDate" [nzFormat]="dateFormat"></nz-date-picker >
+                    </nz-form-item>
+                </div>
+                <div nz-col [nzSpan]="12">
+                    <nz-form-item nzFlex>
+                        <label>员工编号:</label>
+                        <input nz-input placeholder="请选择员工编号"  readonly="readonly" (click)="showAddEmpModule()" maxlength="10" name="add.emp_no" nzSize="default" [(ngModel)]="add.emp_no">
+                    </nz-form-item>
+                </div>
+                <div nz-col [nzSpan]="12">
+                    <nz-form-item nzFlex>
+                        <label>员工姓名:</label>
+                        <input nz-input placeholder="请选择员工姓名"  readonly="readonly" (click)="showAddEmpModule()" maxlength="10" name="add.employee_name" nzSize="default" [(ngModel)]="add.employee_name">
+                    </nz-form-item>
+                </div>
+                <div nz-col [nzSpan]="12">
+                    <nz-form-item nzFlex  >
+                        <label>密码:</label>
+                        <input nz-input placeholder="请输入密码"   maxlength="20" name="add.password" nzSize="default" [(ngModel)]="add.password">
+                    </nz-form-item>
+                </div>
+                <div nz-col [nzSpan]="12">
+                    <nz-form-item nzFlex  >
+                        <label>是否锁定:</label>
+                        <nz-switch name="add.is_locked" [(ngModel)]="add.is_locked"></nz-switch>
+                    </nz-form-item>
+                </div>
+                
+                <div nz-col [nzSpan]="24">
+                    <nz-form-item nzFlex  >
+                        <label>选择部门:</label>
+                            <dept-select [selectDepList]="selectDepList"  [depList]='listDetOption'  (change)="selectDepchange($event)"></dept-select>
+                    </nz-form-item>
+                </div>
+                <div nz-col [nzSpan]="24">
+                    <nz-form-item nzFlex>
+                        <label>所属角色:</label>
+                        <nz-select nzMode="multiple" name="addRoleList"  style="width: 100%;" nzPlaceHolder="请选择所属角色" [(ngModel)]="addRoleList">
+                            <nz-option *ngFor="let option of listRoleOption" [nzLabel]="option.label" [nzValue]="option.value">
+                            </nz-option>
+                        </nz-select>
+                    </nz-form-item>
+                </div>
+                
+            </div>
+        </div>
+    </form>
+</nz-modal>
+
+<nz-modal [(nzVisible)]="isUpdateUser" nzTitle="修改用户" (nzOnCancel)="hideUpdateUserModule()" (nzOnOk)="updateUserSubmit()">
+    <form nz-form   class="ant-advanced-search-form modal-from">
+        <div nz-row [nzGutter]="24">
+            <div nz-col [nzSpan]="24">
+                <div nz-col [nzSpan]="12">
+                    <nz-form-item nzFlex>
+                        <label>用户名:</label>
+                        <input nz-input placeholder="请输入登录用户名"  disabled="disabled"  maxlength="50" name="update.account_name" nzSize="default" [(ngModel)]="update.account_name">
+                    </nz-form-item>
+                </div>
+                <div nz-col [nzSpan]="12">
+                    <nz-form-item nzFlex>
+                        <label>过期日期:</label>
+                        <nz-date-picker  style="width: 100%;" name="addDate"  [(ngModel)]="addDate" [nzFormat]="dateFormat"></nz-date-picker >
+                    </nz-form-item>
+                </div>
+                <div nz-col [nzSpan]="12">
+                    <nz-form-item nzFlex>
+                        <label>员工编号:</label>
+                        <input nz-input placeholder="请选择员工编号"  readonly="readonly" (click)="showAddEmpModule()" maxlength="10" name="update.emp_no" nzSize="default" [(ngModel)]="update.emp_no">
+                    </nz-form-item>
+                </div>
+                <div nz-col [nzSpan]="12">
+                    <nz-form-item nzFlex>
+                        <label>员工姓名:</label>
+                        <input nz-input placeholder="请选择员工姓名"  readonly="readonly" (click)="showAddEmpModule()" maxlength="10" name="update.employee_name" nzSize="default" [(ngModel)]="update.employee_name">
+                    </nz-form-item>
+                </div>
+                <div nz-col [nzSpan]="12">
+                    <nz-form-item nzFlex  >
+                        <label>密码:</label>
+                        <input nz-input placeholder="请输入密码"   maxlength="20" name="update.password" nzSize="default" [(ngModel)]="update.password">
+                    </nz-form-item>
+                </div>
+                <div nz-col [nzSpan]="12">
+                    <nz-form-item nzFlex  >
+                        <label>是否锁定:</label>
+                        <nz-switch name="update.is_locked" [(ngModel)]="update.is_locked"></nz-switch>
+                    </nz-form-item>
+                </div>
+                <div nz-col [nzSpan]="24">
+                    <nz-form-item nzFlex  >
+                        <label>选择部门:</label>
+                        <dept-select [selectDepList]="selectDepList"  [depList]='listDetOption'  (change)="selectDepchange($event)"></dept-select>
+                    </nz-form-item>
+                </div>
+                <div nz-col [nzSpan]="24">
+                    <nz-form-item nzFlex>
+                        <label>所属角色:</label>
+                        <nz-select nzMode="multiple" name="addRoleList"  style="width: 100%;" nzPlaceHolder="请选择所属角色" [(ngModel)]="addRoleList">
+                            <nz-option *ngFor="let option of listRoleOption" [nzLabel]="option.label" [nzValue]="option.value">
+                            </nz-option>
+                        </nz-select>
+                    </nz-form-item>
+                </div>
+            </div>
+        </div>
+    </form>
+</nz-modal>
+
+<nz-modal class="fun" [(nzVisible)]="isAddEmp" [nzMaskClosable]="false"  nzTitle="选择员工" (nzOnCancel)="hideAddEmpModule()" >
+    <mode-emp   (change)="empChange($event)"></mode-emp>
+</nz-modal>
+
+<nz-modal [(nzVisible)]="isSetRole" nzTitle="角色设置" (nzOnCancel)="hideRoleModule()" (nzOnOk)="setRoleSubmit()">
+    <form nz-form   class="ant-advanced-search-form modal-from">
+        <div nz-row [nzGutter]="24">
+            <div nz-col [nzSpan]="24">
+                <div nz-col [nzSpan]="24">
+                    <nz-form-item nzFlex>
+                        <label>所属角色:</label>
+                        <nz-select nzMode="multiple" name="addRoleList"  style="width: 100%;" nzPlaceHolder="请选择所属角色" [(ngModel)]="addRoleList">
+                            <nz-option *ngFor="let option of listRoleOption" [nzLabel]="option.label" [nzValue]="option.value">
+                            </nz-option>
+                        </nz-select>
+                    </nz-form-item>
+                </div>
+            </div>
+        </div>
+    </form>
+</nz-modal>
+
+<nz-modal [(nzVisible)]="isSetDept" nzTitle="部门设置" (nzOnCancel)="hideDeptModule()" (nzOnOk)="setDeptSubmit()">
+    <form nz-form   class="ant-advanced-search-form modal-from">
+        <div nz-row [nzGutter]="24">
+            <div nz-col [nzSpan]="24">
+                <nz-form-item nzFlex  >
+                    <label>选择部门:</label>
+                    <dept-select [selectDepList]="selectDepList" [depList]='listDetOption' (change)="selectDepchange($event)"></dept-select>
+                </nz-form-item>
+            </div>
+        </div>
+    </form>
+</nz-modal>

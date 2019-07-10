@@ -1,0 +1,182 @@
+<form nz-form   class="ant-advanced-search-form">
+    <div nz-row [nzGutter]="24">
+        <div nz-col [nzSpan]="9"></div>
+        <div nz-col [nzSpan]="6">
+            <nz-form-item nzFlex>
+                <label>所属位置:</label>
+                <nz-select  name="search.eqt_id"  style="width: 100%;" nzPlaceHolder="请选择所属位置" [(ngModel)]="search.pro_id">
+                    <nz-option *ngFor="let option of listProOption" [nzLabel]="option.eqt_name" [nzValue]="option.id">
+                    </nz-option>
+                </nz-select>
+            </nz-form-item>
+        </div>
+    </div>
+    <div nz-row>
+        <div nz-col [nzSpan]="24" style="text-align: center;">
+            <button nz-button [nzType]="'primary'" (click)="searchSubmit()">搜索</button>
+            <button nz-button (click)="resetForm()">清空</button>
+        </div>
+    </div>
+</form>
+<div class="base-table">
+    <div class="table-operations">
+        <button nz-button [nzType]="'primary'" (click)="showAddModule()">新增</button>
+        <button nz-button [nzType]="'primary'" (click)="isImport=true">导入</button> 
+        <button nz-button [nzType]="'primary'" nz-popover nzTitle="导出类型" [nzContent]="contentTemplate"  nzPlacement="bottomRight">导出</button>
+    </div>
+    <nz-table   
+        #ajaxTable
+        nzShowSizeChanger
+        [nzFrontPagination]="false"
+        [nzData]="dataSet"
+        [nzLoading]="loading"
+        [nzTotal]="total"
+        [(nzPageIndex)]="pageIndex"
+        [(nzPageSize)]="pageSize"
+        (nzPageIndexChange)="searchData()"
+        (nzPageSizeChange)="searchData(true)">
+        <thead>
+            <tr>
+                <th>位置</th>
+                <th>资源</th>
+                <th>实际开始时间</th>
+                <th>SAP订单</th>
+                <th>物料号</th>
+                <th>物料描述</th>
+                <th>计划产量（PC）</th>
+                <th>计划产量（HL）</th>
+                <th style="width:160px">操作</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr *ngFor="let data of ajaxTable.data">
+            <td>{{data.pro_name}}</td>
+            <td>{{data.eqt_name}}</td>
+            <td>{{data.starttime_actual}}</td>
+            <td>{{data.sap_pror}}</td>
+            <td>{{data.erp_matl_code}}</td>
+            <td>{{data.matl_name}}</td>
+            <td>{{data.prodqty_planned_pc}}</td>
+            <td>{{data.prodqty_planned_hl}}</td>
+            <td> 
+                <button nz-button [nzType]="'primary'" (click)="showUpdateModule(data)">修改</button>
+                <button nz-button [nzType]="'primary'" (click)="deleteModule(data.id)">删除</button>
+            </td>
+            </tr>
+        </tbody>
+    </nz-table>
+</div>
+    
+<nz-modal [(nzVisible)]="isAdd" nzTitle="新增当前生产信息"    (nzOnCancel)="hideAddModule()" (nzOnOk)="addSubmit()">
+    <form nz-form   class="ant-advanced-search-form">
+        <div nz-row [nzGutter]="24">
+            <div nz-col [nzSpan]="24">
+                <nz-form-item nzFlex>
+                    <label>所属位置:</label>
+                    <nz-select  name="add.pro_id"  style="width: 100%;" (ngModelChange)="getProductLineEqt($event)" nzPlaceHolder="请选择所属位置" [(ngModel)]="add.pro_id">
+                        <nz-option *ngFor="let option of listProOption" [nzLabel]="option.eqt_name" [nzValue]="option.id">
+                        </nz-option>
+                    </nz-select>
+                </nz-form-item>
+            </div>
+            <div nz-col [nzSpan]="24">
+                <nz-form-item nzFlex>
+                    <label>所属资源:</label>
+                    <nz-select  name="add.eqt_id"  style="width: 100%;" nzPlaceHolder="请选择所属设备" [(ngModel)]="add.eqt_id">
+                        <nz-option *ngFor="let option of listEqtOption" [nzLabel]="option.eqt_name" [nzValue]="option.id">
+                        </nz-option>
+                    </nz-select>
+                </nz-form-item>
+            </div>
+            <div nz-col [nzSpan]="24">
+                <nz-form-item nzFlex>
+                    <label>选择订单:</label>
+                    <nz-select  name="add.sap_pror"  style="width: 100%;" nzPlaceHolder="请选择订单" [(ngModel)]="add.sap_pror">
+                        <nz-option *ngFor="let option of listSapOption" [nzLabel]="option.sap_pror" [nzValue]="option.sap_pror">
+                        </nz-option>
+                    </nz-select>
+                </nz-form-item>
+            </div>
+        </div>
+    </form>
+</nz-modal>
+
+<nz-modal [(nzVisible)]="isUpdate" nzTitle="更新当前生产时间"  (nzOnCancel)="hideUpdateModule()" (nzOnOk)="updateSubmit()">
+    <form nz-form   class="ant-advanced-search-form">
+        <div nz-row [nzGutter]="24">
+            <div nz-col [nzSpan]="24">
+                <nz-form-item nzFlex>
+                    <label>所属位置:</label>
+                    <nz-select  name="update.pro_id"  style="width: 100%;" (ngModelChange)="getProductLineEqt($event)" nzPlaceHolder="请选择所属位置" [(ngModel)]="update.pro_id">
+                        <nz-option *ngFor="let option of listProOption" [nzLabel]="option.eqt_name" [nzValue]="option.id">
+                        </nz-option>
+                    </nz-select>
+                </nz-form-item>
+            </div>
+            <div nz-col [nzSpan]="24">
+                <nz-form-item nzFlex>
+                    <label>所属资源:</label>
+                    <nz-select  name="update.eqt_id"  style="width: 100%;" nzPlaceHolder="请选择所属设备" [(ngModel)]="update.eqt_id">
+                        <nz-option *ngFor="let option of listEqtOption" [nzLabel]="option.eqt_name" [nzValue]="option.id">
+                        </nz-option>
+                    </nz-select>
+                </nz-form-item>
+            </div>
+            <div nz-col [nzSpan]="24">
+                <nz-form-item nzFlex>
+                    <label>选择订单:</label>
+                    <nz-select  name="add.sap_pror"  style="width: 100%;" nzPlaceHolder="请选择订单" [(ngModel)]="update.sap_pror">
+                        <nz-option *ngFor="let option of listSapOption" [nzLabel]="option.sap_pror" [nzValue]="option.sap_pror">
+                        </nz-option>
+                    </nz-select>
+                </nz-form-item>
+            </div>
+            <div nz-col [nzSpan]="24">
+                <nz-form-item nzFlex  >
+                    <label>是否完成:</label>
+                    <nz-switch name="update.is_finished" [(ngModel)]="update.is_finished"></nz-switch>
+                </nz-form-item>
+            </div>
+        </div>
+    </form>
+</nz-modal>
+
+<ng-template #contentTemplate>
+    <div>
+        <p><a href="{{export}}?type=1&user_id={{user_id}}">导出模板</a></p>
+        <p><a href="{{export}}?type=2&user_id={{user_id}}">导出样例模板</a></p>
+        <p><a href="{{export}}?type=3&user_id={{user_id}}">导出全部数据</a></p>
+    </div>
+</ng-template>
+
+<nz-modal [nzVisible]="isImport"   [nzFooter]="funTemplate" (nzOnCancel)="isImport=false">
+    <form nz-form   class="login-form"    >
+        <div nz-row [nzGutter]="24">
+                <nz-form-item nzFlex  >
+                <div nz-col [nzSpan]="24">
+                        <nz-upload *ngIf="isImport"
+                        [(nzFileList)]="fileList"
+                        [nzBeforeUpload]="beforeUpload"> 
+                        <button nz-button>
+                        <i nz-icon type="upload"></i><span>导入文件</span>
+                        </button>
+                    </nz-upload>
+                </div>
+            </nz-form-item>
+            <div nz-col [nzSpan]="12">
+                <nz-form-item nzFlex  >
+                    <label class="lab-name">导入前清空目标数据:</label>
+                    <nz-switch name="import.is_empty" [(ngModel)]="import.is_empty" ></nz-switch>
+                </nz-form-item>
+            </div>
+        
+        </div>
+     </form>
+</nz-modal>
+
+<ng-template #funTemplate>
+    <button nz-button (click)="isImport=false">取消</button>
+    <button nz-button [nzType]="'primary'" [nzLoading]="uploading" (click)="handleUpload()" [disabled]="fileList.length == 0" style="margin-top: 16px">
+        {{ uploading ? 'Uploading' : '确定' }}
+    </button>
+</ng-template>

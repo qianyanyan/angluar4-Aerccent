@@ -1,0 +1,115 @@
+<div class="searchDiv" id="tabOne" >
+  <!--11111   {{searchCode==1}}-->
+  <div class="left">
+    物料描述 : <input  [(ngModel)]="OWLMS" nz-input placeholder="请输入...." nzSize="small" />
+    订单 : <input [(ngModel)]="ODD"  nz-input placeholder="请输入...." nzSize="small" />
+    品牌 : <input [(ngModel)]="OPP"  nz-input placeholder="请输入...." nzSize="small" />
+  </div>
+  <div class="right">
+    <button (click)='tab1Search()' nz-button nzType="primary" >搜索</button>
+    <button (click)='clear()' style="margin-left: 15px;" nz-button nzType="default">清空</button>
+  </div>
+</div>
+<nz-table style="margin-top: 50px;" class="sortTable" #rowSelectionTable2 nzShowSizeChanger nzBordered
+  [nzFrontPagination]="false" [nzData]="dataSet2" [nzLoading]="loading2" [nzTotal]="total2" [(nzPageIndex)]="pageNum2"
+  [(nzPageSize)]="pageSize2" (nzPageIndexChange)="searchOrderData()" (nzPageSizeChange)="searchOrderData(true)" [nzScroll]="{ y: '300px' }">
+  <thead>
+    <tr>
+      <th nzWidth="6%">工厂</th>
+      <th nzWidth="6%">Braumat订单</th>
+      <th id="orderBatch" nzWidth="6%">订单
+        <!-- <i class="icon-filter"
+                  (click)="GetTextFilterArray('orderBatch');$event.stopPropagation();" ></i> -->
+        <div class="text-filter" *ngIf="Filter.orderBatch.isShow">
+          <div class="checkbox-list">
+            <div class="checkbox">
+              <input type="checkbox" [ngClass]="{'is-half': IsPartChoosed}" id="c_all"
+                (click)="SelectAll($event,rowSelectionTable2.data)" />
+              <label for="c_all">All</label>
+            </div>
+            <div class="checkbox" *ngFor="let item of rowSelectionTable2.data;index as i">
+              <input type="checkbox" (click)="IsAll($event, item,rowSelectionTable2.data)" [checked]="item.IsSelected"
+                [id]="'c_' + i" />
+              <label [for]="'c_' + i">{{ item.orderBatch}}</label>
+            </div>
+          </div>
+          <div class="button">
+            <button class="btn primary" (click)="Submit()">确定</button>
+            <button class="btn" (click)="Closed()">重置</button>
+          </div>
+        </div>
+   
+        <i class="icon-sort-up" (click)="sortTable($event,dataSet2,'asc')"></i>
+        <i class="icon-sort-down" (click)="sortTable($event,dataSet2,'desc')"></i>
+   
+      </th>
+     
+      <th nzWidth="8%">物料描述</th>
+      <th nzWidth="6%">生产线</th>
+      <th nzWidth="6%">机台</th>
+      <th nzWidth="6%">品牌</th>
+      <th nzWidth="8%" id="postingDate">记账日期
+        <i class="icon-sort-up" (click)="sortTable($event,dataSet2,'asc')"></i>
+        <i class="icon-sort-down" (click)="sortTable($event,dataSet2,'desc')"></i></th>
+      <th id="inputExtract" nzWidth="8%">投入浸出物
+        <!-- <i class="icon-sort-up" (click)="sortTable($event,dataSet2,'asc')"></i>
+                <i class="icon-sort-down" (click)="sortTable($event,dataSet2,'desc')"></i> -->
+      </th>
+      <th id="outputExtract" nzWidth="8%">产出浸出物
+        <!-- <i class="icon-sort-up" (click)="sortTable($event,dataSet2,'asc')"></i>
+                <i class="icon-sort-down" (click)="sortTable($event,dataSet2,'desc')"></i> -->
+      </th>
+      <th id="lossExtract" nzWidth="8%">损失浸出物
+        <!-- <i class="icon-sort-up" (click)="sortTable($event,dataSet2,'asc')"></i>
+                <i class="icon-sort-down" (click)="sortTable($event,dataSet2,'desc')"></i> -->
+      </th>
+      <th nzWidth="6%">单位</th>
+      <th id="lossRatio" nzWidth="6%">损失率%
+        <!-- <i class="icon-sort-up" (click)="sortTable($event,dataSet2,'asc')"></i>
+                <i class="icon-sort-down" (click)="sortTable($event,dataSet2,'desc')"></i> -->
+      </th>
+      <th nzWidth="6%">产出原始值</th>
+      <!-- <th *ngIf="queryParam1">对比标识</th> -->
+      <th nzWidth="6%" id="resultType">对比标识
+          <i class="icon-sort-up" (click)="sortTable($event,dataSet2,'asc')"></i>
+          <i class="icon-sort-down" (click)="sortTable($event,dataSet2,'desc')"></i>
+      </th>
+    </tr>
+    <!-- <tr style="height: 30px;text-align: center;line-height: 30px;background-color: #fafafa;" align="center">
+									<th style="width: 60px;text-align: center;">工厂</th>
+									<th style="width: 120px;text-align: center;">订单号</th>
+									<th style="width: 60px;text-align: center;">订单类型</th>
+									<th style="width: 60px;text-align: center;">投入浸出物</th>
+									<th style="width: 120px;text-align: center;">产出原始值</th>
+									<th style="width: 120px;text-align: center;">产出浸出物</th>
+									<th style="width: 120px;text-align: center;">损失</th>
+									<th style="width: 120px;text-align: center;">损失率</th>
+									<th style="width: 200px;text-align: center;">单位</th>
+								</tr> -->
+  </thead>
+  <tbody>
+    <tr *ngFor="let result of rowSelectionTable2.data">
+      <td>{{result.plantCode}}</td>
+      <td>{{result.braumatOrder}}</td>
+      <!--<td>{{result.startPostingDate}}</td>
+								<td>{{result.endPostingDate}}</td>
+								<td>{{result.shiftCategory}}</td>-->
+      <td>{{result.orderBatch}}</td>
+      <!-- <td>{{result.orderType}}</td> -->
+     <td >{{result.matlName}}</td>
+      <td >{{result.workCenterDesc}}</td>
+    
+      <td>{{result.eqtName}}</td>
+      <td>{{result.brandName}}</td>
+      <td>{{result.postingDate}}</td>
+      <td>{{result.inputExtract}}</td>
+      <td>{{result.outputExtract}}</td>
+      <td>{{result.lossExtract}}</td>
+      <td>{{result.extractUnit}}</td>
+      <td>{{result.lossRatio}}</td>
+      <td>{{result.outputValue}}</td>
+      <!-- <td *ngIf="queryParam1">{{result.resultType}}</td> -->
+<td >{{result.resultType}}</td>
+    </tr>
+  </tbody>
+</nz-table>

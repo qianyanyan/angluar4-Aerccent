@@ -1,0 +1,41 @@
+<form nz-form class="ant-advanced-search-form">
+  <div nz-row [nzGutter]="24">
+    <div nz-col [nzSpan]="24">
+        <nz-form-item nzFlex>
+            <label style="width:90px">组件描述:</label>
+            <input nz-input placeholder="请输入组成描述" name="search.component_description" nzSize="default"
+              [(ngModel)]="search.component_description">
+          </nz-form-item>
+    </div>
+  </div>
+  <div nz-row>
+    <div nz-col [nzSpan]="24" style="text-align: center;">
+      <button nz-button [nzType]="'primary'" (click)="searchSubmit()">搜索</button>
+      <button nz-button (click)="resetForm()">清空</button>
+    </div>
+  </div>
+</form>
+<div class="base-table">
+  <nz-table #ajaxTable nzShowSizeChanger [nzFrontPagination]="false" [nzData]="dataSet" [nzLoading]="loading"
+    [nzTotal]="total" [(nzPageIndex)]="pageIndex" [(nzPageSize)]="pageSize" (nzPageIndexChange)="searchData()"
+    (nzPageSizeChange)="searchData(true)">
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>BOMID</th>
+        <th>顺序</th>
+        <th>组件ID</th>
+        <th>组件描述</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let data of ajaxTable.data" (click)="select(data)">
+        <td>{{data.id}}</td>
+        <td>{{data.bom_id}}</td>
+        <td>{{data.sequence}}</td>
+        <td>{{data.component_id}}</td>
+        <td>{{data.matl_description}}</td>
+      </tr>
+    </tbody>
+  </nz-table>
+</div>

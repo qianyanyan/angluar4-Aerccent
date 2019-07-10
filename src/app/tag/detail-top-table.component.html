@@ -1,0 +1,96 @@
+<!-- <div class="table-title" >报警监控结果</div> -->
+  <nz-input-group class="seach_box" nzSearch >
+    <input class="seach_input" #seach_input type="text" nz-input placeholder="输入报警项" />
+    <button class='seach_btn' (click)="getAlarmEqt(seach_input)"  nz-button nzType="primary" nzSearch>
+        <i nz-icon type="search"></i>
+    </button>
+  </nz-input-group>
+  <nz-switch [ngModel]="isplay"  class="touchbtn" nzCheckedChildren="音乐" nzUnCheckedChildren="语音" (click)='playMusic($event)'></nz-switch>
+  
+<nz-table class="table-border" #filterTable [nzLoading]="loading" [nzData]="displayData" [nzFrontPagination]="false"
+    [nzScroll]="{ y: height }" [nzShowPagination]="false">
+    <thead (nzSortChange)="sort($event)" nzSingleSort>
+        <tr>
+            <th nzWidth="4%">序号</th>
+            <th nzWidth="12%" nzSortKey="rule_inst_name" nzShowFilter [nzFilterMultiple]="false"
+                [nzFilters]="ruleInstNameList" (nzFilterChange)="filter($event,1)">报警项</th>
+            <th nzWidth="6%" nzSortKey="eqt_name" nzShowFilter [nzFilterMultiple]="false" [nzFilters]="eqtNameList"
+                (nzFilterChange)="filter($event,2)"> 位置</th>
+            <th nzWidth="6%" nzSortKey="priority" nzShowFilter [nzFilterMultiple]="false" [nzFilters]="priorityList"
+                (nzFilterChange)="filter($event,3)">优先级</th>
+            <th nzWidth="6%" class="more" nzSortKey="customized_name_1" nzShowFilter [nzFilterMultiple]="false"
+                [nzFilters]="customizedName1" (nzFilterChange)="filter($event,4)">自定义类型1</th>
+            <th nzWidth="6%" class="more" nzSortKey="customized_name_2" nzShowFilter [nzFilterMultiple]="false"
+                [nzFilters]="customizedName2" (nzFilterChange)="filter($event,5)">自定义类型2</th>
+            <th nzWidth="6%" class="more" nzSortKey="customized_name_3" nzShowFilter [nzFilterMultiple]="false"
+                [nzFilters]="customizedName3" (nzFilterChange)="filter($event,6)">自定义类型3</th>
+            <th nzWidth="5%">输出参数值1</th>
+            <th nzWidth="5%">输出参数值2</th>
+            <th nzWidth="5%">输出参数值3</th>
+            <th nzWidth="6%" nzSortKey="status" nzShowFilter [nzFilterMultiple]="false" [nzFilters]="statusList"
+                (nzFilterChange)="filter($event,7)">状态</th>
+            <th nzWidth="13%">发生时间</th>
+            <th nzWidth="7%">行动方案</th>
+            <th nzWidth="7%">报警图片</th>
+            <th  nzWidth="7%">操作</th>
+        </tr>
+    </thead>
+    <tbody (mouseover)="gotoCover(0)"  *ngFor="let data of filterTable.data; let i = index">
+        <tr (mouseover)="gotoCover(i)">
+            <td>{{i+1}}</td>
+            <td>{{data.rule_inst_name}}</td>
+            <td>{{data.eqt_name}}</td>
+            <td>{{data.priority}}</td>
+            <td>{{data.customized_name_1}}</td>
+            <td>{{data.customized_name_2}}</td>
+            <td>{{data.customized_name_3}}</td>
+            <td><span (click)="historicalTrend(data,1)">{{data.output_value1}}</span>  </td>
+            <td><span *ngIf="data.output_value2" (click)="historicalTrend(data,2)">{{data.output_value2 | number:'1.2-2'}} </span></td>
+            <td><span *ngIf="data.output_value3" (click)="historicalTrend(data,3)">{{data.output_value3 | number:'1.2-2'}} </span></td>
+            <td>{{data.status | status}}</td>
+            <td>{{data.occur_date}}</td>
+            <td>{{data.action}}</td>
+            <td><div *ngIf="data.image_url" class="table-image" (click)="showImg(data.image_url)"></div> </td>
+            <td><button *ngIf="data.isBtn&&data.status=='opening'" nz-button [nzType]="'primary'" (click)="confirmed(data,$event)">确认</button>
+            </td>
+        </tr>
+    </tbody>
+</nz-table>
+<nz-modal class="footer-hide" [(nzVisible)]="isVisible" nzTitle="{{trendName}}" nzWidth="{{nzWidth}}" (nzOnCancel)="handleCancel()">
+    <nz-radio-group [(ngModel)]="trendSize">
+        <label (click)="checkChange()" nz-radio-button nzValue="0">当天</label>
+        <label (click)="checkChange()" nz-radio-button nzValue="6">7天</label>
+    </nz-radio-group>
+    <div echarts [options]="trendOptions" [loading]="showloading" (chartInit)="onTrendInit($event)" class="modal-echart-box" style="height: 400px;"></div>
+</nz-modal>
+<nz-modal [(nzVisible)]="isAction" nzWidth='650px' nzTitle="行动方案" (nzOnCancel)="isAction = false" (nzOnOk)="submitConfirmed()">
+    <form nz-form class="ant-advanced-search-form">
+        <div nz-row [nzGutter]="24">
+            <div nz-col [nzSpan]="24">
+                <nz-form-item nzFlex>
+                    <label>行动方案:</label>
+                    <div style="width:100%">
+                        <nz-checkbox-wrapper style="width: 100%;" (nzOnChange)="log($event)">
+                            <div nz-row >
+                              <div nz-col nzSpan="24" *ngFor="let modetypessize of action_jieguo">
+                                  <label nz-checkbox nzValue="{{modetypessize}}"style="margin-bottom:5px; width: 500px; overflow: hidden;"  >{{modetypessize}}</label>
+                              </div>
+                            </div>
+                          </nz-checkbox-wrapper>
+                    </div>
+                </nz-form-item>
+            </div>
+            <div nz-col [nzSpan]="24">
+                <nz-form-item nzFlex>
+                    <label>备注:</label>
+                    <textarea rows="1" [(ngModel)]="actionTexttag" name="actionTexttag"  nz-input placeholder="请输入行动方案备注信息"></textarea>
+                </nz-form-item>
+            </div>
+        </div>
+    </form>
+</nz-modal>
+<nz-modal [nzVisible]="isShowImg" [nzContent]="modalContent" [nzFooter]="null" (nzOnCancel)="isShowImg=false">
+    <ng-template #modalContent>
+        <img *ngIf="avatarUrl" [src]="avatarUrl" [ngStyle]="{ 'width': '100%' }" />
+    </ng-template>
+</nz-modal>

@@ -1,0 +1,152 @@
+<div class="msss" style="  padding-top: 16px">
+    <div nz-row>
+        <div nz-col nzSpan="6" class="padding">
+            <div class="img-box">
+                <!-- <div class="img-title">设备静态简图</div> -->
+                <div class="img-info">
+                    <img src="{{avatarUrl}}">
+                </div>
+            </div>
+        </div>
+        <div nz-col nzSpan="12" class="echart-box-bottom">
+            <!--class="padding echart-box-top"-->
+            <div nz-col nzSpan="8" *ngFor="let m of optionRuleValue;  let i = index ">
+                <div echarts [options]="m" (chartInit)="ruleInit($event,i)" [loading]="showloading" class="power-size"></div>
+            </div>
+        </div>
+        <div nz-col nzSpan="6" class="padding">
+            <div class="order-box">
+                <div class="order-title">订单信息</div>
+                <div class="order-number">订单号：{{order.sap_pror}}</div>
+                <div class="matl-box">
+                    <div class="text">物料编码：{{order.erp_matl_code}}</div>
+                    <div class="text">物料名称：{{order.matl_name}}</div>
+                </div>
+                <div class="planned-box">
+                    <div class="text">计划开始时间：{{order.starttime_planned}}</div>
+                    <div class="text">计划完成时间：{{order.endtime_panned}}</div>
+                </div>
+                <div class="planned-box">
+                    <div class="text">计划产量（PC）：{{order.prodqty_planned_pc}}</div>
+                    <div class="text">计划产量（HL）：{{order.prodqty_planned_hl}}</div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div nz-row style="margin-top:20px;">
+        <div nz-col nzSpan="6" class="padding">
+            <div nz-row style="padding:4px 0; background:#fff;">
+                <div nz-col nzSpan="12" style="padding:0 5px  0 10px">
+                    <label style="margin: 10px 0 4px 0;">报警项类型</label>
+                    <nz-form-item nzFlex style="margin:0">
+                        <nz-select name="optionSelect.keySelect" (ngModelChange)="changeKey()" style="width: 100%;"
+                            nzPlaceHolder="请选报警项类型" [(ngModel)]="optionSelect.keySelect">
+                            <nz-option *ngFor="let option of cdTypeTitle" [nzLabel]="option.title"
+                                [nzValue]="option.index">
+                            </nz-option>
+                        </nz-select>
+                    </nz-form-item>
+                </div>
+                <div nz-col nzSpan="12" style="padding:0 10px  0 5px">
+                    <label style="margin: 10px 0 4px 0;">图表类型</label>
+                    <nz-form-item nzFlex style="margin:0">
+                        <nz-select name="optionSelect.keySelectTyle" style="width: 100%;"
+                            (ngModelChange)="changeKeyType()" nzPlaceHolder="请选择图表类型"
+                            [(ngModel)]="optionSelect.keySelectTyle">
+                            <nz-option *ngFor="let option of chartType" [nzLabel]="option.title"
+                                [nzValue]="option.index">
+                            </nz-option>
+                        </nz-select>
+                    </nz-form-item>
+                </div>
+            </div>
+            <div echarts [options]="keyType" [loading]="showloading" (chartClick)="chartClick($event)"
+                (chartInit)="onKeyTypeInit($event)" class="echart-box-bottoms"></div>
+        </div>
+        <div nz-col nzSpan="12">
+            <div nz-row style="padding:4px 0; background:#fff;">
+                <div nz-col nzSpan="12" style="padding:0 5px  0 10px">
+                    <label style="margin: 10px 0 4px 0;">报警项类型</label>
+                    <nz-form-item nzFlex style="margin:0">
+                        <nz-select name="optionSelect.craftSelect" (ngModelChange)="changeCraft()" style="width: 100%;"
+                            nzPlaceHolder="请选报警项类型" [(ngModel)]="optionSelect.craftSelect">
+                            <nz-option *ngFor="let option of cdTypeTitle" [nzLabel]="option.title"
+                                [nzValue]="option.index">
+                            </nz-option>
+                        </nz-select>
+                    </nz-form-item>
+                </div>
+                <div nz-col nzSpan="12" style="padding:0 10px  0 5px">
+                    <label style="margin: 10px 0 4px 0;">图表类型</label>
+                    <nz-form-item nzFlex style="margin:0">
+                        <nz-select name="optionSelect.craftSelectType" style="width: 100%;" nzPlaceHolder="请选择图表类型"
+                            (ngModelChange)="changeKCraftType()" [(ngModel)]="optionSelect.craftSelectType">
+                            <nz-option *ngFor="let option of chartType" [nzLabel]="option.title"
+                                [nzValue]="option.index">
+                            </nz-option>
+                        </nz-select>
+                    </nz-form-item>
+                </div>
+            </div>
+            <div echarts [options]="craftType" [loading]="showloading" (chartClick)="chartClick($event)"
+                (chartInit)="onCraftTypeInit($event)" class="echart-box-bottoms"></div>
+        </div>
+        <div nz-col nzSpan="6" class="padding">
+            <div nz-row style="padding:4px 0; background:#fff;">
+                <div nz-col nzSpan="12" style="padding:0 5px  0 10px">
+                    <label style="margin: 10px 0 4px 0;">优先级</label>
+                </div>
+                <div nz-col nzSpan="12" style="padding:0 10px  0 5px">
+                    <label style="margin: 10px 0 4px 0;">图表类型</label>
+                    <nz-form-item nzFlex style="margin:0">
+                        <nz-select name="optionSelect.prioritySelectType" style="width: 100%;"
+                            (ngModelChange)="changePriorityType()" nzPlaceHolder="请选择图表类型"
+                            [(ngModel)]="optionSelect.prioritySelectType">
+                            <nz-option *ngFor="let option of chartPType" [nzLabel]="option.title"
+                                [nzValue]="option.index">
+                            </nz-option>
+                        </nz-select>
+                    </nz-form-item>
+                </div>
+            </div>
+            <div *ngIf="optionSelect.prioritySelectType>1" echarts [options]="priorityType" [loading]="showloading"
+                (chartInit)="onPriorityTypeInit($event)" class="echart-box-bottoms"></div>
+            <div class="level-box order-box" *ngIf="optionSelect.prioritySelectType==1"
+                style=" height: 200px;    padding-top: 0;">
+                <!-- <div class="level-title order-title">优先级</div> -->
+                <div class="level-ul">
+                    <div class="level-li">
+                        <div class="level-lable">
+                            <span class="level-lable-left">高优先级</span>
+                            <span class="level-lable-rigth">{{priority.h}}个</span>
+                        </div>
+                        <div class="level-line-bg">
+                            <div *ngIf="priority.hw" class="level-line-color color-h"
+                                [ngStyle]="{'width':priority.hw }"></div>
+                        </div>
+                    </div>
+                    <div class="level-li">
+                        <div class="level-lable">
+                            <span class="level-lable-left">中优先级</span>
+                            <span class="level-lable-rigth">{{priority.m}}个</span>
+                        </div>
+                        <div class="level-line-bg">
+                            <div *ngIf="priority.mw" class="level-line-color color-m"
+                                [ngStyle]="{'width':priority.mw }"></div>
+                        </div>
+                    </div>
+                    <div class="level-li">
+                        <div class="level-lable">
+                            <span class="level-lable-left">低优先级</span>
+                            <span class="level-lable-rigth">{{priority.l}}个</span>
+                        </div>
+                        <div class="level-line-bg">
+                            <div *ngIf="priority.lw" class="level-line-color color-l"
+                                [ngStyle]="{'width':priority.lw }"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

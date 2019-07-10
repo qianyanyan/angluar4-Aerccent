@@ -1,0 +1,46 @@
+<form nz-form   class="ant-advanced-search-form">
+    <div nz-row [nzGutter]="24">
+        <div nz-col [nzSpan]="24">
+            <nz-form-item nzFlex>
+                <label>属性名称:</label>
+                <input nz-input placeholder="请输入属性名称"  name="search.prop_name" nzSize="default" [(ngModel)]="search.prop_name">
+            </nz-form-item>
+        </div>
+    </div>
+    <div nz-row>
+        <div nz-col [nzSpan]="24" style="text-align: center;">
+            <button nz-button [nzType]="'primary'" (click)="searchSubmit()">搜索</button>
+            <button nz-button (click)="resetForm()">清空</button>
+        </div>
+    </div>
+</form>
+<div class="base-table">
+    <nz-table   
+        #ajaxTable
+        nzShowSizeChanger
+        [nzFrontPagination]="false"
+        [nzData]="dataSet"
+        [nzLoading]="loading"
+        [nzTotal]="total"
+        [(nzPageIndex)]="pageIndex"
+        [(nzPageSize)]="pageSize"
+        (nzPageIndexChange)="searchData()"
+        (nzPageSizeChange)="searchData(true)"> 
+     <thead>
+        <tr>
+            <th>属性编码</th>
+            <th>属性简写</th>
+            <th>属性名称</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr *ngFor="let data of ajaxTable.data" (click)="select(data)">
+            <td>{{data.prop_code}}</td>
+            <td>{{data.prop_short_name}}</td>
+            <td>{{data.prop_name}}</td>
+          
+        </tr>
+    </tbody>
+    </nz-table>
+</div>
+ 

@@ -1,0 +1,155 @@
+ 
+<div class="base-table">
+    <div class="table-operations">
+        <button nz-button [nzType]="'primary'" (click)="showAddModule()">新增</button>
+    </div>
+    <nz-table 
+        #nzTable [nzData]="data"        
+        [nzLoading]="loading" 
+        [nzFrontPagination]="false"  
+        [nzScroll]="{ y: height }" 
+        [nzShowPagination]="false"  >
+        <thead>
+            <tr>
+                <th nzWidth="18%">模块名称</th>
+                <th nzWidth="5%">类型</th>
+                <th nzWidth="10%">类名</th>
+                <th nzWidth="5%">排序</th> 
+                <th nzWidth="10%">地址</th> 
+                <th nzWidth="12%">创建时间</th>
+                <th nzWidth="12%">更新时间</th>
+                <th nzWidth="10%">更新人</th>
+                <th nzWidth="14%">操作</th>
+            </tr>
+        </thead>
+        <tbody>
+            <ng-template ngFor let-data [ngForOf]="nzTable.data">
+            <ng-template ngFor let-item [ngForOf]="expandDataCache[data.id]">
+                <tr   *ngIf="(item.parent&&item.parent.expand)||!(item.parent)" >
+                    <td [nzIndentSize]="item.level*20"   [nzShowExpand]="!!item.children" [(nzExpand)]="item.expand" (nzExpandChange)="collapse(expandDataCache[item.id],item,$event)">
+                        {{item.module_name}}
+                    </td>
+                    <td>{{item.module_type | menuType}}</td>
+                    <td>{{item.class_name}}</td>
+                    <td>{{item.sort}}</td>
+                    <td>{{item.url}}</td>
+                    <td>{{item.creation_date}}</td>
+                    <td>{{item.last_update}}</td>
+                    <td>{{item.account_name}}</td>
+                    <td> 
+                        <button nz-button [nzType]="'primary'" (click)="showUpdateModule(item)">修改</button>
+                        <button nz-button [nzType]="'primary'" (click)="deleteModule(item.id)">删除</button>
+                    </td>
+                </tr>
+            </ng-template>
+            </ng-template>
+        </tbody>
+    </nz-table>
+</div>
+
+<nz-modal [(nzVisible)]="isAddModule" nzTitle="新增模块" (nzOnCancel)="hideAddModule()" (nzOnOk)="addSubmit()">
+    <form nz-form class="ant-advanced-search-form">
+        <div nz-row [nzGutter]="24">
+            <div nz-col [nzSpan]="24">
+                <nz-form-item nzFlex>
+                    <label>模块名称:</label>
+                    <input nz-input placeholder="请输入模块名称"  maxlength="10" name="add.module_name" nzSize="default" [(ngModel)]="add.module_name">
+                </nz-form-item>
+            </div>
+            <div nz-col [nzSpan]="24">
+                <nz-form-item nzFlex  (mouseleave)="treeState(false)">
+                    <label>上级模块:</label>
+                    <input nz-input placeholder="请输入模块名称"  (click)="treeState(true)"  maxlength="10" name="add.parent_module_name" nzSize="default" [(ngModel)]="add.parent_module_name">
+                    <div class="tree-input" *ngIf='isShowTree' >
+                        <nz-tree
+                        #treeCom
+                        [nzData]="nodes"
+                        (nzClick)="nzClick($event)">
+                        </nz-tree>
+                    </div>
+                </nz-form-item>
+            </div>
+            <div nz-col [nzSpan]="24">
+                <nz-form-item nzFlex>
+                    <label>模块类型:</label>
+                    <nz-select   name="add.type"  style="width: 100%;" nzPlaceHolder="请选择模块类型" [(ngModel)]="add.module_type">
+                        <nz-option *ngFor="let option of listRoleOption" [nzLabel]="option.label" [nzValue]="option.value">
+                        </nz-option>
+                    </nz-select>
+                </nz-form-item>
+            </div>
+            <div nz-col [nzSpan]="24">
+                <nz-form-item nzFlex>
+                    <label>类名:</label>
+                    <input nz-input placeholder="请输入类名" maxlength="20" name="add.class_name" nzSize="default" [(ngModel)]="add.class_name">
+                </nz-form-item>
+            </div>
+            <div nz-col [nzSpan]="24">
+                <nz-form-item nzFlex>
+                    <label>地址:</label>
+                    <input nz-input placeholder="请输入类名" maxlength="40" name="add.url" nzSize="default" [(ngModel)]="add.url">
+                </nz-form-item>
+            </div>
+            <div nz-col [nzSpan]="24">
+                <nz-form-item nzFlex>
+                    <label>排序:</label>
+                    <input nz-input placeholder="请输入排序" maxlength="20" name="add.sort" nzSize="default" [(ngModel)]="add.sort">
+                </nz-form-item>
+            </div>
+        </div>
+    </form>
+</nz-modal>
+
+<nz-modal [(nzVisible)]="isUpdateModule" nzTitle="更新模块" (nzOnCancel)="hideUpdateModule()" (nzOnOk)="updateSubmit()">
+    <form nz-form class="ant-advanced-search-form">
+        <div nz-row [nzGutter]="24">
+            <div nz-col [nzSpan]="24">
+                <nz-form-item nzFlex>
+                    <label>模块名称:</label>
+                    <input nz-input placeholder="请输入模块名称"  maxlength="10" name="update.module_name" nzSize="default" [(ngModel)]="update.module_name">
+                </nz-form-item>
+            </div>
+            <div nz-col [nzSpan]="24">
+                <nz-form-item nzFlex  (mouseleave)="treeState(false)">
+                    <label>上级模块:</label>
+                    <input nz-input placeholder="请输入模块名称"  (click)="treeState(true)"  maxlength="10" name="update.parent_module_name" nzSize="default" [(ngModel)]="update.parent_module_name">
+                    <div class="tree-input" *ngIf='isShowTree' >
+                        <nz-tree
+                        #treeCom
+                        [nzSelectedKeys]="defaultSelectedKeys"
+                        [nzData]="nodes"
+                        (nzClick)="nzClick($event)">
+                        </nz-tree>
+                    </div>
+                </nz-form-item>
+            </div>
+            <div nz-col [nzSpan]="24">
+                <nz-form-item nzFlex>
+                    <label>模块类型:</label>
+                    <nz-select   name="add.type"  style="width: 100%;" nzPlaceHolder="请选择模块类型" [(ngModel)]="update.module_type">
+                        <nz-option *ngFor="let option of listRoleOption" [nzLabel]="option.label" [nzValue]="option.value">
+                        </nz-option>
+                    </nz-select>
+                </nz-form-item>
+            </div>
+            <div nz-col [nzSpan]="24">
+                <nz-form-item nzFlex>
+                    <label>类名:</label>
+                    <input nz-input placeholder="请输入类名" maxlength="20" name="update.class_name" nzSize="default" [(ngModel)]="update.class_name">
+                </nz-form-item>
+            </div>
+            <div nz-col [nzSpan]="24">
+                <nz-form-item nzFlex>
+                    <label>地址:</label>
+                    <input nz-input placeholder="请输入类名" maxlength="40" name="update.url" nzSize="default" [(ngModel)]="update.url">
+                </nz-form-item>
+            </div>
+            <div nz-col [nzSpan]="24">
+                <nz-form-item nzFlex>
+                    <label>排序:</label>
+                    <input nz-input placeholder="请输入排序" maxlength="20" name="update.sort" nzSize="default" [(ngModel)]="update.sort">
+                </nz-form-item>
+            </div>
+        </div>
+    </form>
+</nz-modal>

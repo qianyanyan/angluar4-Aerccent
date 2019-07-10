@@ -1,0 +1,140 @@
+.leftBox{
+    width: 140px;
+    height:100%; 
+    background: #1f263e;
+
+    .head-img{
+        padding: 20px 0 20px 0;
+        border-bottom: 2px solid #43485c;
+        img{
+            display: inherit;
+            margin: 0 auto;
+            
+        }
+    }
+
+    .nav-span{
+        font-size: 12px;
+        color: #cdced4;
+        display: inline-block;
+        padding:12px 0 0 21px;
+    }
+}
+
+.fun-list {
+    clear: both;
+    margin-top: 6px;
+    padding: 0;
+    display: inline-block;
+    text-align: center;
+    width: 140px;
+    
+
+    cursor: pointer;
+
+    .fun-box {
+        background: #1f263e;
+        width: 140px;
+        height: 80px;
+        list-style: none;
+        position: relative;
+        color: #b0b3bb;
+
+        .fun-box-content {
+            position: absolute;
+            margin: auto;
+            width: 100%;
+            font-family: inherit;
+            font-size: 13px;
+
+            .imgSize{
+                width: 24px;
+                height: 24px;
+                opacity: 0.65;
+            }
+
+            .F_Monitoring {
+                background: url('../../assets/images/fun-jiankong.png');
+                background-size: 100%;
+                margin: 18px auto 6px;
+            }
+
+            .F_ProductionPlan {
+                background: url('../../assets/images/fun-shengchanjihu.png');
+                background-size: 100%;
+                margin: 18px auto 6px;
+            }
+
+            .F_StatisticsReport {
+                background: url('../../assets/images/fun-tongjibaobiao.png');
+                background-size: 100%;
+                margin: 18px auto 6px;
+            }
+
+            .F_OrderMagt {
+                background: url('../../assets/images/fun-shebeiguanli.png');
+                background-size: 100%;
+                margin: 18px auto 6px;
+            }
+
+            .F_AuthorityMagt {
+                background: url('../../assets/images/fun-shujuweihu.png');
+                background-size: 100%;
+                margin: 18px auto 6px;
+            }
+
+            .F_Configuration {
+                background: url('../../assets/images/fun-shezhi.png');
+                background-size: 100%;
+                margin: 18px auto 6px;
+            }
+
+
+
+        }
+
+
+    }
+
+    .fun-box-active {
+        color: #b0b3bb;
+        
+    }
+    
+    .fun-box-active:hover {
+        background: #303750;
+        color: #c5c7cc;
+    }
+
+    .fun-box-active {
+        .fun-box-content {
+            .F_Monitoring {
+                background-image: url('../../assets/images/fun-jiankong-active.png');
+            }
+
+            .F_ProductionPlan {
+                background-image: url('../../assets/images/fun-shengchanjihu-active.png');
+            }
+
+            .F_AuthorityMagt {
+                background-image: url('../../assets/images/fun-shujuweihu-active.png');
+
+            }
+
+            .F_Configuration {
+                background-image: url('../../assets/images/fun-shezhi-active.png');
+
+            }
+
+            .F_OrderMagt {
+                background-image: url('../../assets/images/fun-shebeiguanli-active.png');
+            }
+
+            .F_StatisticsReport {
+                background-image: url('../../assets/images/fun-tongjibaobiao-active.png');
+
+            }
+
+        }
+    }
+}

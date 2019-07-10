@@ -1,0 +1,35 @@
+  <div style="position: relative">
+  <nz-tabset [nzSelectedIndex]='nzSelectedIndex'>
+    <nz-tab *ngFor="let tab of tabs" nzTitle="{{tab.module_name}}" (nzClick)="typeChage(tab.class_name)">
+      <div *ngIf="tab.class_name == 'T_Overview'">
+        <overview-info *ngIf="switchValue==false&&type=='T_Overview'" [id]="id"></overview-info>
+        <three-D *ngIf="switchValue==true&&type=='T_Overview'&&isShow3d==true" [id]="id" [eqt_name]="eqt_name"></three-D>
+      </div>
+      <div *ngIf="tab.class_name == 'T_Detail'">
+        <detail-info *ngIf="type=='T_Detail'" [id]="id" [eqt_name]="eqt_name"></detail-info>
+      </div>
+    </nz-tab>
+  </nz-tabset>
+  <!-- <nz-tabset >
+      <nz-tab nzTitle="概览信息" (nzClick)="typeChage(1)">
+        <overview-info   *ngIf='switchValue==false&&type==1 ' [id]="id"  ></overview-info>
+        <three-D  *ngIf='switchValue==true&&type==1'  [id]="id"  [eqt_name]="eqt_name"></three-D>
+      </nz-tab>
+      <nz-tab nzTitle="详细信息" (nzClick)="typeChage(2)">
+        <detail-info  *ngIf='type==2'  [id]="id" [eqt_name]="eqt_name"></detail-info>
+      </nz-tab> 
+  </nz-tabset> -->
+  <div class="notice-box">
+    <div class="notice-bg">
+      <div class="notice-icon"></div>
+      <div class="notice-text">{{eqt_name}}</div>
+      <div *ngIf='number' class="notice-num">{{number}}</div>
+    </div>
+  </div>
+  
+  <div class="switch-box" style="right:150px;" *ngIf="isShow3d&&type=='T_Overview'"> 
+    3D模式 
+    <nz-switch [(ngModel)]="switchValue"></nz-switch>
+  </div>
+  <div class="fun-back" style="top:11px; color:#333; right: 60px;" (click)="back()">返回</div>
+</div>

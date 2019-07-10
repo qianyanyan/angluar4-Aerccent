@@ -1,0 +1,19 @@
+<div style="position: relative">
+  <nz-tabset  [nzSelectedIndex] = 'nzSelectedIndex'>
+    <nz-tab *ngFor="let tab of tabs"   nzTitle="{{tab.module_name}}"  (nzClick)="typeChage(tab.class_name)">
+      <div *ngIf="tab.class_name == 'T_MatlBaseInfo'">
+        <matl-index *ngIf="type=='T_MatlBaseInfo'"></matl-index>
+      </div>
+      <div *ngIf="tab.class_name == 'T_MatlPlant'">
+        <matl-plant-index *ngIf="type=='T_MatlPlant'"></matl-plant-index>
+      </div>
+      <div *ngIf="tab.class_name == 'T_Brand'">
+        <brand-index *ngIf="type=='T_Brand'"></brand-index>
+      </div>
+      <div *ngIf="tab.class_name == 'T_MatlOther'">
+        <matl-other-index *ngIf="type=='T_MatlOther'"></matl-other-index>
+      </div>
+    </nz-tab>
+  </nz-tabset>
+</div>
+ 

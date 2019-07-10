@@ -1,0 +1,20 @@
+<div style="position: relative">
+  <nz-tabset  [nzSelectedIndex] = 'nzSelectedIndex'>
+    <nz-tab *ngFor="let tab of tabs"   nzTitle="{{tab.module_name}}"  (nzClick)="typeChage(tab.class_name)">
+      <div *ngIf="tab.class_name == 'T_EqtBaseInfo'">
+        <org-base-info *ngIf="type=='T_EqtBaseInfo'"  [id]="id" ></org-base-info>
+      </div>
+      <div *ngIf="tab.class_name == 'T_EqtPropInst'">
+        <prop-inst *ngIf="type=='T_EqtPropInst'" [id]="id"  [category_type]="category_type"></prop-inst>
+      </div>
+      <div *ngIf="tab.class_name == 'T_EqtRuleInst'">
+        <rule-inst *ngIf="type=='T_EqtRuleInst'" [id]="id" [category_type]="category_type"></rule-inst>
+      </div>
+      <div *ngIf="tab.class_name == 'T_Action'" >
+        <actionType *ngIf="type=='T_Action'" [id]="id" [category_type]="category_type" ></actionType>
+      </div>
+    </nz-tab>
+  </nz-tabset>
+  <div class="fun-back" style="color:#333; top:11px;" (click)="back()">返回</div>
+</div>
+ 

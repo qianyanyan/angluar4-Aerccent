@@ -1,0 +1,58 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Smart Brewery</title>
+  <base href="/">
+  <script src="assets/plugins/jquery/jquery.js"></script>
+  <script>
+    var fontSize = 14;
+
+function setFontSize () {
+    var whdef = 100/1920;// 表示1920的设计图,使用100PX的默认值
+    var wH = window.innerHeight;// 当前窗口的高度
+    var wW = window.innerWidth;// 当前窗口的宽度
+    var rem = wW * whdef;// 以默认比例值乘以当前窗口宽度,得到该宽度下的相应FONT-SIZE值
+    $('html').css('font-size', rem + "px");
+
+    if(window.innerWidth<1920) {
+      fontSize = 12;
+      if(window.innerWidth<1440) {
+        fontSize = 10;
+      }
+    }
+}
+
+// $(window).resize(function () // 绑定到窗口的这个事件中
+// {
+//     setFontSize();
+// });
+// setFontSize();
+  </script>
+
+ 
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <link rel="icon" type="image/x-icon" href="favicon.ico">
+  <!-- <script>
+    (function (l) {
+      if (l.search) {
+        var q = {};
+        l.search.slice(1).split('&').forEach(function (v) {
+          var a = v.split('=');
+          q[ a[ 0 ] ] = a.slice(1).join('=').replace(/~and~/g, '&');
+        });
+        if (q.p !== undefined) {
+          window.history.replaceState(null, null,
+            l.pathname.slice(0, -1) + (q.p || '') +
+            (q.q ? ('?' + q.q) : '') +
+            l.hash
+          );
+        }
+      }
+    }(window.location))
+  </script> -->
+</head>
+<body>
+  <app-root></app-root>
+</body>
+</html>

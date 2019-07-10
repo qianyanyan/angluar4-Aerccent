@@ -1,0 +1,93 @@
+<div >
+    <div nz-row style="background:url('/assets/images/bg.png'); padding-top: 16px;    min-height: calc(100vh - 164px);">
+        <div nz-col nzSpan="18" class="padding" >
+            <div class="img-pa">
+                <div class="img-box"  #mainBox  [ngStyle]="  {'height':height }"  >
+                    <img src="{{imgSrc}}" #mainScreen class="img-acitve" (imgLoadEvent)="imgLoad($event)" [ngStyle]="  {'height':height }" />
+                    <div *ngIf="showType>1">
+                    <div  class="positon-bg"   *ngFor="let item of eqtList"  (click)="showInfo(item)"  [ngStyle]="  {'top':item.pNowTop,'left':item.pNowLeft }" ></div>
+                    <div  *ngFor='let iconIndex of eqtstuts'   >
+                        <img *ngIf='iconIndex.formula_value != 1 ' style="z-index: 111; width: 20px; height:20px; position: absolute;" src="./assets/images/stopIcon.png" [ngStyle]="  {'top':iconIndex.pNowTop,'left':iconIndex.pNowLeft }">
+                    </div>
+
+                    <div class="sign-box" *ngIf="showType==3"   [ngStyle]="{'top':pNowTop,'left':pNowLeft }">
+                        <div class="ui-alarm">
+                            <div class="ui-tip-cnt">
+                                <div class="ui-title" title="">{{eqt_name}}</div>
+                                <div class="ui-label">
+                                    <p *ngFor="let m of imgDataList; " > 
+                                        <i class="ui-dot n pull-left badge-green"  [ngClass]="{'badge-red':m.count > 0 }"></i>
+                                        <span (click)="chartClick( itemName,m.rule_type_item_name,m.customized_type_index)">{{m.rule_type_item_name}}</span>
+                                        <span >{{m.count}}</span>
+                                    </p>
+                                </div>
+                            </div>
+                            <div class="ui-line">
+                                <div class="line" style="height:50px"></div>
+                                <i class="ui-dot"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div> 
+                <div  class="sign-box" *ngIf="showType==1" #signbox  [ngStyle]=" {'top':pNowTop,'left':pNowLeft }">
+                    <div class="ui-alarm"  *ngIf='counts != 0'>
+                        <div class="ui-tip-cnt" >
+                            <div class="ui-title" title="">{{eqt_name}}</div>
+                            <div class="ui-label">
+                                <p *ngFor="let m of imgDataList; " > 
+                                    <i class="ui-dot n pull-left badge-green"  [ngClass]="{'badge-red':m.count > 0 }"></i>
+                                    <span (click)="chartClick( itemName,m.rule_type_item_name,m.customized_type_index)">{{m.rule_type_item_name}}</span>
+                                    <span>{{m.count}}</span>
+                                </p>
+                            </div>
+                        </div>
+                        <div class="ui-line">
+                            <div class="line" style="height:50px"></div>
+                            <i class="ui-dot" ></i>
+                            <!-- <img *ngIf='equalsIcon!=1' src="./assets/images/stopIcon.png" style='width: 20px; height:20px;position: absolute;'  class="ui-stop"> -->
+                        </div>
+                    </div>
+                </div>
+                <div *ngFor='let iconIndex of eqtstuts'   >
+                    <img *ngIf='iconIndex.formula_value != 1 ' style="z-index: 111; width: 20px; height:20px; position: absolute;" src="./assets/images/stopIcon.png" [ngStyle]="  {'top':iconIndex.pNowTop,'left':iconIndex.pNowLeft }">
+                </div>
+
+                </div>
+            </div>
+            
+        </div>
+        <div nz-col nzSpan="6"  >
+            <div>
+             <div class="key-box">
+                <div class="key-tite">关键报警监控</div>
+                    <ul style="overflow-y: scroll;" [ngStyle]="  {'height':heightRight}">
+                        <li *ngFor="let m of alarmEqtListA; ">  
+                            <div class="li-left">
+                                <div class="li-left-title">{{m.rule_inst_name}}</div>
+                                <div class="li-left-date">{{m.occur_date}}</div>
+                            </div>
+                            <div class="li-right" *ngIf="m.status">
+                                    <div class="li-right-icon {{m.status}}"></div>
+                                    <div class="li-right-state">{{m.status  | status}}</div>
+                            </div>
+                        </li>
+                    </ul>
+             </div>
+             <div class="key-box" style="margin-bottom:0">
+                <div class="key-tite">关键指标监控</div>
+                    <ul style="overflow-y: scroll;" [ngStyle]="  {'height':heightRight}">
+                        <li *ngFor="let d of alarmEqtListB; ">
+                            <div class="li-left">
+                                <div class="li-left-title">{{d.rule_inst_name}}</div>
+                                <div class="li-left-date">{{d.occur_date}}</div>
+                            </div>
+                            <div class="li-right li-right-color" *ngIf="d.formula_value" >{{d.formula_value | number:'1.2-2'}}</div>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+    <three-d-table [id]="id"></three-d-table>
+</div>
+ 

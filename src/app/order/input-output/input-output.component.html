@@ -1,0 +1,15 @@
+
+<nz-spin nzTip="Loading..."  style="text-align: center;" [nzSpinning]="loading">
+    <div class="page-box">
+        <button *ngIf="optionNum>1 && this.search.plantCode && this.search.shopOrderTypeId" class="page-previous" (click)="pagePrevious()"><i nz-icon type="left"
+                theme="outline"></i>上一页</button>
+        <button (click)="pageNext()"*ngIf="this.search.plantCode && this.search.shopOrderTypeId && pages!=optionNum"  class="page-next">下一页<i nz-icon type="right" theme="outline"></i></button>
+        <label nz-checkbox [(ngModel)]="isQuantity">查看浸出物</label>
+    </div>
+    <input-detail [search]="search" [optionNum]="optionNum"   [activeGi]="activeGi" [isQuantity]="isQuantity" [selectList]="giList"
+        (changeGi)="searchData(true)" #inputDetail></input-detail>
+    <output-detail [search]="search" [isQuantity]="isQuantity" [activeGr]="activeGr"[isGowhere]="isGowhere" (checkEmitter)="onCheckedChange($event)" [selectList]='grList' (changeGr)="searchData(true)"
+        #outputDetail></output-detail>
+
+</nz-spin>
+

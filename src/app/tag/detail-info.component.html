@@ -1,0 +1,15 @@
+<div style="background:url('/assets/images/bg.png'); padding-top: 16px; height: calc(100vh - 164px);">
+    <nz-radio-group [(ngModel)]="trendSize" style="margin-top:-10px; margin-bottom: 10px">
+        <label (click)="checkChange()" nz-radio-button nzValue="bj">报警</label>
+        <label (click)="checkChange()"nz-radio-button nzValue="jk">指标</label>
+    </nz-radio-group>
+    <div nz-row>
+        <div nz-col nzSpan="24" class="padding" *ngIf="trendSize=='bj'">
+            <detail-top-table [id]="id" [eqt_name]="eqt_name"></detail-top-table>
+        </div>
+        <div nz-col nzSpan="24" class="padding" *ngIf="trendSize=='jk'" >
+            <detail-bottom-table [id]="id" [eqt_name]="eqt_name"></detail-bottom-table>
+        </div>
+    </div>
+</div>
+ 

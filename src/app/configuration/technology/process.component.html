@@ -1,0 +1,302 @@
+<form nz-form class="ant-advanced-search-form">
+    <div nz-row [nzGutter]="24">
+        <div nz-col [nzSpan]="8">
+            <nz-form-item nzFlex>
+                <label>工艺编号:</label>
+                <input nz-input placeholder="请输入工艺编号" name="search.router_id" nzSize="default" [(ngModel)]="search.router_id">
+            </nz-form-item>
+        </div>
+        <div nz-col [nzSpan]="8">
+            <nz-form-item nzFlex>
+                <label>步骤代码</label>
+                <input nz-input placeholder="请输入步骤代码" name="search.step_code" nzSize="default" [(ngModel)]="search.step_code">
+            </nz-form-item>
+        </div>
+        <div nz-col [nzSpan]="8">
+            <nz-form-item nzFlex>
+                <label>工序描述:</label>
+                <input nz-input placeholder="请输入工序描述" name="search.operation_description" nzSize="default" [(ngModel)]="search.operation_description">
+            </nz-form-item>
+        </div>
+    </div>
+    <div nz-row>
+        <div nz-col [nzSpan]="24" style="text-align: center;">
+            <button nz-button [nzType]="'primary'" (click)="searchSubmit()">搜索</button>
+            <button nz-button (click)="resetForm()">清空</button>
+        </div>
+    </div>
+</form>
+<div class="base-table">
+    <div class="table-operations">
+        <button nz-button [nzType]="'primary'" (click)="showAdd()">新增</button>
+        <button nz-button [nzType]="'primary'" (click)="isImport=true">导入</button>
+        <button nz-button [nzType]="'primary'" nz-popover nzTitle="导出类型"  nzPlacement="bottomRight">导出</button>
+    </div>
+    <nz-table   
+        #ajaxTable
+            nzShowSizeChanger
+            [nzFrontPagination]="false"
+            [nzData]="dataSet"
+            [nzLoading]="loading"
+            [nzTotal]="total"
+            [(nzPageIndex)]="pageIndex"
+            [(nzPageSize)]="pageSize"
+            (nzPageIndexChange)="getList()"
+            (nzPageSizeChange)="getList(true)">
+        <thead>
+            <tr>
+                <th style="width: 80px;">步骤编号</th>
+                <th style="width: 80px;">工艺编号</th>
+                <th style="width: 80px;">工艺描述</th>
+                <th style="width: 80px;">步骤代码 </th>
+                <th style="width: 80px;">工序描述</th>
+                <th>描述 </th>
+                <th style="width: 80px;">基本数量 </th>
+                <th style="width: 80px;">数量单位</th>
+                <th style="width: 80px;">步骤时间 </th>
+                <th style="width: 80px;">时间单位 </th>
+                <th style="width: 80px;">创建时间 </th>
+                <th style="width: 80px;">更新时间 </th>
+                <th>更新人</th>
+                <th style="width: 160px;">操作</th>
+            </tr>
+        </thead>
+        <tbody>
+     
+  <tr *ngFor="let data of ajaxTable.data">
+                <td>{{data.id}}</td>
+                <td>{{data.routerId}}</td>
+                <td>{{data.routerCode}}</td>
+                <td>{{data.stepCode}}</td>
+                <td>{{data.operationId}}</td>
+                <td>{{data.description}}</td>
+                <td>{{data.basicQuantity}}</td>
+                <td>{{data.quantityUnitId}}</td>
+                <td>{{data.timeInProcess}}</td>
+                <td>{{data.timeUnitId}}</td>
+                <td>{{data.creationDate}}</td>
+                <td>{{data.lastUpdate}}</td>
+                <td>{{data.account_name}}</td>
+                <td>
+                    <button nz-button [nzType]="'primary'" (click)="showUpdate(data)">修改</button>
+                    <button nz-button [nzType]="'primary'" (click)="delete(data.id)">删除</button>
+                </td>
+            </tr>
+        </tbody>
+    </nz-table>
+</div>
+    
+<nz-modal [(nzVisible)]="isAdd" nzTitle="新增工艺步骤" (nzOnCancel)="hideAdd()" (nzOnOk)="addSubmit()">
+    <form nz-form class="ant-advanced-search-form">
+        <div nz-row [nzGutter]="24">
+            <div nz-col [nzSpan]="24">
+                <nz-form-item nzFlex>
+                    <label>工艺编号:</label>
+                    <nz-select  name="add.routerId" (click)='choosegyNo()' style="width: 100%;" nzPlaceHolder="请选择工艺编号" [(ngModel)]="add.routerId">
+                        <nz-option  *ngFor="let option of gyNo" [nzLabel]="option.routerCode" [nzValue]="option.id"> </nz-option>
+                    </nz-select>
+                </nz-form-item>
+            </div>
+            <div nz-col [nzSpan]="24">
+                <nz-form-item nzFlex>
+                    <label>步骤代码:</label>
+                    <input nz-input placeholder="请输入步骤代码" maxlength="10" name="add.stepCode" nzSize="default" [(ngModel)]="add.stepCode">
+                </nz-form-item>
+            </div>
+            <div nz-col [nzSpan]="24">
+                <nz-form-item nzFlex>
+                    <label>工序描述:</label>
+                    <nz-select  name="add.operationId" (click)='choosegybh()' style="width: 100%;" nzPlaceHolder="请选择工序描述" [(ngModel)]="add.operationId">
+                        <nz-option  *ngFor="let option of gybh" [nzLabel]="option.description" [nzValue]="option.id"> </nz-option>
+                    </nz-select>
+                </nz-form-item>
+            </div>
+            <div nz-col [nzSpan]="24">
+                <nz-form-item nzFlex>
+                    <label>描述:</label>
+                    <input nz-input placeholder="描述" maxlength="10" name="add.description" nzSize="default" [(ngModel)]="add.description">
+                </nz-form-item>
+            </div>
+            <div nz-col [nzSpan]="24">
+                <nz-form-item nzFlex>
+                    <label>基本数量:</label>
+                    <input nz-input placeholder="10000" maxlength="10" name="add.basicQuantity" nzSize="default" [(ngModel)]="add.basicQuantity">
+                </nz-form-item>
+            </div>
+            <div nz-col [nzSpan]="24">
+                <nz-form-item nzFlex>
+                    <label>数量单位:</label>
+                    <nz-select  name="add.quantityUnitId" (click)='choosedanwei()' style="width: 100%;" nzPlaceHolder="请选择数量单位" [(ngModel)]="add.quantityUnitId">
+                        <nz-option  *ngFor="let option of danwei" [nzLabel]="option.unit_symbol" [nzValue]="option.unit_id"> </nz-option>
+                    </nz-select>
+                </nz-form-item>
+            </div>
+            <div nz-col [nzSpan]="24">
+                <nz-form-item nzFlex>
+                    <label>步骤时间:</label>
+                    <nz-input-number style="width: 100%;" [(ngModel)]="add.timeInProcess" name="add.timeInProcess" [nzMin]="1" [nzMax]="1000000000000000000" [nzStep]="1"></nz-input-number>
+                </nz-form-item>
+            </div>
+            <div nz-col [nzSpan]="24">
+                <nz-form-item nzFlex>
+                    <label>时间单位:</label>
+                    <nz-select  name="add.timeUnitId" (click)='choosedanwei()' style="width: 100%;" nzPlaceHolder="请选择时间单位" [(ngModel)]="add.timeUnitId">
+                        <nz-option  *ngFor="let option of danwei" [nzLabel]="option.unit_code" [nzValue]="option.unit_id"> </nz-option>
+                    </nz-select>
+                </nz-form-item>
+            </div>
+        </div>  
+    </form>
+</nz-modal>
+<nz-modal [(nzVisible)]="isUpdate" nzTitle="更新工艺步骤" (nzOnCancel)="hideUpdate()" (nzOnOk)="updateSubmit()">
+    <form nz-form class="ant-advanced-search-form">
+        <div nz-row [nzGutter]="24">
+            <div nz-col [nzSpan]="24">
+                <nz-form-item nzFlex>
+                    <label>步骤编号:</label>
+                    <nz-select  name="update.id" (click)='choosegyNo()' style="width: 100%;" nzPlaceHolder="请选择步骤编号" [(ngModel)]="update.id">
+                        <nz-option  *ngFor="let option of gyNo" [nzLabel]="option.routerCode" [nzValue]="option.id"> </nz-option>
+                    </nz-select>
+                </nz-form-item>
+            </div>
+            <div nz-col [nzSpan]="24">
+                <nz-form-item nzFlex>
+                    <label>工艺编号:</label>
+                    <nz-select  name="update.routerId" (click)='choosegyNo()' style="width: 100%;" nzPlaceHolder="请选择工艺编号" [(ngModel)]="update.routerId">
+                        <nz-option  *ngFor="let option of gyNo" [nzLabel]="option.routerCode" [nzValue]="option.id"> </nz-option>
+                    </nz-select>
+                </nz-form-item>
+            </div>
+            <div nz-col [nzSpan]="24">
+                <nz-form-item nzFlex>
+                    <label>步骤代码:</label>
+                    <input nz-input placeholder="SC-01001" maxlength="10" name="update.stepCode" nzSize="default" [(ngModel)]="update.stepCode">
+                </nz-form-item>
+            </div>
+            <div nz-col [nzSpan]="24">
+                <nz-form-item nzFlex>
+                    <label>工序描述:</label>
+                    <nz-select  name="update.operationId" (click)='choosegybh()' style="width: 100%;" nzPlaceHolder="请选择工序描述" [(ngModel)]="update.operationId">
+                        <nz-option  *ngFor="let option of gybh" [nzLabel]="option.description" [nzValue]="option.id"> </nz-option>
+                    </nz-select>
+                </nz-form-item>
+            </div>
+            <div nz-col [nzSpan]="24">
+                <nz-form-item nzFlex>
+                    <label>描述:</label>
+                    <input nz-input maxlength="10" name="update.description" nzSize="default" [(ngModel)]="update.description">
+                </nz-form-item>
+            </div>
+            <div nz-col [nzSpan]="24">
+                <nz-form-item nzFlex>
+                    <label>基本数量:</label>
+                    <input nz-input placeholder="10000" maxlength="10" name="update.basicQuantity" nzSize="default" [(ngModel)]="update.basicQuantity">
+                </nz-form-item>
+            </div>
+            <div nz-col [nzSpan]="24">
+                <nz-form-item nzFlex>
+                    <label>数量单位:</label>
+                    <nz-select  name="update.quantityUnitId" (click)='choosedanwei()' style="width: 100%;" nzPlaceHolder="请选择数量单位" [(ngModel)]="update.quantityUnitId">
+                        <nz-option  *ngFor="let option of danwei" [nzLabel]="option.unit_symbol" [nzValue]="option.unit_id"> </nz-option>
+                    </nz-select>
+                </nz-form-item>
+            </div>
+            <div nz-col [nzSpan]="24">
+                <nz-form-item nzFlex>
+                    <label>步骤时间:</label>
+                    <nz-input-number style="width: 100%;" [(ngModel)]="update.timeInProcess" name="update.timeInProcess" [nzMin]="1" [nzMax]="100000000000" [nzStep]="1"></nz-input-number>
+                </nz-form-item>
+            </div>
+            <div nz-col [nzSpan]="24">
+                <nz-form-item nzFlex>
+                    <label>时间单位:</label>
+                    <nz-select  name="update.timeUnitId" (click)='choosedanwei()' style="width: 100%;" nzPlaceHolder="请选择时间单位" [(ngModel)]="update.timeUnitId">
+                        <nz-option  *ngFor="let option of danwei" [nzLabel]="option.unit_code" [nzValue]="option.unit_id"> </nz-option>
+                    </nz-select>
+                </nz-form-item>
+            </div>
+        </div>  
+    </form>
+</nz-modal>
+    
+
+<!-- <nz-modal class="fun" [(nzVisible)]="isAddBrand" [nzMaskClosable]="false"  nzKeyboard="false"  nzWidth="800"   nzTitle="选择品牌" (nzOnCancel)="hideAddBrandModule()" >
+    <mode-brand   (change)="brandChange($event)"></mode-brand>
+</nz-modal> -->
+
+
+<!-- <nz-modal [nzVisible]="isImport"   [nzFooter]="funTemplate" (nzOnCancel)="isImport=false">
+    <form nz-form   class="login-form"    >
+        <div nz-row [nzGutter]="24">
+            <nz-form-item nzFlex  >
+                <div nz-col [nzSpan]="24">
+                        <nz-upload *ngIf="isImport"
+                        [(nzFileList)]="fileList"
+                        [nzBeforeUpload]="beforeUpload"> 
+                        <button nz-button>
+                        <i nz-icon type="upload"></i><span>导入文件</span>
+                        </button>
+                    </nz-upload>
+                </div>
+            </nz-form-item>
+            <div nz-col [nzSpan]="12">
+                <nz-form-item nzFlex  >
+                    <label class="lab-name">导入前清空目标数据:</label>
+                    <nz-switch name="import.is_empty" [(ngModel)]="import.is_empty" ></nz-switch>
+                </nz-form-item>
+            </div>
+            <div nz-col [nzSpan]="12">
+                <nz-form-item nzFlex  >
+                    <label  class="lab-name">导入时不更新语言包:</label>
+                    <nz-switch name="import.is_no_lang" (ngModelChange)="changeLang(false)" [(ngModel)]="import.is_no_lang"></nz-switch>
+                </nz-form-item>
+            </div>
+            <div nz-col [nzSpan]="12">
+                <nz-form-item nzFlex  >
+                    <label  class="lab-name">导入全部数据:</label>
+                    <nz-switch name="import.is_all" (ngModelChange)="changeLang(false)" [(ngModel)]="import.is_all"></nz-switch>
+                </nz-form-item>
+            </div>
+            <div nz-col [nzSpan]="12">
+                <nz-form-item nzFlex  >
+                    <label  class="lab-name">导入多语言数据:</label>
+                    <nz-switch name="import.is_lang"  (ngModelChange)="changeLang(true)" [(ngModel)]="import.is_lang"></nz-switch>
+                </nz-form-item>
+            </div> -->
+            <!-- <div nz-col [nzSpan]="24" *ngIf="import.is_lang==true">
+                <nz-form-item nzFlex>
+                    <label>语言:</label>
+                    <nz-select     name="import.lang_id"  style="width: 100%;" nzPlaceHolder="请选择语言" [(ngModel)]="import.lang_id">
+                        <nz-option *ngFor="let option of listLangOption" [nzLabel]="option.label" [nzValue]="option.value">
+                        </nz-option>
+                    </nz-select>
+                </nz-form-item>
+            </div>
+            <div nz-col [nzSpan]="24" *ngIf="import.is_lang==false">
+                <nz-form-item nzFlex>
+                    <label>语言:</label>
+                    <nz-select   disabled="disabled"   name="import.lang_id"  style="width: 100%;" nzPlaceHolder="请选择语言" [(ngModel)]="import.lang_id">
+                        <nz-option *ngFor="let option of listLangOption" [nzLabel]="option.label" [nzValue]="option.value">
+                        </nz-option>
+                    </nz-select>
+                </nz-form-item>
+            </div> -->
+        <!-- </div>
+    </form>
+</nz-modal> -->
+
+<!-- <ng-template #contentTemplate>
+    <div>
+        <p><a href="/assets/excel/matl.xls">导出模板</a></p>
+        <p><a href="{{export}}?type=1">导出样例模板</a></p>
+        <p><a href="{{export}}?type=2">导出全部数据</a></p>
+        <p><a href="{{export}}?type=3">导出语言配置表</a></p>
+    </div>
+</ng-template>
+
+<ng-template #funTemplate>
+    <button nz-button (click)="isImport=false">取消</button>
+    <button nz-button [nzType]="'primary'" [nzLoading]="uploading" (click)="handleUpload()" [disabled]="fileList.length == 0" style="margin-top: 16px">
+        {{ uploading ? 'Uploading' : '确定' }}
+    </button>
+</ng-template> -->

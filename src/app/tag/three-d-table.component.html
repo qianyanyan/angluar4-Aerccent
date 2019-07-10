@@ -1,0 +1,21 @@
+<div class="table-title max-dropdown " style="margin-top:10px">运行状态监控</div>
+<nz-table class="table-border" #filterTable [nzData]="displayData" [nzLoading]="loading" [nzFrontPagination]="false"
+    [nzScroll]="{ y: height }" [nzShowPagination]="false">
+    <thead>
+        <tr>
+            <th nzWidth="4%">序号</th>
+            <th nzWidth="13%">资源</th>
+            <th nzWidth="10%">状态</th>
+            <th nzWidth="10%">原因</th>
+        </tr>
+    </thead>
+    <tbody>
+            <!-- <tr *ngFor="let data of filterTable.data;   let i = index" (mouseover)="gotoCover(i)"> -->
+        <tr *ngFor="let data of filterTable.data;   let i = index">
+            <td>{{i+1}}</td>
+            <td>{{data.eqt_name}}</td>
+            <td>{{data.formula_value  | runStatus}}</td>
+            <td>{{data.output_value1}}</td>
+        </tr>
+    </tbody>
+</nz-table>

@@ -1,0 +1,261 @@
+<nz-sider class='list-nav' [ngClass]="{'active':isSider }"
+  style=" height: 480px;box-shadow: 3px 3px 3px rgba(51,101,196,.6);background-color: #3365c4;border-top-right-radius: 5px;border-bottom-right-radius: 5px;">
+  <div class="side-box" (click)="showSlider()">
+    <div class="side-icon"></div>
+  </div>
+  <ng-template #renderTpl let-labels="labels">
+    <ng-container>
+      <span>{{labels[labels.length-1]}}</span>
+    </ng-container>
+  </ng-template>
+  <ul class="meAll-ul" nz-menu [nzMode]="'inline'">
+    <li nz-menu-item>
+      <span>
+        <i nz-icon>组织架构</i>
+        <nz-cascader class="CitySelect"  [nzOptions]="nzOptions"
+          [(ngModel)]="abc" [nzShowArrow]='false' [nzAllowClear]='false' [nzValueProperty]="'id'"
+          [nzLabelProperty]="'shortName'" [nzLabelRender]="renderTpl" [nzChangeOnSelect]='false'
+          (ngModelChange)="zzjgOnChanges($event)">
+        </nz-cascader>
+        <i nz-icon type="down"
+          style="color:#d5c4be;position: absolute;right:-10px;top: 50%;transform: translateY(-50%);"></i>
+      </span>
+    </li>
+    <li nz-menu-item>
+      <span>
+        <i nz-icon>细分区域</i>
+        <nz-cascader class="CitySelect"  [nzExpandTrigger]="'hover'"
+          [nzLabelRender]="renderTpl" [nzValueProperty]="'id'" [nzLabelProperty]="'shortName'" [nzOptions]="nzOptions2"
+          [(ngModel)]="abc2" [nzShowArrow]='false' [nzAllowClear]='false' [nzChangeOnSelect]='true'
+          (ngModelChange)="xfqyOnChanges2($event)">
+        </nz-cascader>
+        <i nz-icon type="down"
+          style="color:#d5c4be;position: absolute;right:-10px;top: 50%;transform: translateY(-50%);"></i>
+      </span>
+    </li>
+
+    <li nz-menu-item>
+      <span>
+        <i style="text-align: left;" nz-icon>开始时间</i>
+        <nz-date-picker style="width: 115px;color:#f2f2f2 ;" [nzDisabledDate]="disabledStartDate1"
+          nzFormat="{{dateFormat}}" [(ngModel)]="startValue" nzPlaceHolder="{{Start}}" [nzShowToday]="false"
+          (nzOnOpenChange)="handleStartOpenChange($event)">
+        </nz-date-picker>
+      </span>
+    </li>
+    <li nz-menu-item>
+      <span>
+        <i style="text-align: left;" nz-icon>结束时间</i>
+        <nz-date-picker style="width: 115px;color:#f2f2f2 ;" [nzDisabledDate]="disabledEndDate1"
+          nzFormat="{{dateFormat}}" [nzShowToday]="false" [(ngModel)]="endValue" nzPlaceHolder="{{End}}"
+          (nzOnOpenChange)="handleEndOpenChange($event)">
+        </nz-date-picker>
+      </span>
+    </li>
+    <!-- <li nz-menu-item>
+      <span>
+        <i style="text-align: left;" nz-icon>班次</i>
+        <nz-dropdown>
+          <button style="width: 115px;height: 30px;padding: 0 8px;color: #4e93f6;" nz-button
+            nz-dropdown><span>ALL</span>
+            <i nz-icon type="down" style="color: #4e93f6;"></i></button>
+          <ul nz-menu style="overflow: hidden;padding-left: 5px;box-sizing: border-box;">
+     
+          </ul>
+        </nz-dropdown>
+      </span>
+    </li> -->
+    <!-- <li nz-menu-item>
+      <span>
+        <i style="text-align: left;" nz-icon>订单</i>
+        <nz-dropdown>
+          <button style="width: 115px;height: 30px;padding: 0 8px;color: #4e93f6;" nz-button nz-dropdown><span>ALL</span>
+            <i nz-icon type="down" style="color: #4e93f6;"></i></button>
+          <ul nz-menu style="overflow: hidden;padding-left: 5px;box-sizing: border-box;">
+          </ul>
+        </nz-dropdown>
+      </span>
+    </li> -->
+
+  </ul>
+  <div class="XZDB" (click)="xzdb()">
+    选择对比
+    <div id=""> > </div>
+  </div>
+  <div class="QorS">
+    <div class="qx" (click)='qx()'>
+      取消
+    </div>
+    <div class="qd" (click)="qd()">
+      确定
+    </div>
+  </div>
+</nz-sider>
+<nz-sider *ngIf="isSliderShow" class="slideSecond"
+  style="overflow: auto; height: 480px;box-shadow: 3px 3px 3px rgba(51,101,196,.6);background:rgba(51,101,196,.8);border-top-right-radius: 5px;border-bottom-right-radius: 5px;position: absolute;top: 110px;z-index: 999;">
+  <ul class="meAll-ul" nz-menu [nzMode]="'inline'">
+    <li nz-menu-item>
+      <span>
+        <i nz-icon>组织架构</i>
+        <nz-cascader class="CitySelect"  [nzExpandTrigger]="'click'"
+          [nzLabelRender]="renderTpl" [nzValueProperty]="'id'" [nzLabelProperty]="'shortName'" [nzOptions]="nzOptions1"
+          [(ngModel)]="abc1" [nzShowArrow]='false' [nzAllowClear]='false' [nzChangeOnSelect]='false'
+          (ngModelChange)="zzjgOnChanges1($event)">
+        </nz-cascader>
+        <i nz-icon type="down"
+          style="color:#d5c4be;position: absolute;right:-10px;top: 50%;transform: translateY(-50%);"></i>
+      </span>
+    </li>
+    <li nz-menu-item>
+      <span>
+        <i nz-icon>细分区域</i>
+        <nz-cascader class="CitySelect"  [nzExpandTrigger]="'hover'"
+          [nzLabelRender]="renderTpl" [nzValueProperty]="'id'" [nzLabelProperty]="'shortName'" [nzOptions]="nzOptions3"
+          [(ngModel)]="abc3" [nzShowArrow]='false' [nzAllowClear]='false' [nzChangeOnSelect]='true'
+          (ngModelChange)="xfqyOnChanges3($event)">
+        </nz-cascader>
+        <i nz-icon type="down"
+          style="color:#d5c4be;position: absolute;right:-10px;top: 50%;transform: translateY(-50%);"></i>
+      </span>
+    </li>
+
+    <li nz-menu-item>
+      <span>
+        <i style="text-align: left;color:#fff ;" nz-icon>开始时间</i>
+        <nz-date-picker style="width: 115px;color:#f2f2f2 ;" [nzDisabledDate]="disabledStartDate1"
+          nzFormat="{{dateFormat}}" [(ngModel)]="startValue1" nzPlaceHolder="{{Start1}}" [nzShowToday]="false"
+          (nzOnOpenChange)="handleStartOpenChange1($event)">
+        </nz-date-picker>
+      </span>
+    </li>
+
+    <li nz-menu-item>
+      <span>
+        <i style="text-align: left;color:#fff ;" nz-icon>结束时间</i>
+        <nz-date-picker style="width: 115px;color:#4e93f6 ;" [nzDisabledDate]="disabledEndDate1"
+          nzFormat="{{dateFormat}}" [nzShowToday]="false" [(ngModel)]="endValue1" nzPlaceHolder="{{End1}}"
+          (nzOnOpenChange)="handleEndOpenChange1($event)">
+        </nz-date-picker>
+      </span>
+    </li>
+    <!-- <li nz-menu-item>
+      <span>
+        <i style="text-align: left;color:#fff ;" nz-icon>班次</i>
+        <nz-dropdown>
+          <button style="width: 115px;height: 30px;padding: 0 8px;color: #c5c5c5;" nz-button
+            nz-dropdown><span>ALL</span>
+            <i nz-icon type="down" style="color: #c5c5c5;"></i></button>
+          <ul nz-menu style="overflow: hidden;padding-left: 5px;box-sizing: border-box;">
+  
+          </ul>
+        </nz-dropdown>
+      </span>
+    </li> -->
+    <!-- <li nz-menu-item>
+      <span>
+        <i style="text-align: left;color:#fff ;" nz-icon>订单</i>
+        <nz-dropdown>
+          <button style="width: 115px;height: 30px;padding: 0 8px;color: #c5c5c5;" nz-button nz-dropdown><span>ALL</span>
+            <i nz-icon type="down" style="color: #c5c5c5;"></i></button>
+          <ul nz-menu style="overflow: hidden;padding-left: 5px;box-sizing: border-box;">
+          </ul>
+        </nz-dropdown>
+      </span>
+    </li> -->
+
+  </ul>
+  <!--<div class="XZDB" (click)="xzdb()">
+			选择对比
+			<div id=""> > </div>
+		</div>-->
+  <div class="QorS">
+    <div class="qx" (click)="qx1()">
+      取消
+    </div>
+    <div class="qd" (click)="qd1()">
+      确定
+    </div>
+  </div>
+</nz-sider>
+<nz-layout style="margin-top: 15px;position: relative;">
+  <div style="position: relative;box-sizing: border-box;width: 100%;overflow: hidden;display: flex">
+    <!--<nz-header style="padding:0;background: none;text-align: center;position:relative;height: 45px;line-height: 45px;">
+			<button nz-button nzType="primary" style="height: 40px;width: 40%;border-radius: 22px;background-color: #2d5fba;" nzBlock>浸出物损失率报表-工序层级</button>
+			<img class="downImg" style="position: absolute;right: 20px;bottom: -5px;width: 30px;" src="../../assets/images/downPic.png" alt="" />
+		</nz-header>-->
+    <nz-content class="firstContent">
+      <div class="title">
+        {{zzjg}}<span *ngIf="zfqy!=''">/</span>{{zfqy}}
+      </div>
+      <div class="calculate">
+        <div class="item">
+          <div>{{TlossRatio}}</div>
+          <span>糖分损失率(%)</span>
+          <!-- <div>{{TlossRatio}}</div> -->
+        </div>
+        <span style="width: 5%;">=</span>
+        <div class="item">
+          <!-- <div>{{TlossSum}}</div> -->
+          <div>{{TlossSum}}</div>
+          <span>糖分损失(kg)</span>
+        </div>
+        <span style="width: 5%;">÷</span>
+        <div class="item">
+          <!-- <div>{{TinputExtractSum}}</div> -->
+          <div>{{TinputExtractSum}}</div>
+          <span>糖分投入(kg)</span>
+        </div>
+        <span style="width: 5%;">x</span>
+        <span style="width: 10%;">100%</span>
+      </div>
+    </nz-content>
+    <nz-content *ngIf="isShow" class="firstContent">
+      <div class="title">
+        {{zzjg1}}<span *ngIf="zfqy2!=''">/</span>{{zfqy2}}
+      </div>
+      <div class="calculate">
+        <div class="item">
+          <div>{{TlossRatio1}}</div>
+          <span>
+            糖分损失率(%)
+          </span>
+        </div>
+        <span style="width: 5%;">=</span>
+        <div class="item">
+          <div>{{TlossSum1}}</div>
+          <span>糖分损失 (kg)</span>
+        </div>
+        <span style="width: 5%;">÷</span>
+        <div class="item">
+          <div>{{TinputExtractSum1}}</div>
+          <span>糖分投入(kg)</span>
+        </div>
+        <span style="width: 5%;">x</span>
+        <span style="width: 10%;">100%</span>
+      </div>
+    </nz-content>
+  </div>
+
+  <nz-footer class="footer1" style="padding: 14px 16px 0;position: relative;display: block;">
+      <div class="fun-back" style="color:#333; top:27px;" (click)="back()">返回</div>
+    <a (click)="DownLoadExcel()" class="DownloadExcel" href="javascript:;"
+     ><img src="../../assets/images/downPic.png" alt="" /></a>
+    <nz-tabset style="border-radius: 6px;background-color: #fff;overflow:hidden;">
+      <nz-tab nzTitle="订单" (nzSelect)="tabsNum(1)" style="position: relative;">
+        <tab-form #bigBtn1 (checkedOne)="checkedBackOne($event)"   [queryParam1]='queryParam1' [plantId]='plantId' [eqtId]='XFQYId'
+          [startDate]='startDate' [endDate]='endDate' [XFQYId1]='XFQYId1'
+          [startDate1]='startDate1' [endDate1]='endDate1'></tab-form>
+      </nz-tab>
+      <nz-tab nzTitle="工序" (nzSelect)="tabsNum(2)">
+        <tab-procedure  #bigBtn2 (checkedTwo)="checkedBackTwo($event)" [queryParam1]='queryParam1' [plantId]='plantId'
+          [eqtId]='XFQYId' [startDate]='startDate' [endDate]='endDate' [XFQYId1]='XFQYId1'
+          [startDate1]='startDate1' [endDate1]='endDate1'></tab-procedure>
+      </nz-tab>
+      <nz-tab  nzTitle="工艺参数" (nzSelect)="tabsNum(3)">
+        <tab-gy  #bigBtn3 (checkedThree)="checkedBackThree($event)" [plantId]='plantId' [queryParam1]='queryParam1'
+          [eqtId]='XFQYId' [startDate]='startDate' [endDate]='endDate' [XFQYId1]='XFQYId1'
+          [startDate1]='startDate1' [endDate1]='endDate1'></tab-gy>
+      </nz-tab>
+    </nz-tabset>
+  </nz-footer>
+</nz-layout>

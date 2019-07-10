@@ -1,0 +1,279 @@
+<form nz-form class="ant-advanced-search-form">
+    <div nz-row [nzGutter]="24">
+        <div nz-col [nzSpan]="12">
+            <nz-form-item nzFlex>
+                <label>物料描述:</label>
+                <input nz-input placeholder="请输入物料描述" name="search.matl_description" nzSize="default" [(ngModel)]="search.matl_description">
+            </nz-form-item>
+        </div>
+        <div nz-col [nzSpan]="12">
+            <nz-form-item nzFlex>
+                <label>工厂代码</label>
+                <nz-select  name="search.plant_code" (click)='choosegongchang()' style="width: 100%;" nzPlaceHolder="请选择工厂代码" [(ngModel)]="search.plant_code">
+                    <nz-option  *ngFor="let option of gongyi" [nzLabel]="option.keyvalue" [nzValue]="option.label">
+                    </nz-option>
+                </nz-select>
+            </nz-form-item>
+        </div>
+    </div>
+    <div nz-row>
+        <div nz-col [nzSpan]="24" style="text-align: center;">
+            <button nz-button [nzType]="'primary'" (click)="searchSubmit()">搜索</button>
+            <button nz-button (click)="resetForm()">清空</button>
+        </div>
+    </div>
+  </form>
+  <div class="base-table">
+    <div class="table-operations">
+        <button nz-button [nzType]="'primary'" (click)="showAdd()">新增</button>
+        <button nz-button [nzType]="'primary'" (click)="isImport=true">导入</button> 
+        <button nz-button [nzType]="'primary'" nz-popover nzTitle="导出类型"  nzPlacement="bottomRight">导出</button>
+    </div>
+    <nz-table   
+        #ajaxTable
+            nzShowSizeChanger
+            [nzFrontPagination]="false"
+            [nzData]="dataSet"
+            [nzLoading]="loading"
+            [nzTotal]="total"
+            [(nzPageIndex)]="pageIndex"
+            [(nzPageSize)]="pageSize"
+            (nzPageIndexChange)="getList()"
+            (nzPageSizeChange)="getList(true)">
+        <thead>
+            <tr>
+                <th>物料号</th>
+                <th>物料描述</th>
+                <th>工厂代码</th>
+                <th>默认单位数量</th>
+                <th>默认单位</th>
+                <th>转化单位数量</th>
+                <th>转化单位</th>
+                <th>创建时间</th>
+                <th>更新时间</th>
+                <th>更新人</th>
+                <th style="width:160px">操作</th>
+            </tr>
+        </thead>
+        <tbody>
+
+            <tr *ngFor="let data of ajaxTable.data">
+                <td>{{data.matl_id}}</td>
+                <td>{{data.matl_name}}</td>
+                <td>{{data.plant_code}}</td>
+                <td>{{data.base_unit_quantity}}</td>
+                <td>{{data.default_unit_symbol}}</td>
+                <td>{{data.convert_unit_quantity}}</td>
+                <td>{{data.convert_unit_symbol}}</td>
+                <td>{{data.creation_date}}</td>
+                <td>{{data.last_update}}</td>
+                <td>{{data.account_name}}</td>
+                <td style="width:160px">
+                    <button nz-button [nzType]="'primary'" (click)="showUpdate(data)">修改</button>
+                    <button nz-button [nzType]="'primary'" (click)="delete(data.id)">删除</button>
+                </td>
+              
+            </tr>
+        </tbody>
+    </nz-table>
+  </div>
+    
+  <nz-modal [(nzVisible)]="isAdd" nzTitle="新增单位换算" (nzOnCancel)="hideAdd()" (nzOnOk)="addSubmit()">
+    <form nz-form class="ant-advanced-search-form">
+        <div nz-row [nzGutter]="24">
+                <!-- 物料号	物料描述 工厂代码 默认单位数量 默认单位	转化单位数量 单位id	转化单位 -->
+                <!-- matl_id matl_name plant_code base_unit_quantity unit_id convert_unit_quantity convert_unit_id -->
+            <div nz-col [nzSpan]="24">
+                <nz-form-item nzFlex>
+                    <label>物料号:</label>
+                    <input nz-input placeholder="请输入物料号" (click)='showAddBrandModule()'  maxlength="50" name="add.matl_id" nzSize="default" [(ngModel)]="add.matl_id">
+                 </nz-form-item>
+            </div>
+            <div nz-col [nzSpan]="24">
+                <nz-form-item nzFlex>
+                    <label>物料描述:</label>
+                    <input nz-input placeholder="请输入物料描述"  maxlength="50" name="add.matl_name" nzSize="default" [(ngModel)]="add.matl_name " readonly>
+                </nz-form-item>
+            </div>
+            <div nz-col [nzSpan]="24">
+                <nz-form-item nzFlex>
+                    <label>工厂代码:</label>
+                    <nz-select  name="add.plant_code" (click)='choosegongchang()' style="width: 100%;" nzPlaceHolder="请选择资源类型" [(ngModel)]="add.plant_code">
+                        <nz-option  *ngFor="let option of gongyi" [nzLabel]="option.keyvalue" [nzValue]="option.label">
+                        </nz-option>
+                    </nz-select>
+                </nz-form-item>
+            </div>
+            <div nz-col [nzSpan]="24">
+                <nz-form-item nzFlex>
+                    <label>默认单位数量:</label>
+                    <input nz-input placeholder="默认单位数量" maxlength="10" name="add.base_unit_quantity" nzSize="default" [(ngModel)]="add.base_unit_quantity ">
+                </nz-form-item>
+            </div>
+            <div nz-col [nzSpan]="24">
+                <nz-form-item nzFlex>
+                    <label>默认单位:</label>
+                    <input nz-input placeholder="默认单位" maxlength="10" name="add.unit_id" nzSize="default" [(ngModel)]="add.unit_id">
+                </nz-form-item>
+            </div>
+            <div nz-col [nzSpan]="24">
+                <nz-form-item nzFlex>
+                    <label>转化单位数量:</label>
+                    <input nz-input placeholder="转化单位数量" maxlength="10" name="add.convert_unit_quantity" nzSize="default" [(ngModel)]="add.convert_unit_quantity">
+                </nz-form-item>
+            </div>
+            <div nz-col [nzSpan]="24">
+                <nz-form-item nzFlex>
+                    <label>单位id:</label>
+                    <nz-select  name="add.convert_unit_id" (click)='choosedanw()' style="width: 100%;" nzPlaceHolder="请选择单位id" [(ngModel)]="add.convert_unit_id">
+                        <nz-option  *ngFor="let option of danwei" [nzLabel]="option.unit_symbol" [nzValue]="option.unit_id">
+                        </nz-option>
+                    </nz-select>
+                </nz-form-item>
+            </div>
+        </div>  
+    </form>
+  </nz-modal>
+  
+  <nz-modal [(nzVisible)]="isUpdate" nzTitle="更新单位换算" (nzOnCancel)="hideUpdate()" (nzOnOk)="updateSubmit()">
+    <form nz-form class="ant-advanced-search-form">
+        <div nz-row [nzGutter]="24">
+                <div nz-col [nzSpan]="24">
+                    <nz-form-item nzFlex>
+                        <label>单位换算id:</label>
+                        <input nz-input placeholder="请输入单位换算id"  maxlength="50" name="update.id" nzSize="default" [(ngModel)]="update.id">
+                    </nz-form-item>
+                </div>
+                <div nz-col [nzSpan]="24">
+                    <nz-form-item nzFlex>
+                        <label>物料号:</label>
+                        <input nz-input placeholder="请输入物料号" (click)='showAddBrandModule()'  maxlength="50" name="update.matl_id" nzSize="default" [(ngModel)]="update.matl_id">
+                     </nz-form-item>
+                </div>
+                <div nz-col [nzSpan]="24">
+                    <nz-form-item nzFlex>
+                        <label>物料描述:</label>
+                        <input nz-input placeholder="请输入物料描述"  maxlength="50" name="update.matl_name" nzSize="default" [(ngModel)]="update.matl_name " readonly>
+                    </nz-form-item>
+                </div>
+                <div nz-col [nzSpan]="24">
+                    <nz-form-item nzFlex>
+                        <label>工厂代码:</label>
+                        <nz-select  name="update.plant_code" (click)='choosegongchang()' style="width: 100%;" nzPlaceHolder="请选择资源类型" [(ngModel)]="update.plant_code">
+                            <nz-option  *ngFor="let option of gongyi" [nzLabel]="option.keyvalue" [nzValue]="option.label">
+                            </nz-option>
+                        </nz-select>
+                    </nz-form-item>
+                </div>
+                <div nz-col [nzSpan]="24">
+                    <nz-form-item nzFlex>
+                        <label>默认单位数量:</label>
+                        <input nz-input placeholder="默认单位数量" maxlength="10" name="update.base_unit_quantity" nzSize="default" [(ngModel)]="update.base_unit_quantity ">
+                    </nz-form-item>
+                </div>
+                <div nz-col [nzSpan]="24">
+                    <nz-form-item nzFlex>
+                        <label>默认单位:</label>
+                        <input nz-input placeholder="默认单位" maxlength="10" name="update.unit_id" nzSize="default" [(ngModel)]="update.unit_id">
+                    </nz-form-item>
+                </div>
+                <div nz-col [nzSpan]="24">
+                    <nz-form-item nzFlex>
+                        <label>转化单位数量:</label>
+                        <input nz-input placeholder="转化单位数量" maxlength="10" name="update.convert_unit_quantity" nzSize="default" [(ngModel)]="update.convert_unit_quantity">
+                    </nz-form-item>
+                </div>
+                <div nz-col [nzSpan]="24">
+                    <nz-form-item nzFlex>
+                        <label>单位id:</label>
+                        <nz-select  name="update.convert_unit_id" (click)='choosedanw()' style="width: 100%;" nzPlaceHolder="请选择单位id" [(ngModel)]="update.convert_unit_id">
+                            <nz-option  *ngFor="let option of danwei" [nzLabel]="option.unit_symbol" [nzValue]="option.unit_id">
+                            </nz-option>
+                        </nz-select>
+                    </nz-form-item>
+                </div>
+        </div>  
+    </form>
+  </nz-modal>
+    
+  
+  <nz-modal class="fun" [(nzVisible)]="isAddBrand" [nzMaskClosable]="false"  nzKeyboard="false"  nzWidth="800"   nzTitle="选择物料" (nzOnCancel)="hideAddBrandModule()" >
+    <mode-matllist   (change)="brandChange($event)"></mode-matllist>
+  </nz-modal>
+  
+  
+  <!-- <nz-modal [nzVisible]="isImport"   [nzFooter]="funTemplate" (nzOnCancel)="isImport=false">
+    <form nz-form   class="login-form"    >
+        <div nz-row [nzGutter]="24">
+            <nz-form-item nzFlex  >
+                <div nz-col [nzSpan]="24">
+                        <nz-upload *ngIf="isImport"
+                        [(nzFileList)]="fileList"
+                        [nzBeforeUpload]="beforeUpload"> 
+                        <button nz-button>
+                        <i nz-icon type="upload"></i><span>导入文件</span>
+                        </button>
+                    </nz-upload>
+                </div>
+            </nz-form-item>
+            <div nz-col [nzSpan]="12">
+                <nz-form-item nzFlex  >
+                    <label class="lab-name">导入前清空目标数据:</label>
+                    <nz-switch name="import.is_empty" [(ngModel)]="import.is_empty" ></nz-switch>
+                </nz-form-item>
+            </div>
+            <div nz-col [nzSpan]="12">
+                <nz-form-item nzFlex  >
+                    <label  class="lab-name">导入时不更新语言包:</label>
+                    <nz-switch name="import.is_no_lang" (ngModelChange)="changeLang(false)" [(ngModel)]="import.is_no_lang"></nz-switch>
+                </nz-form-item>
+            </div>
+            <div nz-col [nzSpan]="12">
+                <nz-form-item nzFlex  >
+                    <label  class="lab-name">导入全部数据:</label>
+                    <nz-switch name="import.is_all" (ngModelChange)="changeLang(false)" [(ngModel)]="import.is_all"></nz-switch>
+                </nz-form-item>
+            </div>
+            <div nz-col [nzSpan]="12">
+                <nz-form-item nzFlex  >
+                    <label  class="lab-name">导入多语言数据:</label>
+                    <nz-switch name="import.is_lang"  (ngModelChange)="changeLang(true)" [(ngModel)]="import.is_lang"></nz-switch>
+                </nz-form-item>
+            </div> -->
+            <!-- <div nz-col [nzSpan]="24" *ngIf="import.is_lang==true">
+                <nz-form-item nzFlex>
+                    <label>语言:</label>
+                    <nz-select     name="import.lang_id"  style="width: 100%;" nzPlaceHolder="请选择语言" [(ngModel)]="import.lang_id">
+                        <nz-option *ngFor="let option of listLangOption" [nzLabel]="option.label" [nzValue]="option.value">
+                        </nz-option>
+                    </nz-select>
+                </nz-form-item>
+            </div>
+            <div nz-col [nzSpan]="24" *ngIf="import.is_lang==false">
+                <nz-form-item nzFlex>
+                    <label>语言:</label>
+                    <nz-select   disabled="disabled"   name="import.lang_id"  style="width: 100%;" nzPlaceHolder="请选择语言" [(ngModel)]="import.lang_id">
+                        <nz-option *ngFor="let option of listLangOption" [nzLabel]="option.label" [nzValue]="option.value">
+                        </nz-option>
+                    </nz-select>
+                </nz-form-item>
+            </div> -->
+        <!-- </div>
+    </form>
+  </nz-modal> -->
+  
+  <!-- <ng-template #contentTemplate>
+    <div>
+        <p><a href="/assets/excel/matl.xls">导出模板</a></p>
+        <p><a href="{{export}}?type=1">导出样例模板</a></p>
+        <p><a href="{{export}}?type=2">导出全部数据</a></p>
+        <p><a href="{{export}}?type=3">导出语言配置表</a></p>
+    </div>
+  </ng-template>
+  
+  <ng-template #funTemplate>
+    <button nz-button (click)="isImport=false">取消</button>
+    <button nz-button [nzType]="'primary'" [nzLoading]="uploading" (click)="handleUpload()" [disabled]="fileList.length == 0" style="margin-top: 16px">
+        {{ uploading ? 'Uploading' : '确定' }}
+    </button>
+  </ng-template> -->

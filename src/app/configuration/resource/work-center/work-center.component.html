@@ -1,0 +1,269 @@
+<div class="base-table">
+    <div class="table-operations">
+      <button nz-button [nzType]="'primary'" (click)="showAdd()">新增</button>
+      <button nz-button [nzType]="'primary'" (click)="isImport=true">导入</button>
+      <button nz-button [nzType]="'primary'" nz-popover nzTitle="导出类型" [nzContent]="contentTemplate"
+        nzPlacement="bottomRight">导出</button>
+    </div>
+    <nz-table #ajaxTable nzShowSizeChanger [nzFrontPagination]="false" [nzData]="dataSet" [nzLoading]="loading"
+      [nzTotal]="total" [(nzPageIndex)]="pageIndex" [(nzPageSize)]="pageSize" (nzPageIndexChange)="getList()"
+      (nzPageSizeChange)="getList(true)">
+      <thead>
+        <tr>
+          <th>工厂代码</th>
+          <th>工作中心</th>
+          <th>工作中心描述</th>
+          <th>存在再制品</th>
+          <th>消耗先进先出</th>
+          <th>生成先进先出</th>
+          <th>工作中心分类</th>
+          <th>工作中心类型</th>
+          <th>ERP工作中心</th>
+          <th>创建时间</th>
+          <th>更新时间</th>
+          <th>更新人</th>
+          <th style="width:160px">操作</th>
+        </tr>
+      </thead>
+  
+      <tbody>
+        <tr *ngFor="let data of ajaxTable.data">
+          <td>{{data.plant_code}}</td>
+          <td>{{data.work_center_code}}</td>
+          <td>{{data.short_description}}</td>
+          <td>{{data.is_wip}}</td>
+          <td>{{data.is_gi_fifo}}</td>
+          <td>{{data.is_gr_fifo}}</td>
+          <td>{{data.work_center_category}}</td>
+          <td>{{data.work_center_type}}</td>
+          <td>{{data.erp_work_center}}</td>
+          <td>{{data.creation_date}}</td>
+          <td>{{data.last_update}}</td>
+          <td>{{data.account_name}}</td>
+          <td>
+            <button nz-button [nzType]="'primary'" (click)="showUpdate(data)">修改</button>
+            <button nz-button [nzType]="'primary'" (click)="delete(data.id,data.work_center_desc_id)">删除</button>
+          </td>
+        </tr>
+      </tbody>
+    </nz-table>
+  </div>
+  <nz-modal [(nzVisible)]="isAdd" nzTitle="新增工作中心" (nzOnCancel)="hideAdd()" (nzOnOk)="addSubmit()">
+    <form nz-form class="ant-advanced-search-form">
+      <div nz-row [nzGutter]="24">
+        <div nz-col [nzSpan]="24">
+          <nz-form-item nzFlex>					
+            <label>工厂代码:</label>
+            <nz-select name="add.plant_code" style="width: 100%;" placeholder="请输入工厂代码" [(ngModel)]="add.plant_code">
+                <nz-option *ngFor="let option of listPlantOption" [nzLabel]="option.label" [nzValue]="option.keyvalue">
+                </nz-option>
+              </nz-select>
+          </nz-form-item>
+        </div>
+        <div nz-col [nzSpan]="24">
+          <nz-form-item nzFlex>
+            <label>工作中心:</label>
+            <input nz-input placeholder="请输入工作中心" maxlength="20" name="add.work_center_code" nzSize="default"
+              [(ngModel)]="add.work_center_code">
+          </nz-form-item>
+        </div>
+        <div nz-col [nzSpan]="24">
+          <nz-form-item nzFlex>
+            <label>工作中心描述:</label>
+            <input nz-input placeholder="请输入工作中心描述" maxlength="50" name="add.short_description" nzSize="default"
+              [(ngModel)]="add.short_description">
+          </nz-form-item>
+        </div>		
+        <div nz-col [nzSpan]="24">
+          <nz-form-item nzFlex>
+            <label style="width: 93px;">存在再制品:</label>
+            <nz-switch name="add.is_wip" [(ngModel)]="add.is_wip"></nz-switch>
+          </nz-form-item>
+        </div>
+        <div nz-col [nzSpan]="12">
+          <nz-form-item nzFlex>
+            <label style="width: 93px;">消耗先进先出:</label>
+            <nz-switch name="add.is_gi_fifo" [(ngModel)]="add.is_gi_fifo"></nz-switch>
+          </nz-form-item>
+        </div>
+        <div nz-col [nzSpan]="12">
+          <nz-form-item nzFlex>
+            <label>生成先进先出:</label>			
+            <nz-switch name="add.is_gr_fifo" [(ngModel)]="add.is_gr_fifo"></nz-switch>
+          </nz-form-item>
+        </div>
+        <div nz-col [nzSpan]="24">
+          <nz-form-item nzFlex>
+            <label>工作中心分类:</label>
+            <!-- <input nz-input placeholder="请输入工作中心分类" maxlength="10" name="add.work_center_category" nzSize="default"
+              [(ngModel)]="add.work_center_category"> -->
+              <nz-select  name="add.work_center_category"  style="width: 100%;" nzPlaceHolder="请选择工作中心分类" [(ngModel)]="add.work_center_category">
+                <nz-option  *ngFor="let option of workCenter" [nzLabel]="option.label" [nzValue]="option.value"> </nz-option>
+            </nz-select>
+          </nz-form-item>
+        </div>		
+        <div nz-col [nzSpan]="24">
+          <nz-form-item nzFlex>
+            <label>工作中心类型:</label>
+            <input nz-input placeholder="请输入工作中心类型" maxlength="10" name="add.work_center_type" nzSize="default"
+              [(ngModel)]="add.work_center_type">
+          </nz-form-item>
+        </div>
+        <div nz-col [nzSpan]="24">
+            <nz-form-item nzFlex>
+              <label>ERP工作中心:</label>
+              <input nz-input placeholder="请输入ERP工作中心" maxlength="10" name="add.erp_work_center" nzSize="default"
+                [(ngModel)]="add.erp_work_center">
+            </nz-form-item>
+          </div>
+      </div>
+    </form>
+  </nz-modal>
+  
+  <nz-modal [(nzVisible)]="isUpdate" nzTitle="更新工作中心" (nzOnCancel)="hideUpdate()" (nzOnOk)="updateSubmit()">
+      <form nz-form class="ant-advanced-search-form">
+          <div nz-row [nzGutter]="24">
+            <div nz-col [nzSpan]="24">
+              <nz-form-item nzFlex>					
+                <label>工厂代码:</label>
+                <nz-select name="update.plant_code" style="width: 100%;" placeholder="请输入工厂代码" [(ngModel)]="update.plant_code">
+                    <nz-option *ngFor="let option of listPlantOption" [nzLabel]="option.label" [nzValue]="option.keyvalue">
+                    </nz-option>
+                  </nz-select>
+              </nz-form-item>
+            </div>
+            <div nz-col [nzSpan]="24">
+              <nz-form-item nzFlex>
+                <label>工作中心:</label>
+                <input nz-input placeholder="请输入工作中心" maxlength="20" name="update.work_center_code" nzSize="default"
+                  [(ngModel)]="update.work_center_code">
+              </nz-form-item>
+            </div>
+            <div nz-col [nzSpan]="24">
+              <nz-form-item nzFlex>
+                <label>工作中心描述:</label>
+                <input nz-input placeholder="请输入工作中心描述" maxlength="50" name="update.short_description" nzSize="default"
+                  [(ngModel)]="update.short_description">
+              </nz-form-item>
+            </div>		
+            <div nz-col [nzSpan]="24">
+              <nz-form-item nzFlex>
+                <label style="width: 93px;">存在再制品:</label>
+                <nz-switch name="update.is_wip" [(ngModel)]="update.is_wip"></nz-switch>
+              </nz-form-item>
+            </div>
+            <div nz-col [nzSpan]="12">
+              <nz-form-item nzFlex>
+                <label style="width: 93px;">消耗先进先出:</label>
+                <nz-switch name="update.is_gi_fifo" [(ngModel)]="update.is_gi_fifo"></nz-switch>
+              </nz-form-item>
+            </div>
+            <div nz-col [nzSpan]="12">
+              <nz-form-item nzFlex>
+                <label>生成先进先出:</label>			
+                <nz-switch name="update.is_gr_fifo" [(ngModel)]="update.is_gr_fifo"></nz-switch>
+              </nz-form-item>
+            </div>
+            <div nz-col [nzSpan]="24">
+              <nz-form-item nzFlex>
+                <label>工作中心分类:</label>
+                <nz-select  name="update.work_center_category"  style="width: 100%;" nzPlaceHolder="请选择工作中心分类" [(ngModel)]="update.work_center_category">
+                  <nz-option  *ngFor="let option of workCenter" [nzLabel]="option.label" [nzValue]="option.value"> </nz-option>
+              </nz-select>
+              </nz-form-item>
+            </div>		
+            <div nz-col [nzSpan]="24">
+              <nz-form-item nzFlex>
+                <label>工作中心类型:</label>
+                <input nz-input placeholder="请输入工作中心类型" maxlength="10" name="update.work_center_type" nzSize="default"
+                  [(ngModel)]="update.work_center_type">
+              </nz-form-item>
+            </div>
+            <div nz-col [nzSpan]="24">
+                <nz-form-item nzFlex>
+                  <label>ERP工作中心:</label>
+                  <input nz-input placeholder="请输入ERP工作中心" maxlength="10" name="update.erp_work_center" nzSize="default"
+                    [(ngModel)]="update.erp_work_center">
+                </nz-form-item>
+              </div>
+          </div>
+        </form>
+  </nz-modal>
+  
+  <nz-modal [nzVisible]="isImport" [nzFooter]="funTemplate" (nzOnCancel)="isImport=false">
+    <form nz-form class="login-form">
+      <div nz-row [nzGutter]="24">
+        <nz-form-item nzFlex>
+          <div nz-col [nzSpan]="24">
+            <nz-upload *ngIf="isImport" [(nzFileList)]="fileList" [nzBeforeUpload]="beforeUpload">
+              <button nz-button>
+                <i nz-icon type="upload"></i><span>导入文件</span>
+              </button>
+            </nz-upload>
+          </div>
+        </nz-form-item>
+        <div nz-col [nzSpan]="12">
+          <nz-form-item nzFlex>
+            <label class="lab-name">导入前清空目标数据:</label>
+            <nz-switch name="import.is_empty" [(ngModel)]="import.is_empty"></nz-switch>
+          </nz-form-item>
+        </div>
+        <div nz-col [nzSpan]="12">
+          <nz-form-item nzFlex>
+            <label class="lab-name">导入时不更新语言包:</label>
+            <nz-switch name="import.is_no_lang" (ngModelChange)="changeLang(false)" [(ngModel)]="import.is_no_lang">
+            </nz-switch>
+          </nz-form-item>
+        </div>
+        <div nz-col [nzSpan]="12">
+          <nz-form-item nzFlex>
+            <label class="lab-name">导入全部数据:</label>
+            <nz-switch name="import.is_all" (ngModelChange)="changeLang(false)" [(ngModel)]="import.is_all"></nz-switch>
+          </nz-form-item>
+        </div>
+        <div nz-col [nzSpan]="12">
+          <nz-form-item nzFlex>
+            <label class="lab-name">导入多语言数据:</label>
+            <nz-switch name="import.is_lang" (ngModelChange)="changeLang(true)" [(ngModel)]="import.is_lang"></nz-switch>
+          </nz-form-item>
+        </div>
+        <div nz-col [nzSpan]="24" *ngIf="import.is_lang==true">
+          <nz-form-item nzFlex>
+            <label>语言:</label>
+            <nz-select name="import.lang_id" style="width: 100%;" nzPlaceHolder="请选择语言" [(ngModel)]="import.lang_id">
+              <nz-option *ngFor="let option of listLangOption" [nzLabel]="option.label" [nzValue]="option.value">
+              </nz-option>
+            </nz-select>
+          </nz-form-item>
+        </div>
+        <div nz-col [nzSpan]="24" *ngIf="import.is_lang==false">
+          <nz-form-item nzFlex>
+            <label>语言:</label>
+            <nz-select disabled="disabled" name="import.lang_id" style="width: 100%;" nzPlaceHolder="请选择语言"
+              [(ngModel)]="import.lang_id">
+              <nz-option *ngFor="let option of listLangOption" [nzLabel]="option.label" [nzValue]="option.value">
+              </nz-option>
+            </nz-select>
+          </nz-form-item>
+        </div>
+      </div>
+    </form>
+  </nz-modal>
+  
+  <ng-template #contentTemplate>
+    <div>
+      <p><a href="/assets/excel/shift.xls">导出模板</a></p>
+      <p><a href="{{export}}?type=1">导出样例模板</a></p>
+      <p><a href="{{export}}?type=2">导出全部数据</a></p>
+      <p><a href="{{export}}?type=3">导出语言配置表</a></p>
+    </div>
+  </ng-template>
+  
+  <ng-template #funTemplate>
+    <button nz-button (click)="isImport=false">取消</button>
+    <button nz-button [nzType]="'primary'" [nzLoading]="uploading" (click)="handleUpload()"
+      [disabled]="fileList.length == 0" style="margin-top: 16px">
+      {{ uploading ? 'Uploading' : '确定' }}
+    </button>
+  </ng-template>
+  

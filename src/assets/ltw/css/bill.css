@@ -1,0 +1,371 @@
+body,
+html,
+dd,
+dir,
+dl,
+fieldset,
+figure,
+form,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+hr,
+input,
+legend,
+menu,
+ol,
+optgroup,
+p,
+pre,
+tbody,
+td,
+textarea,
+tfoot,
+th,
+thead,
+ul,
+li {
+	margin: 0;
+	padding: 0;
+}
+
+ul,
+li {
+	list-style: none;
+}
+
+body,
+html {
+	width: 100%;
+	height: 100%;
+	/*overflow: hidden;*/
+	padding: 10px;
+	box-sizing: border-box;
+}
+
+.appBox {
+	width: 100%;
+	height: 100%;
+	border: 1px solid #0c4cd0;
+	background-color: #f3f3f3;
+}
+
+.aapContent {
+	width: 100%;
+	height: 45px;
+	text-align: center;
+}
+
+.aapContent ul {
+	width: 100%;
+	height: 45px;
+	line-height: 45px;
+}
+
+.aapContent ul li {
+	width: 180px;
+	height: 100%;
+	text-align: center;
+	font-size: 16px;
+	float: left;
+	border-right: 1px solid #dcdcdc;
+	border-bottom: 1px solid #dcdcdc;
+}
+
+.aapContent ul li:first-child {
+	border-bottom: 0;
+}
+
+
+/*.aapContent ul li:hover{
+	border-bottom:0;
+}*/
+
+.tabs1,
+.tabs2,
+.tabs3 {
+	width: 100%;
+	height: calc(100% - 45px);
+	padding-left: 10px;
+	padding-right: 10px;
+	/*padding-top: 30px;*/
+	box-sizing: border-box;
+	/*text-align: center;*/
+}
+.tabs1{
+	overflow: hidden;
+}
+#tableBox{
+	width: 100%;
+	height: calc(100% - 258px);
+	overflow-y: auto;
+	overflow-x:auto ;
+}
+.searchBox {
+	width: 1500px;
+    height: 100px;
+}
+.searchBox>ul{
+	width: 100%;
+	height: 100%;
+
+}
+.searchBox>ul>li{
+	width: 150%;
+	height: 40px;
+
+		margin-top: 15px;
+}
+.searchBtn,
+.cleanBtn,
+.searchBtn1,
+.cleanBtn1,
+.searchBtn3,
+.cleanBtn3  {
+	width: 95px;
+	height: 30px;
+	line-height: 30px;
+	text-align: center;
+	float: left;
+	border-radius: 6px;
+	margin-right: 50px;
+	color: #fff;
+	font-size: 18px;
+	font-weight: 700;
+	cursor: pointer;
+}
+.searchBtn,.searchBtn1,.searchBtn3{
+	background-color: #41a9fd;
+}
+.cleanBtn,.cleanBtn1,.cleanBtn3{
+	border: 1px solid #ccc;
+	color: #999;
+}
+.searchBtnC,.searchBtnC1,.searchBtnC3{
+	opacity: 0.8;
+}
+.cleanBtnC,.cleanBtnC1,.cleanBtnC3{
+	border-color: #41a9fd;
+	color: #41a9fd;
+}
+
+.overLine {
+	height: 1px;
+	width: 2330px;
+	background-color: #999;
+	margin-top: 24px;
+	margin-bottom: 24px;
+	position: relative;
+}
+
+.code1Title1 {
+	position: absolute;
+	left: 50px;
+	height: 50px;
+	line-height: 50px;
+	top: -25px;
+	width: 100px;
+	text-align: center;
+	background-color: #f2f2f2;
+}
+
+.tabs1 table td,
+.tabs1 table th {
+	border-collapse: collapse;
+	height: 40px;
+	border: 1px solid #d7d7d7;
+}
+
+.tabs2 {
+	overflow: hidden;
+	position: relative;
+}
+
+#main1,
+#main2 ,
+#main3{
+	width: 100%;
+	background-color: #fff;
+	height: calc(100% - 80px);
+	float: left;
+}
+
+
+
+
+.tabs3 table td,
+.tabs3 table th {
+	text-align: center;
+	border-collapse: collapse;
+	height: 40px;
+	border: 1px solid #d7d7d7;
+}
+
+.tabs3 {
+	position: relative;
+}
+
+
+/*界面三图表模态框*/
+
+.tabs3Chart,
+.tabs3Table {
+	position: absolute;
+	left: 0;
+	top: 0;
+	display: none;
+	width: 100%;
+	height: 100%;
+	/*background:rgba(0,0,0,0.7) ;*/
+	background-color: #fff;
+	z-index: 999;
+}
+
+.closeM {
+	position: absolute;
+	right: 20px;
+	top: 10px;
+	width: 30px;
+}
+
+.closeT {
+	z-index: 999;
+	position: fixed;
+	right: 40px;
+	top: 75px;
+	width: 30px;
+}
+
+.tabs3Table {
+	padding-top: 50px;
+	box-sizing: border-box;
+}
+
+#tabs3Chart1 {
+	width: 100%;
+	height: 90%;
+	margin: auto;
+	margin-top: 40px;
+}
+
+
+/*分页*/
+.bottom-page{
+	
+    width:100%;
+    height: 55px;
+    box-sizing: border-box;
+   margin-top: 5px;
+}
+.bottom-page-l{
+    height: 100%;
+    float: right;
+   line-height: 55px;
+    color: #fff;
+}
+.prev1,.prev2,.prev3{
+   width: 35px;
+    height: 30px;
+    border-radius: 6px;
+    text-align: center;
+    line-height: 30px;
+    margin-top: 12.5px;
+    float: left;
+    color:#cdcdcd;
+    font-size: 18px;
+    background-color: #fefefe;
+    border: 1px solid #d8d8d8;
+}
+.prev1>span,.prev2>span,.prev3>span{
+    width: 0;
+    height: 0;
+    display: inline-block;
+    border-right: 8px solid #000;
+    border-bottom: 8px solid transparent;
+    border-top: 8px solid transparent;
+    margin-top: 6px;
+    margin-right: 8px;
+    vertical-align: top;
+}
+.page-detail{
+    float: left;
+    width: 100px;
+    color: #000;
+}
+.input,.input2,.input3{
+    width: 35px;
+    height: 30px;
+    outline: none;
+    text-align: center;
+    line-height: 30px;
+    border: 1px solid #d8d8d8;
+    border-radius: 6px;
+    background-color: #fff;
+    color: #000;
+}
+.next1:hover,.prev1:hover,.next2:hover,.prev2:hover,.next3:hover,.prev3:hover{
+	cursor: pointer;
+}
+.perPage{
+	float: left;
+	width: 95px;
+	 margin-top: 12.5px;
+	 margin-left: 8px;
+	height: 30px;
+	text-align: center;
+	line-height: 30px;
+	background-color: #fff;
+    color: #000;
+    border: 1px solid #d8d8d8;
+    border-radius: 6px;
+}
+.next1,.next2,.next3{
+    width: 35px;
+    height: 30px;
+    border-radius: 6px;
+    text-align: center;
+    line-height: 30px;
+    margin-top: 12.5px;
+    float: left;
+    color: #cdcdcd;
+    font-size: 18px;
+    background-color: #fefefe;
+    border: 1px solid #d8d8d8;
+}
+.next1>span,.next2>span,.next3>span{
+    width: 0;
+    height: 0;
+    display: inline-block;
+    border-left: 8px solid #000;
+    border-bottom: 8px solid transparent;
+    border-top: 8px solid transparent;
+    margin-top: 6px;
+    margin-right: 8px;
+    vertical-align: top;
+}
+.bottom-page-r{
+    width: 30%;
+    height: 30px;
+    background-color: #ccc;
+    border-radius: 30px;
+    float: right;
+    text-align: center;
+    /*line-height: 156%;*/
+   line-height: 30px;
+    font-size: 1rem;
+    color: #000;
+    margin-top: 12.5px;
+    
+}
+.action_name{float: left; height: 40px;line-height: 40px;float: left;margin-left: 20px;}
+.action_name_input_top{height: 34px;width: 200px;border-radius: 6px; outline: none;}
+.action_name_shebei{float: left; height: 40px;line-height: 40px;float: left;margin-left: 20px;}
+.action_name_theer{height: 34px;width: 100px; border-radius: 6px; outline: none;}
+.touchlist_p{position: relative;}
+.touchlist , .touchlist_shebei{position: absolute; display: none; width:160px; height: 290px; overflow: auto; background: #fff; border-radius: 5px; border: 1px solid #ccc;left: 38px;z-index: 222;}
+.touchlist div, .touchlist_shebei div{line-height: 30px; width: 100%; border-bottom: 1px solid #ccc; text-align: center;}
+.WZposition{height: 34px;width: 100px;border-radius: 6px;}
+.user-name{float: left; height: 40px;line-height: 40px;float: left;margin-left: 20px; position: relative;}

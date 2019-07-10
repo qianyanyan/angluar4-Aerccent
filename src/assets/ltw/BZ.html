@@ -1,0 +1,716 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+	</head>
+	<link rel="stylesheet" type="text/css" href="css/bootstrap.min.css" />
+	<link rel="stylesheet" type="text/css" href="css/bootstrap-datetimepicker.min.css" />
+	<link rel="stylesheet" href="./css/BZ.css" />
+
+	<body>
+		<div class="app1Box" ng-app="myApp1" ng-controller="myCtrl1" ng-init="app1Tabs=1">
+			<div class="aapContent">
+				<ul>
+					<li ng-click="app1Tabs1C()">KPI柱形图</li>
+					<li ng-click="app1Tabs2C()">包装日报表</li>
+					<li ng-click="app1Tabs3C()">包装月报表</li>
+					<li ng-click="app1Tabs4C()">历史报表</li>
+				</ul>
+			</div>
+			<div class="app1Tabs1" ng-show="app1Tabs==1">
+				<div class="app1Tabs2Search">
+					<div class="user-name" style="float: left;height: 40px;line-height: 40px;float: left;margin-left: 20px;margin-top:10px;">
+						<span>KPI:</span>
+						<select autocomplete="off" ng-init="glyName = glyList[0]" ng-model="glyName" ng-options="x for x in glyList">
+						</select>
+					</div>
+					<div class="user-name" style="float: left;height: 40px;line-height: 40px;float: left;margin-left: 20px;margin-top:10px;">
+						<span>查询类型:</span>
+						<select autocomplete="off" ng-init="kipSelectType = kipType[0]" ng-model="kipSelectType" ng-options="x for x in kipType">
+						</select>
+					</div>
+					<div ng-show="kipSelectType=='按日期查询'" style="width:140px;height: 36px;float: left;border: 1px solid #d8d8d8;background-color: #fefefe;line-height: 36px;border-radius: 6px;     margin-left: 20px;
+					margin-top: 10px;">
+						<div class="form-group" style="float: left;height: 40px;width: 140px;margin-left: 12px;">
+							<div class="input-group">
+								<input style="border: 0;" autocomplete="off" placeholder="选择月份" class="form-control" type="text" id="startTimeKPI" />
+							</div>
+						</div>
+						<!-- <span style="float: left;height: 40px;line-height: 40px;margin-left: 5px;margin-right: 5px;">~</span>
+						<div class="form-group" style="float: left;height: 40px;width: 100px;">
+							<div class="input-group">
+								<input style="border: 0;" autocomplete="off" placeholder="结束日期" class="form-control" type="text" id="endTimeKPI">
+							</div>
+						</div> -->
+					</div>
+					<div ng-show="kipSelectType=='按月查询'"  style="width:240px;height: 36px;float: left;border: 1px solid #d8d8d8;background-color: #fefefe;line-height: 36px;border-radius: 6px;     margin-left: 20px;
+					margin-top: 10px;">
+						<div class="form-group" style="float: left;height: 40px;width: 100px;margin-left: 12px;">
+							<div class="input-group">
+								<input style="border: 0;" autocomplete="off" placeholder="开始日期" class="form-control" type="text" id="startTimeQX" />
+							</div>
+						</div>
+						<span style="float: left;height: 40px;line-height: 40px;margin-left: 5px;margin-right: 5px;">~</span>
+						<div class="form-group" style="float: left;height: 40px;width: 100px;">
+							<div class="input-group">
+								<input style="border: 0;" autocomplete="off" placeholder="结束日期" class="form-control" type="text" id="endTimeQX">
+							</div>
+						</div>
+					</div>
+					<div class="btnOorF" style=" float: left;margin-left: 20px;margin-top: 12px;">
+							<div class="btnOorF"  >
+							<div ng-click="getGLYData()" class="searchBtn1">
+								查询
+							</div>
+						</div>
+					</div>
+				</div>
+				<div style="text-align: center;font-size: 24px;">PTN Packaging KPI chart</div>
+				<div style="text-align: center;position: absolute;left: 52%;bottom: 3%;transform:translateX(-50%);font-size: 24px;"><span id="yearGLY"></span> </div>
+				<div id="BZCahrt" style="width: 100%;    height: calc(100% - 50px);"></div>
+			</div>
+			<div class="app1Tabs2" ng-show="app1Tabs==2">
+				<div class="login-box">
+					<img src="./images/vpo.png" />
+					<span>KPI日报表ALL</span>
+				</div>
+				<div class="app1Tabs2Search">
+					<div class="user-name" style="float: left;height: 40px;line-height: 40px;float: left;margin-left: 20px;margin-top:10px;">
+						<span>Category:</span>
+						<select autocomplete="off" ng-init="categoryDay = category[0]" ng-model="categoryDay" ng-options="x for x in category">
+						</select>
+					</div>
+					<div class="user-name" style="float: left;height: 40px;line-height: 40px;float: left;margin-left: 20px;margin-top:10px;">
+						<span>产线:</span>
+						<select autocomplete="off" ng-init="nodeDay = nodeNameList[0]" ng-model="nodeDay" ng-options="x.name for x in nodeNameList">
+						</select>
+					</div>
+					<div style="float: left;height: 40px;line-height: 40px;float: left;margin-left: 20px;margin-top:12px;">
+						<div style="float:left;height: 30px;line-height: 30px;">选择月份:</div>
+						<div class="form-group" style="float: left;height: 30px;width: 100px;margin-left: 12px;">
+							<div class="input-group">
+								<input class="form-control" autocomplete="off" type="text" id="startTimetabs2" />
+							</div>
+						</div>
+					</div>
+					<div class="btnOorF" style=" float: left;margin-left: 70px;margin-top: 12px;">
+						<div ng-click="searchBtn()" class="searchBtn">查询</div>
+					</div>
+				</div>
+				<div class="apptabTitle">
+					<div class="titleTip" id='titleTip' style="background-color:#f9f9f9 ;" >
+						<p style="width:62px;text-align: center;">编号</p>
+						<p style="width:104px;text-align: center;">Category</p>
+						<p style="width:125px;text-align: center;">KPI Code</p>
+						<p style="width:125px;text-align: center;">KPI Name</p>
+						<p style="width:125px;text-align: center;">Node ID</p>
+						<p style="width:61px;text-align: center;">Level</p>
+						<p style="width:61px;text-align: center;">UOM</p>
+						<p style="width:106px;text-align: center;">KPI Owner</p>
+						<p style="width:105px;text-align: center;">MTD-BU</p>
+						<p style="width:105px;text-align: center;">MTD-AC</p>
+						<p style="width:105px;text-align: center;">YTD-BU</p>
+						<p style="width:105px;text-align: center;">YTD-AC</p>
+						<p style="width:105px;text-align: center;">BU/AC</p>
+						<p style="width:105px;text-align: center;">01</p>
+						<p style="width:105px;text-align: center;">02</p>
+						<p style="width:105px;text-align: center;">03</p>
+						<p style="width:105px;text-align: center;">04</p>
+						<p style="width:105px;text-align: center;">05</p>
+						<p style="width:105px;text-align: center;">06</p>
+						<p style="width:105px;text-align: center;">07</p>
+						<p style="width:105px;text-align: center;">08</p>
+						<p style="width:105px;text-align: center;">09</p>
+						<p style="width:105px;text-align: center;">10</p>
+						<p style="width:105px;text-align: center;">11</p>
+						<p style="width:105px;text-align: center;">12</p>
+						<p style="width:105px;text-align: center;">13</p>
+						<p style="width:105px;text-align: center;">14</p>
+						<p style="width:105px;text-align: center;">15</p>
+						<p style="width:105px;text-align: center;">16</p>
+						<p style="width:105px;text-align: center;">17</p>
+						<p style="width:105px;text-align: center;">18</p>
+						<p style="width:105px;text-align: center;">19</p>
+						<p style="width:105px;text-align: center;">20</p>
+						<p style="width:105px;text-align: center;">21</p>
+						<p style="width:105px;text-align: center;">22</p>
+						<p style="width:105px;text-align: center;">23</p>
+						<p style="width:105px;text-align: center;">24</p>
+						<p style="width:105px;text-align: center;">25</p>
+						<p style="width:105px;text-align: center;">26</p>
+						<p style="width:105px;text-align: center;">27</p>
+						<p style="width:105px;text-align: center;">28</p>
+						<p style="width:105px;text-align: center;">29</p>
+						<p style="width:105px;text-align: center;">30</p>
+						<p style="width:105px;text-align: center;">31</p>
+						<p style="width:210px;text-align: center;">Comments</p>
+					</div>
+				</div>
+				<div id="app1Tabs2Box" >
+					<table style="width: 4760px;background-color: #fff;" cellspacing="0" cellpadding="0">
+						<tbody >
+							<tr align="center" ng-repeat="result in tabs2Result">
+								<td style="width:60px;text-align: center;">{{$index+1}}</td>
+								<td style="width:100px;text-align: center;">{{result.category}}</td>
+								<td style="width:120px;text-align: center;">{{result.kpi_code}}</td>
+								<td style="width:120px;text-align: center;">{{result.kpi_name}}</td>
+								<td style="width:120px;text-align: center;">{{result.node_id}}</td>
+								<td style="width:60px;text-align: center;">{{result.level}}</td>
+								<td style="width:60px;text-align: center;">{{result.uom}}</td>
+								<td style="width:100px;text-align: center;">{{result.kpi_owner}}</td>
+								<td style="width:100px;text-align: center;">
+									{{result.budget_mtd |filter1}}
+								</td>
+								<td style="width:100px;text-align: center; " ng-if=" !result.budget_mtd || !result.actual_mtd ">
+									{{result.actual_mtd |filter1}}
+								</td>
+								<td style="width:100px;text-align: center; background:#ff0000;" ng-if=" result.budget_mtd && result.actual_mtd && result.actual_mtd < result.budget_mtd">
+									{{result.actual_mtd |filter1}}
+								</td>
+								<td style="width:100px;text-align: center; background:#33CC33; " ng-if=" result.budget_mtd && result.actual_mtd && result.actual_mtd > result.budget_mtd ">
+									{{result.actual_mtd |filter1}}
+								</td>
+								<td style="width:100px;text-align: center;">{{result.budget_ytd |filter1}}</td>
+								<td style="width:100px;text-align: center; ">
+									{{result.actual_ytd |filter1}}
+								</td> 
+								<td style="width:100px;text-align: center;">
+									<div class="sc_bu sc_bu_bro"> budget	</div>
+									<div class="sc_bu">actual	</div> 
+								</td>
+								<td style="width:100px;text-align: center;">
+									<div class="sc_bu sc_bu_bro" ></div>
+									<div class="sc_bu" ng-if="!result.ac1">{{result.ac1 |filter1}}</div>
+									<div class="sc_bu" ng-if='result.ac1 && result.ac1 > 0'>{{result.ac1 |filter1}}</div> 
+									<div class="sc_bu colorBorder_yello" ng-if='result.ac1 && result.ac1 == 0 '>{{result.ac1 |filter1}}</div>
+									</td>
+								<td style="width:100px;text-align: center;">
+									<div class="sc_bu sc_bu_bro"></div> 
+									<div class="sc_bu" ng-if="!result.ac2">{{result.ac2 |filter1}}</div>
+									<div class="sc_bu" ng-if='result.ac2 && result.ac2 > 0'>{{result.ac2 |filter1}}</div> 
+									<div class="sc_bu colorBorder_yello" ng-if='result.ac2 && result.ac2 == 0 '>{{result.ac2 |filter1}}</div>
+								</td>
+								<td style="width:100px;text-align: center;">
+									<div class="sc_bu sc_bu_bro"></div> 
+									<div class="sc_bu" ng-if="!result.ac3">{{result.ac3 |filter1}}</div>
+									<div class="sc_bu" ng-if='result.ac3 && result.ac3 > 0'>{{result.ac3 |filter1}}</div> 
+									<div class="sc_bu colorBorder_yello" ng-if='result.ac3 && result.ac3 == 0 '>{{result.ac3 |filter1}}</div>
+								</td>
+								<td style="width:100px;text-align: center;">
+									<div class="sc_bu sc_bu_bro"></div> 
+									<div class="sc_bu" ng-if="!result.ac4">{{result.ac4 |filter1}}</div>
+									<div class="sc_bu" ng-if='result.ac4 && result.ac4 > 0'>{{result.ac4 |filter1}}</div> 
+									<div class="sc_bu colorBorder_yello" ng-if='result.ac4 && result.ac4 == 0 '>{{result.ac4 |filter1}}</div>
+								</td>
+								<td style="width:100px;text-align: center;">
+									<div class="sc_bu sc_bu_bro"></div> 
+									<div class="sc_bu" ng-if="!result.ac5">{{result.ac5 |filter1}}</div>
+									<div class="sc_bu" ng-if='result.ac5 && result.ac5 > 0'>{{result.ac5 |filter1}}</div> 
+									<div class="sc_bu colorBorder_yello" ng-if='result.ac5 && result.ac5 == 0 '>{{result.ac5 |filter1}}</div>
+								</td>
+								<td style="width:100px;text-align: center;">
+									<div class="sc_bu sc_bu_bro"></div> 
+									<div class="sc_bu" ng-if="!result.ac6">{{result.ac6 |filter1}}</div>
+									<div class="sc_bu" ng-if='result.ac6 && result.ac6 > 0'>{{result.ac6 |filter1}}</div> 
+									<div class="sc_bu colorBorder_yello" ng-if='result.ac6 && result.ac6 == 0 '>{{result.ac6 |filter1}}</div>
+								</td>
+								<td style="width:100px;text-align: center;">
+									<div class="sc_bu sc_bu_bro"></div>
+									<div class="sc_bu" ng-if="!result.ac7">{{result.ac7 |filter1}}</div>
+									<div class="sc_bu" ng-if='result.ac7 && result.ac7 > 0'>{{result.ac7 |filter1}}</div> 
+									<div class="sc_bu colorBorder_yello" ng-if='result.ac7 && result.ac7 == 0 '>{{result.ac7 |filter1}}</div>
+								</td>
+								<td style="width:100px;text-align: center;">
+									<div class="sc_bu sc_bu_bro"></div> 
+									<div class="sc_bu" ng-if="!result.ac8">{{result.ac8 |filter1}}</div>
+									<div class="sc_bu" ng-if='result.ac8 && result.ac8 > 0'>{{result.ac8 |filter1}}</div> 
+									<div class="sc_bu colorBorder_yello" ng-if='result.ac8 && result.ac8 == 0 '>{{result.ac8 |filter1}}</div>
+								</td>
+								<td style="width:100px;text-align: center;">
+									<div class="sc_bu sc_bu_bro"></div> 
+									<div class="sc_bu" ng-if="!result.ac9">{{result.ac9 |filter1}}</div>
+									<div class="sc_bu" ng-if='result.ac9 && result.ac9 > 0'>{{result.ac9 |filter1}}</div> 
+									<div class="sc_bu colorBorder_yello" ng-if='result.ac9 && result.ac9 == 0 '>{{result.ac9 |filter1}}</div>
+								</td>
+								<td style="width:100px;text-align: center;">
+									<div class="sc_bu sc_bu_bro"></div> 
+									<div class="sc_bu" ng-if="!result.ac10">{{result.ac10 |filter1}}</div>
+									<div class="sc_bu" ng-if='result.ac10 && result.ac10 > 0'>{{result.ac10 |filter1}}</div> 
+									<div class="sc_bu colorBorder_yello" ng-if='result.ac10 && result.ac10 == 0 '>{{result.ac10 |filter1}}</div>
+								</td>
+								<td style="width:100px;text-align: center;">
+									<div class="sc_bu sc_bu_bro"></div> 
+									<div class="sc_bu" ng-if="!result.ac11">{{result.ac11 |filter1}}</div>
+									<div class="sc_bu" ng-if='result.ac11 && result.ac11 > 0'>{{result.ac11 |filter1}}</div> 
+									<div class="sc_bu colorBorder_yello" ng-if='result.ac11 && result.ac11 == 0 '>{{result.ac11 |filter1}}</div>
+								</td>
+								<td style="width:100px;text-align: center;">
+									<div class="sc_bu sc_bu_bro"></div> 
+									<div class="sc_bu" ng-if="!result.ac12">{{result.ac12 |filter1}}</div>
+									<div class="sc_bu" ng-if='result.ac12 && result.ac12 > 0'>{{result.ac12 |filter1}}</div> 
+									<div class="sc_bu colorBorder_yello" ng-if='result.ac12 && result.ac12 == 0 '>{{result.ac12 |filter1}}</div>
+								</td>
+								<td style="width:100px;text-align: center;">
+									<div class="sc_bu sc_bu_bro"></div> 
+									<div class="sc_bu" ng-if="!result.ac13">{{result.ac13 |filter1}}</div>
+									<div class="sc_bu" ng-if='result.ac13 && result.ac13 > 0'>{{result.ac13 |filter1}}</div> 
+									<div class="sc_bu colorBorder_yello" ng-if='result.ac13 && result.ac13 == 0 '>{{result.ac13 |filter1}}</div>
+								</td>
+								<td style="width:100px;text-align: center;">
+									<div class="sc_bu sc_bu_bro"></div> 
+									<div class="sc_bu" ng-if="!result.ac14">{{result.ac14 |filter1}}</div>
+									<div class="sc_bu" ng-if='result.ac14 && result.ac14 > 0'>{{result.ac14 |filter1}}</div> 
+									<div class="sc_bu colorBorder_yello" ng-if='result.ac14 && result.ac14 == 0 '>{{result.ac14 |filter1}}</div>
+								</td>
+								<td style="width:100px;text-align: center;">
+									<div class="sc_bu sc_bu_bro"></div> 
+									<div class="sc_bu" ng-if="!result.ac15">{{result.ac15 |filter1}}</div>
+									<div class="sc_bu" ng-if='result.ac15 && result.ac15 > 0'>{{result.ac15 |filter1}}</div> 
+									<div class="sc_bu colorBorder_yello" ng-if='result.ac15 && result.ac15 == 0 '>{{result.ac15 |filter1}}</div>
+								</td>
+								<td style="width:100px;text-align: center;">
+									<div class="sc_bu sc_bu_bro"></div> 
+									<div class="sc_bu" ng-if="!result.ac16">{{result.ac16 |filter1}}</div>
+									<div class="sc_bu" ng-if='result.ac16 && result.ac16 > 0'>{{result.ac16 |filter1}}</div> 
+									<div class="sc_bu colorBorder_yello" ng-if='result.ac16 && result.ac16 == 0 '>{{result.ac16 |filter1}}</div>
+								</td>
+								<td style="width:100px;text-align: center;">
+									<div class="sc_bu sc_bu_bro"></div> 
+									<div class="sc_bu" ng-if="!result.ac17">{{result.ac17 |filter1}}</div>
+									<div class="sc_bu" ng-if='result.ac17 && result.ac17 > 0'>{{result.ac17 |filter1}}</div> 
+									<div class="sc_bu colorBorder_yello" ng-if='result.ac17 && result.ac17 == 0 '>{{result.ac17 |filter1}}</div>
+								</td>
+								<td style="width:100px;text-align: center;">
+									<div class="sc_bu sc_bu_bro"></div> 
+									<div class="sc_bu" ng-if="!result.ac18">{{result.ac18 |filter1}}</div>
+									<div class="sc_bu" ng-if='result.ac18 && result.ac18 > 0'>{{result.ac18 |filter1}}</div> 
+									<div class="sc_bu colorBorder_yello" ng-if='result.ac18 && result.ac18 == 0 '>{{result.ac18 |filter1}}</div>
+								</td>
+								<td style="width:100px;text-align: center;">
+									<div class="sc_bu sc_bu_bro"></div> 
+									<div class="sc_bu" ng-if="!result.ac19">{{result.ac19 |filter1}}</div>
+									<div class="sc_bu" ng-if='result.ac19 && result.ac19 > 0'>{{result.ac19 |filter1}}</div> 
+									<div class="sc_bu colorBorder_yello" ng-if='result.ac19 && result.ac19 == 0 '>{{result.ac19 |filter1}}</div>
+								</td>
+								<td style="width:100px;text-align: center;">
+									<div class="sc_bu sc_bu_bro"></div> 
+									<div class="sc_bu" ng-if="!result.ac20">{{result.ac20 |filter1}}</div>
+									<div class="sc_bu" ng-if='result.ac20 && result.ac20 > 0'>{{result.ac20 |filter1}}</div> 
+									<div class="sc_bu colorBorder_yello" ng-if='result.ac20 && result.ac20 == 0 '>{{result.ac20 |filter1}}</div>
+								</td>
+								<td style="width:100px;text-align: center;">
+									<div class="sc_bu sc_bu_bro"></div> 
+									<div class="sc_bu" ng-if="!result.ac21">{{result.ac21 |filter1}}</div>
+									<div class="sc_bu" ng-if='result.ac21 && result.ac21 > 0'>{{result.ac21 |filter1}}</div> 
+									<div class="sc_bu colorBorder_yello" ng-if='result.ac21 && result.ac21 == 0 '>{{result.ac21 |filter1}}</div>
+								</td>
+								<td style="width:100px;text-align: center;">
+									<div class="sc_bu sc_bu_bro"></div> 
+									<div class="sc_bu" ng-if="!result.ac22">{{result.ac22 |filter1}}</div>
+									<div class="sc_bu" ng-if='result.ac22 && result.ac22 > 0'>{{result.ac22 |filter1}}</div> 
+									<div class="sc_bu colorBorder_yello" ng-if='result.ac22 && result.ac22 == 0 '>{{result.ac22 |filter1}}</div>
+								</td>
+								<td style="width:100px;text-align: center;">
+									<div class="sc_bu sc_bu_bro"></div> 
+									<div class="sc_bu" ng-if="!result.ac23">{{result.ac23 |filter1}}</div>
+									<div class="sc_bu" ng-if='result.ac23 && result.ac23 > 0'>{{result.ac23 |filter1}}</div> 
+									<div class="sc_bu colorBorder_yello" ng-if='result.ac23 && result.ac23 == 0 '>{{result.ac23 |filter1}}</div>
+								</td>
+								<td style="width:100px;text-align: center;">
+									<div class="sc_bu sc_bu_bro"></div> 
+									<div class="sc_bu" ng-if="!result.ac24">{{result.ac24 |filter1}}</div>
+									<div class="sc_bu" ng-if='result.ac24 && result.ac24 > 0'>{{result.ac24 |filter1}}</div> 
+									<div class="sc_bu colorBorder_yello" ng-if='result.ac24 && result.ac24 == 0 '>{{result.ac24 |filter1}}</div>
+								</td>
+								<td style="width:100px;text-align: center;">
+									<div class="sc_bu sc_bu_bro"></div> 
+									<div class="sc_bu" ng-if="!result.ac25">{{result.ac25 |filter1}}</div>
+									<div class="sc_bu" ng-if='result.ac25 && result.ac25 > 0'>{{result.ac25 |filter1}}</div> 
+									<div class="sc_bu colorBorder_yello" ng-if='result.ac25 && result.ac25 == 0 '>{{result.ac25 |filter1}}</div>
+								</td>
+								<td style="width:100px;text-align: center;">
+									<div class="sc_bu sc_bu_bro"></div> 
+									<div class="sc_bu" ng-if="!result.ac26">{{result.ac26 |filter1}}</div>
+									<div class="sc_bu" ng-if='result.ac26 && result.ac26 > 0'>{{result.ac26 |filter1}}</div> 
+									<div class="sc_bu colorBorder_yello" ng-if='result.ac26 && result.ac26 == 0 '>{{result.ac26 |filter1}}</div>
+								</td>
+								<td style="width:100px;text-align: center;">
+									<div class="sc_bu sc_bu_bro"></div> 
+									<div class="sc_bu" ng-if="!result.ac27">{{result.ac27 |filter1}}</div>
+									<div class="sc_bu" ng-if='result.ac27 && result.ac27 > 0'>{{result.ac27 |filter1}}</div> 
+									<div class="sc_bu colorBorder_yello" ng-if='result.ac27 && result.ac27 == 0 '>{{result.ac27 |filter1}}</div>
+								</td>
+								<td style="width:100px;text-align: center;">
+									<div class="sc_bu sc_bu_bro"></div> 
+									<div class="sc_bu" ng-if="!result.ac28">{{result.ac28 |filter1}}</div>
+									<div class="sc_bu" ng-if='result.ac28 && result.ac28 > 0'>{{result.ac28 |filter1}}</div> 
+									<div class="sc_bu colorBorder_yello" ng-if='result.ac28 && result.ac28 == 0 '>{{result.ac28 |filter1}}</div>
+								</td>
+								<td style="width:100px;text-align: center;">
+									<div class="sc_bu sc_bu_bro"></div> 
+									<div class="sc_bu" ng-if="!result.ac29">{{result.ac29 |filter1}}</div>
+									<div class="sc_bu" ng-if='result.ac29 && result.ac29 > 0'>{{result.ac29 |filter1}}</div> 
+									<div class="sc_bu colorBorder_yello" ng-if='result.ac29 && result.ac29 == 0 '>{{result.ac29 |filter1}}</div>
+								</td>
+								<td style="width:100px;text-align: center;">
+									<div class="sc_bu sc_bu_bro"></div> 
+									<div class="sc_bu" ng-if="!result.ac30">{{result.ac30 |filter1}}</div>
+									<div class="sc_bu" ng-if='result.ac30 && result.ac30 > 0'>{{result.ac30 |filter1}}</div> 
+									<div class="sc_bu colorBorder_yello" ng-if='result.ac30 && result.ac30 == 0 '>{{result.ac30 |filter1}}</div>
+								</td>
+								<td style="width:100px;text-align: center;">
+									<div class="sc_bu sc_bu_bro"></div> 
+									<div class="sc_bu" ng-if="!result.ac31">{{result.ac31 |filter1}}</div>
+									<div class="sc_bu" ng-if='result.ac31 && result.ac31 > 0'>{{result.ac31 |filter1}}</div> 
+									<div class="sc_bu colorBorder_yello" ng-if='result.ac31 && result.ac31 == 0 '>{{result.ac31 |filter1}}</div>
+								</td>
+								<td style="width:200px;text-align: center;">
+									<div class="sc_bu sc_bu_bro">{{result.comments}}</div> 
+									<div class="sc_bu "></div>
+								</td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+				<div class="bottom-page" style="display:none">
+					<div class="bottom-page-l">
+						<div class="prev1" title="上一页">
+							<</div>
+								<div class="page-detail">
+									&nbsp;&nbsp;第&nbsp; <input autocomplete="off" class="input1" disabled="disabled" id="pageNum1" type="text" value="1" style="text-align: center;" /> &nbsp;页
+								 
+								</div>
+								<div class="next1" title="上一页">
+									>
+								</div>
+								<div class="perPage">20条/页</div>
+						</div>
+					</div>
+				</div>
+			<div class="app1Tabs3" ng-show="app1Tabs==3">
+				<div class="login-box">
+						<img src="./images/vpo.png" />
+						<span>KPI月报表ALL</span>
+				</div>
+				<div class="app1Tabs3Search">
+					<div class="user-name" style="float: left;height: 40px;line-height: 40px;float: left;margin-left: 20px;margin-top:10px;">
+						<span>Category:</span>
+						<!-- <input style="height: 34px;width: 200px;" style="border-radius: 6px;" class="Category1" type="" name=""> -->
+						<select ng-init="categoryMonth = category[0]" autocomplete="off" ng-model="categoryMonth" ng-options="x for x in category">
+						</select>
+					</div>
+					<div class="user-name" style="float: left;height: 40px;line-height: 40px;float: left;margin-left: 20px;margin-top:10px;">
+						<span>产线:</span>
+						<select autocomplete="off" ng-init="nodeMonth = nodeNameList[0]" ng-model="nodeMonth" ng-options="x.name for x in nodeNameList">
+						</select>
+					</div>
+					<div style="float: left;height: 40px;line-height: 40px;float: left;margin-left: 20px;margin-top:12px;">
+						<div style="float:left;height: 30px;line-height: 30px;">选择年份:</div>
+						<div class="form-group" style="float: left;height: 30px;width: 100px;margin-left: 12px;">
+							<div class="input-group">
+								<!--<div class="input-group-addon">开始日期</div>-->
+								<input autocomplete="off" class="form-control" type="text" id="startTimetabs3" />
+							</div>
+						</div>
+					</div>
+					<div class="btnOorF" style=" float: left;margin-left: 70px;margin-top: 12px;">
+						<div ng-click="searchBtn1()" class="searchBtn1">
+							查询
+						</div>
+						<!-- <div ng-click="cleanBtn1()" class="cleanBtn1">清空</div> -->
+					</div>
+				</div>
+				<div class="apptabTitle">
+					<div class="titleTips" id='titleTips' style="background-color:#f9f9f9 ;" >
+						<p style="width:65px;text-align: center;">编号</p>
+						<p style="width:108px;text-align: center;">Category</p>
+						<p style="width:130px;text-align: center;">KPI Code</p>
+						<p style="width:130px;text-align: center;">KPI Name</p>
+						<p style="width:130px;text-align: center;">Node ID</p>
+						<p style="width:67px;text-align: center;">YTD-BU</p>
+						<p style="width:72px;text-align: center;">YTD-AC</p>
+						<p style="width:109px;text-align: center;">FY-BU</p>
+						<p style="width:109px;text-align: center;">FY-LE</p>
+						<p style="width:109px;text-align: center;">BU/AC</p>
+						<p style="width:110px;text-align: center;">Jan</p>
+						<p style="width:108px;text-align: center;">Feb</p>
+						<p style="width:109px;text-align: center;">Mar</p>
+						<p style="width:109px;text-align: center;">Apr</p>
+						<p style="width:108px;text-align: center;">May</p>
+						<p style="width:111px;text-align: center;">Jun</p>
+						<p style="width:109px;text-align: center;">Jul</p>
+						<p style="width:109px;text-align: center;">Aug</p>
+						<p style="width:109px;text-align: center;">Sep</p>
+						<p style="width:109px;text-align: center;">Oct</p>
+						<p style="width:109px;text-align: center;">Nov</p>
+						<p style="width:110px;text-align: center;">Dec</p>
+						<p style="width:221px;text-align: center;">Comments</p>
+					</div>
+				</div>
+
+				<div id="app1Tabs3Box">
+					<table style="width: 2560px;background-color: #fff;" cellspacing="0" cellpadding="0">
+						<tbody>
+							<tr align="center"  ng-repeat="result in tabs3Result">
+								<td style="width:60px;text-align: center;">{{$index+1}}</td>
+								<td style="width:100px;text-align: center;">{{result.category}}</td>
+								<td style="width:120px;text-align: center;">{{result.kpi_code}}</td>
+								<td style="width:120px;text-align: center;">{{result.kpi_name}}</td>
+								<td style="width:120px;text-align: center;">{{result.node_id}}</td>
+
+								<td style="width:60px;text-align: center;">{{result.budget_ytd |filter1}}</td>
+								<td style="width:60px;text-align: center;">{{result.actual_ytd |filter1}}</td>
+
+								<td style="width:100px;text-align: center;">{{result.budget_fy |filter1}}</td>
+								<td style="width:100px;text-align: center;">{{result.le_fy |filter1}}</td>
+								<td style="width:100px;text-align: center;">
+									<div class="sc_bu sc_bu_bro">  budget	</div> 
+									<div class="sc_bu"> actual</div>
+								</td>
+								<td style="width:100px; text-align: center;">
+									<div class="sc_bu sc_bu_bro">{{result.bu1 |filter1}}</div>
+									<div class="sc_bu" ng-if='!result.ac1'>{{result.ac1 |filter1}}</div>
+									<div class="sc_bu colorBorder_red" ng-if='result.bu1 > result.ac1 && result.bu1'>{{result.ac1 |filter1}}</div>
+									<div class="sc_bu colorBorder_green" ng-if='result.bu1 < result.ac1 && result.bu1'>{{result.ac1 |filter1}}</div>
+									<div class="sc_bu colorBorder_yello" ng-if='result.ac1 == 0 && result.bu1'>{{result.ac1 |filter1}}</div>
+								</td>
+								<td style="width:100px;text-align: center;">
+									<div class="sc_bu sc_bu_bro">{{result.bu2 |filter1}}</div>
+									<div class="sc_bu" ng-if='!result.bu2'>{{result.ac2 |filter1}}</div>
+									<div class="sc_bu colorBorder_red" ng-if='result.bu2 > result.ac2 && result.bu2'>{{result.ac2 |filter1}}</div>
+									<div class="sc_bu colorBorder_green" ng-if='result.bu2 < result.ac2 && result.bu2'>{{result.ac2 |filter1}}</div>
+									<div class="sc_bu colorBorder_yello" ng-if='result.ac2 == 0 && result.bu2'>{{result.ac2 |filter1}}</div>
+								</td>
+								<td style="width:100px;text-align: center;">
+									<div class="sc_bu sc_bu_bro">{{result.bu3 |filter1}}</div>
+									<div class="sc_bu colorBorder_yello" ng-if='!result.bu3 && result.ac3 == 0'>{{result.ac3 |filter1}}</div>
+									<div class="sc_bu" ng-if='!result.bu3 && result.ac3 > 0 '>{{result.ac3 |filter1}}</div>
+								  <div class="sc_bu" ng-if='!result.ac3'>{{result.ac3 |filter1}}</div>
+									<div class="sc_bu colorBorder_red" ng-if='result.bu3 && result.ac3 && result.bu3 > result.ac3'>{{result.ac3 |filter1}}</div>
+									<div class="sc_bu colorBorder_green" ng-if='result.bu3 && result.ac3 && result.bu3 < result.ac3'>{{result.ac3 |filter1}}</div>
+								</td>
+								<td style="width:100px;text-align: center;">
+									<div class="sc_bu sc_bu_bro">{{result.bu4 |filter1}}</div>
+									<div class="sc_bu colorBorder_yello" ng-if='!result.bu4 && result.ac4 == 0'>{{result.ac4 |filter1}}</div>
+									<div class="sc_bu" ng-if='!result.bu4 && result.ac4 > 0 '>{{result.ac4 |filter1}}</div>
+								  <div class="sc_bu" ng-if='!result.ac4'>{{result.ac4 |filter1}}</div>
+									<div class="sc_bu colorBorder_red" ng-if='result.bu4 && result.ac4 && result.bu4 > result.ac4'>{{result.ac4 |filter1}}</div>
+									<div class="sc_bu colorBorder_green" ng-if='result.bu4 && result.ac4 && result.bu4 < result.ac4'>{{result.ac4 |filter1}}</div>
+								</td>
+								<td style="width:100px;text-align: center;">
+									<div class="sc_bu sc_bu_bro">{{result.bu5 |filter1}}</div>
+									<div class="sc_bu colorBorder_yello" ng-if='!result.bu5 && result.ac5 == 0'>{{result.ac5 |filter1}}</div>
+									<div class="sc_bu" ng-if='!result.bu5 && result.ac5 > 0 '>{{result.ac5 |filter1}}</div>
+								  <div class="sc_bu" ng-if='!result.ac5'>{{result.ac5 |filter1}}</div>
+									<div class="sc_bu colorBorder_red" ng-if='result.bu5 && result.ac5 && result.bu5 > result.ac5'>{{result.ac5 |filter1}}</div>
+									<div class="sc_bu colorBorder_green" ng-if='result.bu5 && result.ac5 && result.bu5 < result.ac5'>{{result.ac5 |filter1}}</div>
+								</td>
+								<td style="width:100px;text-align: center;">
+									<div class="sc_bu sc_bu_bro">{{result.bu6 |filter1}}</div>
+									<div class="sc_bu colorBorder_yello" ng-if='!result.bu6 && result.ac6 == 0'>{{result.ac6 |filter1}}</div>
+									<div class="sc_bu" ng-if='!result.bu6 && result.ac6 > 0 '>{{result.ac6 |filter1}}</div>
+								  <div class="sc_bu" ng-if='!result.ac6'>{{result.ac6 |filter1}}</div>
+									<div class="sc_bu colorBorder_red" ng-if='result.bu6 && result.ac6 && result.bu6 > result.ac6'>{{result.ac6 |filter1}}</div>
+									<div class="sc_bu colorBorder_green" ng-if='result.bu6 && result.ac6 && result.bu6 < result.ac6'>{{result.ac6 |filter1}}</div>
+								</td>
+								<td style="width:100px;text-align: center;">
+									<div class="sc_bu sc_bu_bro">{{result.bu7 |filter1}}</div>
+									<div class="sc_bu colorBorder_yello" ng-if='!result.bu7 && result.ac7 == 0'>{{result.ac7 |filter1}}</div>
+									<div class="sc_bu" ng-if='!result.bu7 && result.ac7 > 0 '>{{result.ac7 |filter1}}</div>
+								  <div class="sc_bu" ng-if='!result.ac7'>{{result.ac7 |filter1}}</div>
+									<div class="sc_bu colorBorder_red" ng-if='result.bu7 && result.ac7 && result.bu7 > result.ac7'>{{result.ac7 |filter1}}</div>
+									<div class="sc_bu colorBorder_green" ng-if='result.bu7 && result.ac7 && result.bu7 < result.ac7'>{{result.ac7 |filter1}}</div>
+								</td>
+								<td style="width:100px;text-align: center;">
+									<div class="sc_bu sc_bu_bro">{{result.bu8 |filter1}}</div>
+									<div class="sc_bu colorBorder_yello" ng-if='!result.bu8 && result.ac8 == 0'>{{result.ac8 |filter1}}</div>
+									<div class="sc_bu" ng-if='!result.bu8 && result.ac8 > 0 '>{{result.ac8 |filter1}}</div>
+								  <div class="sc_bu" ng-if='!result.ac8'>{{result.ac8 |filter1}}</div>
+									<div class="sc_bu colorBorder_red" ng-if='result.bu8 && result.ac8 && result.bu8 > result.ac8'>{{result.ac8 |filter1}}</div>
+									<div class="sc_bu colorBorder_green" ng-if='result.bu8 && result.ac8 && result.bu8 < result.ac8'>{{result.ac8 |filter1}}</div>
+								</td>
+								<td style="width:100px;text-align: center;">
+									<div class="sc_bu sc_bu_bro">{{result.bu9 |filter1}}</div>
+									<div class="sc_bu colorBorder_yello" ng-if='!result.bu9 && result.ac9 == 0'>{{result.ac9 |filter1}}</div>
+									<div class="sc_bu" ng-if='!result.bu9 && result.ac9 > 0 '>{{result.ac9 |filter1}}</div>
+								  <div class="sc_bu" ng-if='!result.ac9'>{{result.ac9 |filter1}}</div>
+									<div class="sc_bu colorBorder_red" ng-if='result.bu9 && result.ac9 && result.bu9 > result.ac9'>{{result.ac9 |filter1}}</div>
+									<div class="sc_bu colorBorder_green" ng-if='result.bu9 && result.ac9 && result.bu9 < result.ac9'>{{result.ac9 |filter1}}</div>
+								</td>
+								<td style="width:100px;text-align: center;">
+									<div class="sc_bu sc_bu_bro">{{result.bu10 |filter1}}</div>
+									<div class="sc_bu colorBorder_yello" ng-if='!result.bu10 && result.ac10 == 0'>{{result.ac10 |filter1}}</div>
+									<div class="sc_bu" ng-if='!result.bu10 && result.ac10 > 0 '>{{result.ac10 |filter1}}</div>
+								  <div class="sc_bu" ng-if='!result.ac10'>{{result.ac10 |filter1}}</div>
+									<div class="sc_bu colorBorder_red" ng-if='result.bu10 && result.ac10 && result.bu10 > result.ac10'>{{result.ac10 |filter1}}</div>
+									<div class="sc_bu colorBorder_green" ng-if='result.bu10 && result.ac10 && result.bu10 < result.ac10'>{{result.ac10 |filter1}}</div>
+								</td>
+								<td style="width:100px;text-align: center;">
+									<div class="sc_bu sc_bu_bro">{{result.bu11 |filter1}}</div>
+									<div class="sc_bu colorBorder_yello" ng-if='!result.bu11 && result.ac11 == 0'>{{result.ac11 |filter1}}</div>
+									<div class="sc_bu" ng-if='!result.bu11 && result.ac11 > 0 '>{{result.ac11 |filter1}}</div>
+								  <div class="sc_bu" ng-if='!result.ac11'>{{result.ac11 |filter1}}</div>
+									<div class="sc_bu colorBorder_red" ng-if='result.bu11 && result.ac11 && result.bu11 > result.ac11'>{{result.ac11 |filter1}}</div>
+									<div class="sc_bu colorBorder_green" ng-if='result.bu11 && result.ac11 && result.bu11 < result.ac11'>{{result.ac11 |filter1}}</div>
+								</td>
+								<td style="width:100px;text-align: center;">
+									<div class="sc_bu sc_bu_bro">{{result.bu12 |filter1}}</div>
+									<div class="sc_bu colorBorder_yello" ng-if='!result.bu12 && result.ac12 == 0'>{{result.ac12 |filter1}}</div>
+									<div class="sc_bu" ng-if='!result.bu12 && result.ac12 > 0 '>{{result.ac12 |filter1}}</div>
+								  <div class="sc_bu" ng-if='!result.ac12'>{{result.ac12 |filter1}}</div>
+									<div class="sc_bu colorBorder_red" ng-if='result.bu12 && result.ac12 && result.bu12 > result.ac12'>{{result.ac12 |filter1}}</div>
+									<div class="sc_bu colorBorder_green" ng-if='result.bu12 && result.ac12 && result.bu12 < result.ac12'>{{result.ac12 |filter1}}</div>
+								</td>
+								<td style="width:200px;text-align: center;">
+									<div class="sc_bu sc_bu_bro">{{result.comments}}</div>
+									<div class="sc_bu"></div>
+								</td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+				<div class="bottom-page"  style="display:none">
+					<div class="bottom-page-l">
+						<div class="prev2" title="上一页"><</div>
+							<div class="page-detail">&nbsp;&nbsp;第&nbsp; 
+								<input class="input2" autocomplete="off" disabled="disabled" id="pageNum2" type="text" value="1" style="text-align: center;" /> &nbsp;页
+								<!--，共&nbsp; <span id="page"></span>&nbsp;页&nbsp;&nbsp;-->
+							</div>
+							<div class="next2" title="上一页">></div>
+							<div class="perPage">20条/页</div>
+						</div>
+					</div>
+				</div>
+				<div class="app1Tabs1"  ng-show="app1Tabs==4" ng-init='glylists()'>
+					<div class="lishijil" >
+						<div> 
+							<span>产线:</span>
+							<select  ng-change='touchVal()' ng-model="nodeDays">
+								<option value="{{results.id}}" ng-repeat="results in glyVal">{{results.eqt_name}}</option>
+							</select>
+						</div>
+						<div>
+							<span>设备:</span>
+							<select ng-change='touchVal()' ng-model="shebeis">
+								<option value="{{rs.id}}" ng-repeat="rs in shebei;">{{rs.eqt_name}}</option>
+							</select>
+						</div>
+						<div>
+							<span>指标:</span>
+							<select ng-model="zhibiao"  >
+								<option value="{{rss.rule_inst_name}}" ng-repeat="rss in zhibiaos;" >{{rss.rule_inst_name}}</option>
+							</select>
+						</div>
+					</div>
+					<div class="lishijiltimer">
+						<div>
+							<span>开始日期:</span>
+							<input  class="lishitimer form_datetime" size="16" type="text" value=""  readonly>
+						</div>
+						<div>
+							<span>结束日期:</span>
+							<input  class="lishitimer form_datetimes" size="16" type="text" value="" readonly>
+						</div>
+					</div>
+					<div class="touchseach">
+						<div>
+							<input type="button" class="touchOk btn" ng-click='touchtimer()' type="button"  value="搜索"/>
+						</div>
+						<div>
+							<input type="button" class="touchno"  value="清空" ng-click='resettimer()'/>
+						</div>
+					</div>
+					<div style='padding-top: 50px;'>
+						<div class="apptabTitle"  >
+							<div class="titleTipss" id='titleTip' style="background-color:#f9f9f9; width: 100%;" >
+								<p style="width:25%;text-align: center;">指标名称</p>
+								<p style="width:30%;text-align: center;">物料名称</p>
+								<p style="width:25%;text-align: center;">发生时间</p>
+								<p style="width:20%;text-align: center; border-right: none">输出值</p>
+							</div>
+						</div>
+						<div id="app1Tabs2Box" style='height: 300px; overflow: auto;'  >
+							<table style="background-color: #fff;  width: 100%; " cellspacing="0" cellpadding="0">
+								<tbody>
+									<tr align="center" ng-repeat="resultsb in zhibiaosb">
+										<td style="width:25%;text-align: center;">{{resultsb.rule_inst_name}}</td>
+										<td style="width:30%;text-align: center;">{{resultsb.matl_name}}</td>
+										<td style="width:25%;text-align: center;">{{resultsb.occur_date}}</td>
+										<td style="width:20%;text-align: center;">{{resultsb.output_value1 |filter1}}</td>
+									</tr>
+								</tbody>
+							</table>
+						</div>
+							
+					</div>
+				</div>
+			</div>
+	  
+	  <!-- Modal -->
+	 
+		<div class="modal-dialog tips">
+		  <div class="modal-content">
+			<div class="modal-header">
+			  <button type="button" class="close">
+				  <span aria-hidden="true">&times;</span>
+			  </button>
+			  <h4 class="modal-title" id="myModalLabel"></h4>
+			</div>
+			<div class="modal-body"></div>
+			<div class="modal-footer">
+			  <button type="button" class="btn btn-default">关闭</button>
+			</div>
+		  </div>
+		</div>
+
+
+	</body>
+
+</html>
+<script src="js/angular.min.js"></script>
+<script src="js/echarts.js"></script>
+<script src="js/jquery.min.1.11.js"></script>
+<script src="js/bootstrap.min.js"></script>
+<script src="js/bootstrap-datetimepicker.min.js" charset="UTF-8"></script>
+<script src='js/bootstrap-datetimepicker.zh-CN.js'></script>
+<script src="js/url.js"></script>
+<script src="js/BZ.js"></script>
+<script>
+
+$(document).ready(function() {
+	$('.btn-default').on('click',function(){
+		$('.tips').hide(500);
+	});
+	$('.close').on('click',function(){
+		$('.tips').hide(500);
+	});
+
+	$(".form_datetime").datetimepicker({
+        format: 'yyyy-mm-dd hh:ii',
+        autoclose: true,
+        todayBtn: true,
+		pickerPosition: "bottom-left",
+		language:'zh-CN'
+	});
+	$(".form_datetimes").datetimepicker({
+        format: 'yyyy-mm-dd hh:ii',
+        autoclose: true,
+        todayBtn: true,
+		pickerPosition: "bottom-left",
+		language:'zh-CN'
+    });
+	
+  $('#app1Tabs2Box').scroll(function() {
+	var s = $('#app1Tabs2Box').scrollLeft();
+	var titleTip = document.getElementById('titleTip');
+	titleTip.style.left = -s+'px';
+  });
+  $('#app1Tabs3Box').scroll(function() {
+	var sd = $('#app1Tabs3Box').scrollLeft();
+	var titleTips = document.getElementById('titleTips');
+	titleTips.style.left = -sd+'px';
+  });
+});
+</script>

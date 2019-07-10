@@ -1,0 +1,475 @@
+<!DOCTYPE html>
+<html lang="zh">
+
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<meta http-equiv="X-UA-Compatible" content="ie=edge" />
+		<title>清单报表一</title>
+		<link rel="stylesheet" type="text/css" href="css/bill.css" />
+		<link rel="stylesheet" type="text/css" href="css/bootstrap.min.css" />
+		<link rel="stylesheet" type="text/css" href="css/bootstrap-theme.min.css" />
+		<link rel="stylesheet" type="text/css" href="css/bootstrap-datetimepicker.min.css" />
+		<script src="js/echarts.js"></script>
+		<script src="js/angular.min.js"></script>
+		<script src="js/jquery.min.1.11.js"></script>
+		<script src="js/bootstrap.min.js"></script>
+		<script src="js/bootstrap-datetimepicker.min.js"></script>
+		<script src="js/url.js"></script>
+		<script src="js/bill.js"></script>
+
+	</head>
+
+	<body>
+		<div ng-app="myApp" ng-controller="myCtrl" class="appBox" ng-init="tabCode=1">
+			<div class="aapContent">
+				<ul>
+					<li ng-click="tabs1C()">清单报表</li>
+					<li ng-click="tabs2C()">单类型统计图</li>
+					<li ng-click="tabs3C()">单个报警历史曲线</li>
+				</ul>
+
+			</div>
+			<div class="tabs1" ng-show="tabCode==1">
+				<div class="overLine">
+					<div class="code1Title1">
+						搜索
+					</div>
+				</div>
+				<div class="searchBox">
+					<ul>
+						<li>
+							<div class="user-name action_name">
+								<span>报警项:</span>
+								<input  class="action_name_input_top bjx" type="" name="">
+							</div>
+							<div class="user-name action_name_shebei" >
+								<span>位置:</span>
+								<input class="WZposition action_name_theer"  type="" name="" >
+								<!-- <div class="touchlist">
+									<div  ng-repeat="result in Plistnum" ng-click="touchListnum(result.eqt_name)">
+										{{result.eqt_name}}
+									</div>
+								</div> -->
+							</div>
+
+							<div id="" style="height: 40px;line-height: 40px;float: left;margin-left: 20px;">
+								<span style="float: left;">优先级:</span>
+								<div style="float: left;margin-left: 12px;" class="dropdown">
+									<button style="width: 110px;" class="btn btn-default dropdown-toggle btnContent1" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">---请选择---<span class="caret"></span>
+				  </button>
+									<ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
+										<li ng-repeat="result in yxjData">
+											<a href="#" ng-click="chooseContent1($event)">{{result.priority}}</a>
+										</li>
+
+									</ul>
+								</div>
+							</div>
+
+							<div id="" style="height: 40px;line-height: 40px;float: left;margin-left: 20px;">
+								<span style="float: left;">自定义类型1:</span>
+								<div style="float: left;margin-left: 12px;" class="dropdown">
+									<button style="width: 110px;" class="btn btn-default dropdown-toggle btnContent2" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+					     ---请选择---
+					    <span class="caret"></span>
+				  </button>
+									<ul class="dropdown-menu" style="overflow-y: auto;" aria-labelledby="dropdownMenu1">
+										<li>
+											<a ng-repeat="result in zdylx1" href="#" ng-click="chooseContent2($event)">{{result.rule_type_item_name}}</a>
+										</li>
+
+									</ul>
+								</div>
+							</div>
+
+							<div id="" style="height: 40px;line-height: 40px;float: left;margin-left: 20px;">
+								<span style="float: left;">自定义类型2:</span>
+								<div style="float: left;margin-left: 12px;" class="dropdown">
+									<button style="width: 110px;" class="btn btn-default dropdown-toggle btnContent3" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+					     ---请选择---
+					    <span class="caret"></span>
+				  </button>
+									<ul class="dropdown-menu" style="overflow-y: auto;" aria-labelledby="dropdownMenu1">
+										<li>
+											<a ng-repeat="result in zdylx2" href="#" ng-click="chooseContent3($event)">{{result.rule_type_item_name}}</a>
+										</li>
+									</ul>
+								</div>
+							</div>
+
+							<div id="" style="height: 40px;line-height: 40px;float: left;margin-left: 20px;">
+								<span style="float: left;">自定义类型3:</span>
+								<div style="float: left;margin-left: 12px;" class="dropdown">
+									<button style="width: 110px;" class="btn btn-default dropdown-toggle btnContent4" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+					     ---请选择---
+					    <span class="caret"></span>
+				  </button>
+									<ul class="dropdown-menu" style="overflow-y: auto;" aria-labelledby="dropdownMenu1">
+										<li>
+											<a ng-repeat="result in zdylx3" href="#" ng-click="chooseContent4($event)">{{result.rule_type_item_name}}</a>
+										</li>
+									</ul>
+								</div>
+							</div>
+
+						</li>
+						<li>
+							<div style="margin-left: 20px;float: left;">
+								<div style="float: left;height: 40px;line-height: 40px;">报警时间:</div>
+								<div style="width:240px;height: 36px;float: left;border: 1px solid #d8d8d8;background-color: #fefefe;line-height: 36px;border-radius: 6px;border-collapse: collapse;">
+									<div class="form-group" style="float: left;height: 34px;width: 100px;margin-left: 12px;margin-bottom: 0;">
+										<div class="input-group">
+											<!--<div class="input-group-addon">开始日期</div>-->
+											<input autocomplete="off" style="border: 0;" class="form-control" placeholder="开始日期" type="text" id="startTime" />
+										</div>
+									</div>
+									<span style="float: left;height: 34px;line-height: 34px;margin-left: 5px;margin-right: 5px;background-color:#fefefe ;">~</span>
+									<div class="form-group" style="float: left;height: 40px;width: 100px;">
+										<div class="input-group">
+											<!--<div class="input-group-addon">结束日期</div>-->
+											<input autocomplete="off" style="border: 0;" class="form-control" placeholder="结束日期" type="text" id="endTime">
+										</div>
+									</div>
+								</div>
+							</div>
+							<div style="margin-left: 20px;float: left;">
+								<div style="float: left;height: 40px;line-height: 40px;">确认时间:</div>
+								<div style="width:240px;height: 36px;float: left;border: 1px solid #d8d8d8;background-color: #fefefe;line-height: 36px;border-radius: 6px;">
+									<div class="form-group" style="float: left;height: 40px;width: 100px;margin-left: 12px;">
+										<div class="input-group">
+											<!--<div class="input-group-addon">开始日期</div>-->
+											<input style="border: 0;" autocomplete="off"  placeholder="开始日期" class="form-control" type="text" id="startTime2" />
+										</div>
+									</div>
+									<span style="float: left;height: 40px;line-height: 40px;margin-left: 5px;margin-right: 5px;">~</span>
+									<div class="form-group" style="float: left;height: 40px;width: 100px;">
+										<div class="input-group">
+											<!--<div class="input-group-addon">结束日期</div>-->
+											<input style="border: 0;" autocomplete="off" placeholder="结束日期" class="form-control" type="text" id="endTime2">
+										</div>
+									</div>
+								</div>
+							</div>
+
+							<div style="margin-left: 20px;float: left;">
+								<div style="float: left;height: 40px;line-height: 40px;">关闭时间:</div>
+								<div style="width:240px;height: 36px;float: left;border: 1px solid #d8d8d8;background-color: #fefefe;line-height: 36px;border-radius: 6px;">
+									<div class="form-group" style="float: left;height: 40px;width: 100px;margin-left: 12px;">
+										<div class="input-group">
+											<!--<div class="input-group-addon">开始日期</div>-->
+											<input style="border: 0;" autocomplete="off" placeholder="开始日期" class="form-control" type="text" id="startTime3" />
+										</div>
+									</div>
+									<span style="float: left;height: 40px;line-height: 40px;margin-left: 5px;margin-right: 5px;">~</span>
+									<div class="form-group" style="float: left;height: 40px;width: 100px;">
+										<div class="input-group">
+											<!--<div class="input-group-addon">结束日期</div>-->
+											<input style="border: 0;" autocomplete="off"  placeholder="结束日期" class="form-control" type="text" id="endTime3">
+										</div>
+									</div>
+								</div>
+							</div>
+
+							<div class="btnOorF" style=" float: left;margin-left: 70px;">
+								<div ng-click="searchBtn()" class="searchBtn">
+									查询
+								</div>
+								<div ng-click="cleanBtn()" class="cleanBtn">
+									清空
+								</div>
+							</div>
+						</li>
+					</ul>
+
+				</div>
+
+				<div class="overLine">
+					<div class="code1Title1">
+						清单报表
+					</div>
+				</div>
+
+				<div id="tableBox">
+					<table style="width: 1700px;background-color: #fff;" cellspacing="0" cellpadding="0">
+						<thead>
+							<tr align="center" style="background-color:#f9f9f9 ;">
+								<th style="width:60px;text-align: center;">编号</th>
+								<th style="width:280px;text-align: center;">
+									报警项
+								</th>
+								<th style="width:100px;text-align: center;">部门</th>
+								<th style="width:100px;text-align: center;">车间</th>
+								<th style="width:100px;text-align: center;">产线</th>
+								<th style="width:100px;text-align: center;">位置</th>
+								<th style="width:60px;text-align: center;">
+									优先级
+								</th>
+								<th style="width:250px;text-align: center;">报警时间</th>
+								<th style="width:250px;text-align: center;">确认时间</th>
+								<th style="width:250px;text-align: center;">关闭时间</th>
+								<th style="width:100px;text-align: center;">自定义类型1</th>
+								<th style="width:100px;text-align: center;">自定义类型2</th>
+								<th style="width:100px;text-align: center;">自定义类型3</th>
+								<th style="width:100px;text-align: center;">输出参数值1</th>
+								<th style="width:100px;text-align: center;">输出参数值2</th>
+								<th style="width:100px;text-align: center;">输出参数值3</th>
+								<th style="width:100px;text-align: center;">行动方案</th>
+								<th style="width:100px;text-align: center;">确认人</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr align="center" ng-repeat="result in chart2Result" >
+								<td>{{result.index}}</td>
+								<td>{{result.rule_inst_name}}</td>
+								<td>{{result.a3}}</td>
+								<td>{{result.a2}}</td>
+								<td>{{result.a1}}</td>
+								<td>{{result.eqt_name}}</td>
+								<td>{{result.priority}}</td>
+								<td>{{result.occur_date}}</td>
+								<td>{{result.confirm_date}}</td>
+								<td>{{result.close_date}}</td>
+								<td>{{result.c_type1}} </td>
+								<td>{{result.c_type2}} </td>
+								<td>{{result.c_type3}} </td>
+								<td>{{result.output_value1 | filter1}}</td>
+								<td>{{result.output_value2 | filter1}}</td>
+								<td>{{result.output_value3| filter1}}</td>
+								<td>{{result.action}} </td>
+								<td></td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+
+				<div class="bottom-page">
+					<div class="bottom-page-l">
+						<div class="prev1" title="上一页">
+							<</div>
+								<div class="page-detail">
+									&nbsp;&nbsp;第&nbsp; <input class="input" disabled="disabled" id="pageNum" type="text" value="1" style="text-align: center;" /> &nbsp;页
+									<!--，共&nbsp; <span id="page"></span>&nbsp;页&nbsp;&nbsp;-->
+								</div>
+								<div class="next1" title="上一页">></div>
+								<div class="perPage">10条/页</div>
+						</div>
+					</div>
+				</div>
+				<div class="tabs2" ng-show="tabCode==2">
+					<div class="" style="width: 100%;height: 80px;line-height: 80px;">
+						<div style="margin-left: 20px;margin-top:20px;float: left;">
+							<div style="float: left;height: 40px;line-height: 40px;">报警时间:</div>
+							<div style="width:240px;height: 36px;float: left;border: 1px solid #d8d8d8;background-color: #fefefe;line-height: 36px;border-radius: 6px;">
+								<div class="form-group" style="float: left;height: 40px;width: 100px;margin-left: 12px;">
+									<div class="input-group">
+										<!--<div class="input-group-addon">开始日期</div>-->
+										<input autocomplete="off" style="border: 0;" placeholder="开始日期" class="form-control" type="text" id="startTime4" />
+									</div>
+								</div>
+								<span style="float: left;height: 40px;line-height: 40px;margin-left: 5px;margin-right: 5px;">~</span>
+								<div class="form-group" style="float: left;height: 40px;width: 100px;">
+									<div class="input-group">
+										<!--<div class="input-group-addon">结束日期</div>-->
+										<input style="border: 0;" autocomplete="off" placeholder="结束日期" class="form-control" type="text" id="endTime4">
+									</div>
+								</div>
+							</div>
+						</div>
+
+						<div id="" style="height: 40px;line-height: 40px;margin-top:16px;float: left;margin-left: 20px;">
+							<span style="float: left;" class="tabs2Type">类型:</span>
+							<div style="float: left;margin-left: 12px;" class="dropdown">
+								<button style="width: 110px;" class="btn btn-default dropdown-toggle btnContent5" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+					     ---请选择---
+					    <span class="caret"></span>
+				  </button>
+								<ul class="dropdown-menu" style="overflow-y: auto;" aria-labelledby="dropdownMenu1">
+									<li>
+										<a href="#" ng-click="chooseContent5($event)">优先级</a>
+									</li>
+									<li>
+										<a href="#" ng-click="chooseContent5($event)">位置</a>
+									</li>
+									<li>
+										<a href="#" ng-click="chooseContent5($event)">自定义类型</a>
+									</li>
+								</ul>
+							</div>
+						</div>
+						<div id="btnContentP" style="height: 40px;margin-top:16px;line-height: 40px;float: left;margin-left: 20px;display: none;">
+							<span style="float: left;">位置</span>
+							<div style="float: right;margin-left: 12px;" class="dropdown">
+								<button style="width: 110px;" class="btn btn-default dropdown-toggle btnContentP" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+					     ---请选择---
+					    <span class="caret"></span>
+				  </button>
+								<ul class="dropdown-menu" aria-labelledby="dropdownMenu1" style="height:150px;overflow-y: auto;">
+									<li ng-repeat="result in Plist">
+										<a href="#" ng-click="chooseContentP($event,result.eqt_id)">{{result.eqt_name}}</a>
+									</li>
+
+								</ul>
+							</div>
+						</div>
+						<div id="btnContentT" style="height: 40px;line-height: 40px;margin-top:16px;float: left;margin-left: 20px;display: none;">
+							<span style="float: left;">	自定义类型</span>
+							<div style="float: right;margin-left: 12px;" class="dropdown">
+								<button style="width: 110px;" class="btn btn-default dropdown-toggle btnContentT" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+					     ---请选择---
+					    <span class="caret"></span>
+				  </button>
+								<ul style="overflow: auto;" class="dropdown-menu" aria-labelledby="dropdownMenu1">
+									<li>
+										<a href="#" ng-click="chooseContentT($event)">自定义类型1</a>
+									</li>
+									<li>
+										<a href="#" ng-click="chooseContentT($event)">自定义类型2</a>
+									</li>
+									<li>
+										<a href="#" ng-click="chooseContentT($event)">自定义类型3</a>
+									</li>
+								</ul>
+							</div>
+						</div>
+						<div class="btnOorF" style=" float: left;margin-left: 70px;margin-top: 23px;">
+							<div ng-click="searchBtn1()" class="searchBtn1">
+								查询
+							</div>
+							<div ng-click="cleanBtn1()" class="cleanBtn1">
+								清空
+							</div>
+						</div>
+					</div>
+
+					<div id="main1">
+
+					</div>
+					<div id="main2">
+
+					</div>
+					<div id="main3">
+
+					</div>
+				</div>
+
+				<div class="tabs3" ng-show="tabCode==3">
+					<div class="tabs3TableSearchBox" style="width: 100%;height: 60px;">
+						<div style="margin-left: 20px;float: left;margin-top: 10px;">
+							<div style="float: left;height: 40px;line-height: 40px;">报警时间:</div>
+							<div style="width:240px;height: 36px;float: left;border: 1px solid #d8d8d8;background-color: #fefefe;line-height: 36px;border-radius: 6px;">
+								<div class="form-group" style="float: left;height: 40px;width: 100px;margin-left: 12px;">
+									<div class="input-group">
+										<!--<div class="input-group-addon">开始日期</div>-->
+										<input style="border: 0;" autocomplete="off" placeholder="开始日期" class="form-control" type="text" id="startTimeQX" />
+									</div>
+								</div>
+								<span style="float: left;height: 40px;line-height: 40px;margin-left: 5px;margin-right: 5px;">~</span>
+								<div class="form-group" style="float: left;height: 40px;width: 100px;">
+									<div class="input-group">
+										<!--<div class="input-group-addon">结束日期</div>-->
+										<input style="border: 0;" autocomplete="off" placeholder="结束日期" class="form-control" type="text" id="endTimeQX">
+									</div>
+								</div>
+							</div>
+						</div>
+
+						<div class="btnOorF" style=" float: left;margin-left: 70px;margin-top: 12px;">
+							<div ng-click="searchBtn3()" class="searchBtn3">
+								查询
+							</div>
+							<div ng-click="cleanBtn3()" class="cleanBtn3">
+								清空
+							</div>
+						</div>
+					</div>
+					<div class="" style="width: 100%;height: calc(100% - 125px);overflow-y: auto;">
+						<table cellpadding="0" cellspacing="0" style="width: 100%;background-color: #fff;">
+							<tr style="background-color: #f9f9f9;">
+								<th style="width: 8%;">序号</th>
+								<th style="width: 50%;">报警项</th>
+								<th style="width: 25%;">位置</th>
+								<th style="width: 15%;">次数(次)</th>
+							</tr>
+
+							<tbody>
+								<tr ng-repeat="result in chart3Result">
+									<td>{{result.index}}</td>
+									<td>
+										<a ng-click="showTab3Chart($event,result.rule_inst_id)" href="javascript:;">{{result.rule_inst_name}}</a>
+									</td>
+									<td>{{result.eqt_name}}</td>
+									<td>{{result.num}}</td>
+								</tr>
+							</tbody>
+						</table>
+
+					</div>
+					<div class="bottom-page">
+						<div class="bottom-page-l">
+							<div class="prev2" title="上一页">
+								<</div>
+									<div class="page-detail">
+										&nbsp;&nbsp;第&nbsp; <input class="input2" autocomplete="off" disabled="disabled" id="pageNum2" type="text" value="1" style="text-align: center;" /> &nbsp;页
+										<!--，共&nbsp; <span id="page"></span>&nbsp;页&nbsp;&nbsp;-->
+									</div>
+									<div class="next2" title="上一页">
+										>
+									</div>
+									<div class="perPage">20条/页</div>
+							</div>
+						</div>
+						<div class="tabs3Chart">
+							<img class="closeM" src="./images/close.png" />
+							<div id="tabs3Chart1"></div>
+						</div>
+						<div class="tabs3Table" style="overflow: auto;padding-left: 10px;box-sizing: border-box;">
+							<img class="closeT" src="./images/close.png" />
+							<div class="" style="width: 100%;height: calc(100% - 56px);overflow-y: auto;">
+								<table cellpadding="0" cellspacing="0" style="width: 1800px;background-color: #fff;margin-right: 10px;">
+									<tr style="background-color: #f9f9f9;">
+										<th style="width: 70px;">序号</th>
+										<th style="width: 270px;">报警项</th>
+										<th style="width: 200px;">报警时间</th>
+										<th style="width: 200px;">确认时间</th>
+										<th style="width: 150px;">关闭时间</th>
+										<th style="width: 60px;">优先级</th>
+										<th style="width: 200px;">自定义类型1</th>
+										<th style="width: 200px;">自定义类型2</th>
+										<th style="width: 200px;">自定义类型3</th>
+										<th style="width: 250px;">备注</th>
+									</tr>
+									<tbody>
+										<tr ng-repeat="result in tabs3Table3Data">
+											<td>{{result.index}}</td>
+											<td>{{result.rule_inst_name}}</td>
+											<td>{{result.occur_date}}</td>
+											<td>{{result.confirm_date}}</td>
+											<td>{{result.close_date}}</td>
+											<td>{{result.priority}}</td>
+											<td>{{result.customized_type_1}}</td>
+											<td>{{result.customized_type_2}}</td>
+											<td>{{result.customized_type_3}}</td>
+											<td>{{result.remark}}</td>
+										</tr>
+									</tbody>
+
+								</table>
+							</div>
+							<div class="bottom-page">
+								<div class="bottom-page-l">
+									<div class="prev3" title="上一页"><</div>
+										<div class="page-detail">
+											&nbsp;&nbsp;第&nbsp; 
+											<input class="input3"  autocomplete="off" disabled="disabled" id="pageNum3" type="text" value="1" style="text-align: center;" /> &nbsp;页
+										</div>
+										<div class="next3" title="上一页">></div>
+										<div class="perPage">20条/页</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+	</body>
+
+</html>

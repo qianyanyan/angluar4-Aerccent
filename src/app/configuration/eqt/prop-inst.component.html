@@ -1,0 +1,290 @@
+<form nz-form class="ant-advanced-search-form">
+    <div nz-row [nzGutter]="24">
+        <div nz-col [nzSpan]="3"></div>
+        <div nz-col [nzSpan]="6">
+            <nz-form-item nzFlex>
+                <label>属性名称:</label>
+                <input nz-input placeholder="请输入属性名称" name="search.prop_name" nzSize="default"
+                    [(ngModel)]="search.prop_name">
+            </nz-form-item>
+        </div>
+        <div nz-col [nzSpan]="6">
+            <nz-form-item nzFlex>
+                <label>实例简写:</label>
+                <input nz-input placeholder="请输入属性实例简写" name="search.prop_short_name" nzSize="default"
+                    [(ngModel)]="search.prop_short_name">
+            </nz-form-item>
+        </div>
+        <div nz-col [nzSpan]="6">
+            <nz-form-item nzFlex>
+                <label>实例名称:</label>
+                <input nz-input placeholder="请输入属性实例名称" name="search.prop_inst_name" nzSize="default"
+                    [(ngModel)]="search.prop_inst_name">
+            </nz-form-item>
+        </div>
+    </div>
+    <div nz-row>
+        <div nz-col [nzSpan]="24" style="text-align: center;">
+            <button nz-button [nzType]="'primary'" (click)="searchSubmit()">搜索</button>
+            <button nz-button (click)="resetForm()">清空</button>
+        </div>
+    </div>
+</form>
+<div class="base-table">
+    <div class="table-operations">
+        <button nz-button [nzType]="'primary'" (click)="showAdd()">新增</button>
+        <button nz-button [nzType]="'primary'" (click)="isImport=true">导入</button> 
+        <button nz-button [nzType]="'primary'" nz-popover nzTitle="导出类型" [nzContent]="contentTemplate"  nzPlacement="bottomRight">导出</button>
+    </div>
+    <nz-table   
+        #ajaxTable
+            nzShowSizeChanger
+            [nzFrontPagination]="false"
+            [nzData]="dataSet"
+            [nzLoading]="loading"
+            [nzTotal]="total"
+            [(nzPageIndex)]="pageIndex"
+            [(nzPageSize)]="pageSize"
+            (nzPageIndexChange)="getList()"
+            (nzPageSizeChange)="getList(true)">
+        <thead>
+            <tr>
+            <th style="min-width:80px">属性实例编码</th>
+            <th style="min-width:80px">属性名称</th>
+            <th style="min-width:80px">属性实例简写</th>
+            <th style="min-width:80px">属性实例名称</th>
+            <th style="min-width:80px">单位</th>
+            <th style="min-width:80px">类型</th>
+            <th style="min-width:80px">值</th>
+            <th style="min-width:80px">状态</th>
+            <th style="width:160px">操作</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr *ngFor="let data of ajaxTable.data">
+                <td>{{data.prop_inst_code}}</td>
+                <td>{{data.prop_name}}</td>
+                <td>{{data.prop_short_name}}</td>
+                <td>{{data.prop_inst_name}}</td>
+                <td>{{data.unit_name}}</td>
+                <td>{{data.prop_type | PropInstType}}</td>
+                <td>{{data.prop_value}}</td>
+                <td><span *ngIf="data.is_valid==1">激活</span> <span *ngIf="data.is_valid==0">关闭</span></td>
+                <td> 
+                    <button nz-button [nzType]="'primary'" (click)="showUpdate(data)">修改</button>
+                    <button nz-button [nzType]="'primary'" (click)="delete(data.prop_inst_id)">删除</button>
+                </td>
+            </tr>
+        </tbody>
+    </nz-table>
+</div>
+    
+<nz-modal [(nzVisible)]="isAdd" nzTitle="新增属性实例" [nzMaskClosable]="false"  (nzOnCancel)="hideAdd()" (nzOnOk)="addSubmit()">
+    <form nz-form class="ant-advanced-search-form">
+        <div nz-row [nzGutter]="24">
+            <div nz-col [nzSpan]="24">
+                <nz-form-item nzFlex>
+                    <label>实例编码:</label>
+                    <input nz-input placeholder="请输入属性实例编码" maxlength="20" name="add.prop_inst_code" nzSize="default" [(ngModel)]="add.prop_inst_code">
+                </nz-form-item>
+            </div>
+            <div nz-col [nzSpan]="24">
+                <nz-form-item nzFlex>
+                    <label>属性名称:</label>
+                    <input nz-input placeholder="请选择属性名称"   (click)="showAddPropModule()"   maxlength="50" name="add.prop_name" nzSize="default" [(ngModel)]="add.prop_name">
+                </nz-form-item>
+            </div>
+            
+            <div nz-col [nzSpan]="24">
+                <nz-form-item nzFlex>
+                    <label>实例缩写:</label>
+                    <input nz-input placeholder="请输入属性实例缩写"  maxlength="50" name="add.prop_short_name" nzSize="default" [(ngModel)]="add.prop_short_name">
+                </nz-form-item>
+            </div>
+            <div nz-col [nzSpan]="24">
+                <nz-form-item nzFlex>
+                    <label>实例名称:</label>
+                    <input nz-input placeholder="请输入属性实例名称"  maxlength="50" name="add.prop_inst_name" nzSize="default" [(ngModel)]="add.prop_inst_name">
+                </nz-form-item>
+            </div>
+             
+            <div nz-col [nzSpan]="24">
+                <nz-form-item nzFlex>
+                    <label>单位:</label>
+                    <nz-select  name="add.unit_id"  style="width: 100%;" nzPlaceHolder="请选择单位" [(ngModel)]="add.unit_id">
+                        <nz-option *ngFor="let option of listUnitPtion" [nzLabel]="option.unit_name" [nzValue]="option.unit_id">
+                        </nz-option>
+                    </nz-select>
+                </nz-form-item>
+            </div>
+            <div nz-col [nzSpan]="24">
+                <nz-form-item nzFlex>
+                    <label>实例类型:</label>
+                    <nz-select  name="add.prop_type"  style="width: 100%;" nzPlaceHolder="请选择实例类型" [(ngModel)]="add.prop_type">
+                        <nz-option *ngFor="let option of listTypePtion" [nzLabel]="option.label" [nzValue]="option.id">
+                        </nz-option>
+                    </nz-select>
+                </nz-form-item>
+            </div>
+             
+            <div nz-col [nzSpan]="24">
+                <nz-form-item nzFlex>
+                    <label>值:</label>
+                    <input nz-input placeholder="请输入属性实例值"  maxlength="50" name="add.prop_value" nzSize="default" [(ngModel)]="add.prop_value">
+                </nz-form-item>
+            </div>
+            <div nz-col [nzSpan]="12">
+                <nz-form-item nzFlex>
+                    <label>是否激活:</label>
+                    <nz-switch name="add.is_valid" [(ngModel)]="add.is_valid"></nz-switch>
+                </nz-form-item>
+            </div>
+        </div>  
+    </form>
+</nz-modal>
+
+<nz-modal [(nzVisible)]="isUpdate" nzTitle="更新属性实例" [nzMaskClosable]="false"  (nzOnCancel)="hideUpdate()" (nzOnOk)="updateSubmit()">
+    <form nz-form class="ant-advanced-search-form">
+        <div nz-row [nzGutter]="24">
+            <div nz-col [nzSpan]="24">
+                <nz-form-item nzFlex>
+                    <label>实例编码:</label>
+                    <input nz-input placeholder="请输入属性实例编码" maxlength="20" name="update.prop_inst_code" nzSize="default" [(ngModel)]="update.prop_inst_code">
+                </nz-form-item>
+            </div>
+            <div nz-col [nzSpan]="24">
+                <nz-form-item nzFlex>
+                    <label>属性名称:</label>
+                    <input nz-input placeholder="请选择属性名称"   (click)="showAddPropModule()"   maxlength="50" name="update.prop_name" nzSize="default" [(ngModel)]="update.prop_name">
+                </nz-form-item>
+            </div>
+            
+            <div nz-col [nzSpan]="24">
+                <nz-form-item nzFlex>
+                    <label>实例缩写:</label>
+                    <input nz-input placeholder="请输入属性实例缩写"  maxlength="50" name="update.prop_short_name" nzSize="default" [(ngModel)]="update.prop_short_name">
+                </nz-form-item>
+            </div>
+            <div nz-col [nzSpan]="24">
+                <nz-form-item nzFlex>
+                    <label>实例名称:</label>
+                    <input nz-input placeholder="请输入属性实例名称"  maxlength="50" name="update.prop_inst_name" nzSize="default" [(ngModel)]="update.prop_inst_name">
+                </nz-form-item>
+            </div>
+             
+            <div nz-col [nzSpan]="24">
+                <nz-form-item nzFlex>
+                    <label>单位:</label>
+                    <nz-select  name="update.unit_id"  style="width: 100%;" nzPlaceHolder="请选择单位" [(ngModel)]="update.unit_id">
+                        <nz-option *ngFor="let option of listUnitPtion" [nzLabel]="option.unit_name" [nzValue]="option.unit_id">
+                        </nz-option>
+                    </nz-select>
+                </nz-form-item>
+            </div>
+            <div nz-col [nzSpan]="24">
+                <nz-form-item nzFlex>
+                    <label>实例类型:</label>
+                    <nz-select  name="update.prop_type"  style="width: 100%;" nzPlaceHolder="请选择实例类型" [(ngModel)]="update.prop_type">
+                        <nz-option *ngFor="let option of listTypePtion" [nzLabel]="option.label" [nzValue]="option.id">
+                        </nz-option>
+                    </nz-select>
+                </nz-form-item>
+            </div>
+             
+            <div nz-col [nzSpan]="24">
+                <nz-form-item nzFlex>
+                    <label>值:</label>
+                    <input nz-input placeholder="请输入属性实例值"  maxlength="50" name="update.prop_value" nzSize="default" [(ngModel)]="update.prop_value">
+                </nz-form-item>
+            </div>
+            <div nz-col [nzSpan]="12">
+                <nz-form-item nzFlex>
+                    <label>是否激活:</label>
+                    <nz-switch name="update.is_valid" [(ngModel)]="update.is_valid"></nz-switch>
+                </nz-form-item>
+            </div>
+        </div>  
+    </form>
+</nz-modal>
+    
+
+<nz-modal class="fun" [(nzVisible)]="isAddProp" [nzMaskClosable]="false"  nzKeyboard="false"  nzWidth="800"   nzTitle="选择属性" (nzOnCancel)="hideAddPropModule()" >
+    <mode-prop   (change)="propChange($event)"></mode-prop>
+</nz-modal>
+    
+
+<nz-modal [nzVisible]="isImport"   [nzFooter]="funTemplate"   (nzOnCancel)="isImport=false">
+    <form nz-form   class="login-form"    >
+        <div nz-row [nzGutter]="24">
+            <nz-form-item nzFlex  >
+                <div nz-col [nzSpan]="24">
+                        <nz-upload *ngIf="isImport"
+                        [(nzFileList)]="fileList"
+                        [nzBeforeUpload]="beforeUpload"> 
+                        <button nz-button>
+                        <i nz-icon type="upload"></i><span>导入文件</span>
+                        </button>
+                    </nz-upload>
+                </div>
+            </nz-form-item>
+            <div nz-col [nzSpan]="12">
+                <nz-form-item nzFlex  >
+                    <label class="lab-name">导入前清空目标数据:</label>
+                    <nz-switch name="import.is_empty" [(ngModel)]="import.is_empty" ></nz-switch>
+                </nz-form-item>
+            </div>
+            <div nz-col [nzSpan]="12">
+                <nz-form-item nzFlex  >
+                    <label  class="lab-name">导入时不更新语言包:</label>
+                    <nz-switch name="import.is_no_lang" (ngModelChange)="changeLang(false)" [(ngModel)]="import.is_no_lang"></nz-switch>
+                </nz-form-item>
+            </div>
+            <div nz-col [nzSpan]="12">
+                <nz-form-item nzFlex  >
+                    <label  class="lab-name">导入全部数据:</label>
+                    <nz-switch name="import.is_all" (ngModelChange)="changeLang(false)" [(ngModel)]="import.is_all"></nz-switch>
+                </nz-form-item>
+            </div>
+            <div nz-col [nzSpan]="12">
+                <nz-form-item nzFlex  >
+                    <label  class="lab-name">导入多语言数据:</label>
+                    <nz-switch name="import.is_lang"  (ngModelChange)="changeLang(true)" [(ngModel)]="import.is_lang"></nz-switch>
+                </nz-form-item>
+            </div>
+            <!-- <div nz-col [nzSpan]="24" *ngIf="import.is_lang==true">
+                <nz-form-item nzFlex>
+                    <label>语言:</label>
+                    <nz-select     name="import.lang_id"  style="width: 100%;" nzPlaceHolder="请选择语言" [(ngModel)]="import.lang_id">
+                        <nz-option *ngFor="let option of listLangOption" [nzLabel]="option.label" [nzValue]="option.value">
+                        </nz-option>
+                    </nz-select>
+                </nz-form-item>
+            </div> -->
+            <!-- <div nz-col [nzSpan]="24" *ngIf="import.is_lang==false">
+                <nz-form-item nzFlex>
+                    <label>语言:</label>
+                    <nz-select   disabled="disabled"   name="import.lang_id"  style="width: 100%;" nzPlaceHolder="请选择语言" [(ngModel)]="import.lang_id">
+                        <nz-option *ngFor="let option of listLangOption" [nzLabel]="option.label" [nzValue]="option.value">
+                        </nz-option>
+                    </nz-select>
+                </nz-form-item>
+            </div> -->
+        </div>
+    </form>
+</nz-modal>
+
+<ng-template #contentTemplate>
+    <div>
+        <p><a href="/assets/excel/prop_inst.xls">导出模板</a></p>
+        <p><a href="{{export}}?type=1&eqt_id={{id}}">导出样例模板</a></p>
+        <p><a href="{{export}}?type=2&eqt_id={{id}}">导出全部数据</a></p>
+        <p><a href="{{export}}?type=3&eqt_id={{id}}">导出语言配置表</a></p>
+    </div>
+</ng-template>
+
+<ng-template #funTemplate>
+    <button nz-button (click)="isImport=false">取消</button>
+    <button nz-button [nzType]="'primary'" [nzLoading]="uploading" (click)="handleUpload()" [disabled]="fileList.length == 0" style="margin-top: 16px">
+        {{ uploading ? 'Uploading' : '确定' }}
+    </button>
+</ng-template>

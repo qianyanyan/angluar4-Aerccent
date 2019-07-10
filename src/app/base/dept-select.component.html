@@ -1,0 +1,10 @@
+<div class="tree-input"  >
+    <nz-tree
+    #treeCom
+    [nzData]="nodes"
+    nzCheckable="true"
+      nzMultiple="true"
+      [nzCheckedKeys]="defaultSelectedKeys"
+    (nzCheckBoxChange)="nzCheck($event)">
+    </nz-tree>
+</div>

@@ -1,0 +1,276 @@
+<nz-sider *ngIf="side" class='list-nav' [ngClass]="{'active':isSider }" style=" height: 480px;box-shadow: 3px 3px 3px rgba(51,101,196,.6);background-color: #3365c4;border-top-right-radius: 5px;border-bottom-right-radius: 5px;">
+  <div class="side-box" (click)="showSlider()">
+    <div class="side-icon"></div>
+  </div>
+  <ng-template #renderTpl let-labels="labels">
+    <ng-container>
+      <span>{{labels[labels.length-1]}}</span>
+    </ng-container>
+  </ng-template>
+  <ul class="meAll-ul" nz-menu [nzMode]="'inline'" style="background: none;margin-top:30px;border-right: 0;overflow: hidden;">
+    <li nz-menu-item>
+      <span>
+        <i nz-icon>组织架构</i>
+        <nz-cascader class="CitySelect" style="width: 115px;height: 32px;color: #4e93f6;" [nzExpandTrigger]="'hover'" [nzLabelRender]="renderTpl"
+          [nzOptions]="nzOptions" [(ngModel)]="abc" [nzShowArrow]='false'
+                     [nzValueProperty]="'id'" [nzLabelProperty]="'shortName'"
+                     [nzChangeOnSelect]='true' (ngModelChange)="onChanges($event)">
+        </nz-cascader>
+        <i nz-icon type="down" style="color:#d5c4be;position: absolute;right:-10px;top: 50%;transform: translateY(-50%);"></i>
+      </span>
+    </li>
+    <li nz-menu-item>
+      <span>
+        <i nz-icon>开始时间</i>
+        <nz-date-picker style="width: 115px;" [nzDisabledDate]="disabledStartDate" [nzFormat]="dateFormat" [(ngModel)]="startValue"
+          nzPlaceHolder="{{Start}}" [nzShowToday]="false" (nzOnOpenChange)="handleStartOpenChange($event)">
+        </nz-date-picker>
+      </span>
+    </li>
+    <li nz-menu-item>
+      <span>
+        <i nz-icon style="text-align: center;">|</i>
+
+      </span>
+    </li>
+    <li nz-menu-item>
+      <span>
+        <i nz-icon>结束时间</i>
+        <nz-date-picker style="width: 115px;" [nzDisabledDate]="disabledEndDate" nzFormat="yyyy-MM-dd" [nzShowToday]="false"
+          [(ngModel)]="endValue" nzPlaceHolder="{{End}}" (nzOnOpenChange)="handleEndOpenChange($event)">
+        </nz-date-picker>
+      </span>
+    </li>
+
+  </ul>
+  <div class="QorS">
+    <div class="qx" (click)="qx()">
+      取消
+    </div>
+    <div class="qd" (click)="qd()">
+      确定
+    </div>
+  </div>
+</nz-sider>
+<nz-layout style="position: relative;background-color: #f9f9f9;" *ngIf="side">
+
+  <nz-layout style="margin-left: 200;height: 100%;">
+    <nz-header class="header-data">
+      <!--<span (click)='showSlider()'> < </span>-->
+      <ul>
+        <li class="clearfix innerwidth">
+          <div class="left">{{factoryDQZ}}<em>%</em> <span>{{zzjgName}}</span></div>
+          <div class="right">
+            <p><span>{{factoryMTD}}%</span>MTD目标</p>
+            <p><span>{{factoryYTD}}%</span>YTD值</p>
+            <p><span>{{factoryYTDMBZ}}%</span>YTD目标</p>
+            <p (click)="goToSecondByArea('酿造部','酿造部')"><span>{{nzb}}%</span>酿造部</p>
+            <p (click)="goToSecondByArea('包装部','包装部')"><span>{{bzb}}%</span>包装部</p>
+          </div>
+		    </li>
+        <li class="clearfix resetWidth">
+          <div class="left" (click)="goToSecondByArea('酿造热区','酿造热区')">{{nzrq}}%<span>酿造热区</span></div>
+        </li>
+        <li class="clearfix resetWidth">
+          <div class="left" (click)="goToSecondByArea('酿造冷区','酿造冷区')">{{nzlq}}%<span>酿造冷区</span></div>
+        </li>
+        <li class="clearfix innerwidth">
+          <div class="left" (click)="goToSecondByArea('包装部','包装部')">{{bzb}}<em>%</em><span>包装部</span></div>
+          <div class="right">
+            <p><span>{{factoryBZZL}}</span>包装总量(HL)</p>
+            <p><span>{{factoryBZZLYTD}}</span>YTD值</p>
+          </div>
+        </li>
+        
+        <!-- <li>
+					<div>酿造部 </div>
+					<div>{{nzb}}%</div>
+				</li>
+				<li>
+					<div>酿造热区 </div>
+					<div>{{nzrq}}%</div>
+				</li>
+				<li>
+					<div>酿造冷区</div>
+					<div>{{nzlq}}%</div>
+				</li>
+				<li>
+					<div>包装部</div>
+					<div>{{bzb}}%</div>
+				</li> -->
+        <!-- <li class="clearfix">
+          <div class="left"></div>
+          <div class="right">
+            <p><span>{{factoryBZZLYTD}}</span>YTD值</p>
+          </div>
+        </li> -->
+      </ul>
+    </nz-header>
+    <nz-content style="width:100%;flex: initial;">
+      <img style="width:100%;display: block" src="assets/images/ztbgit.png" />
+    </nz-content>
+    <nz-footer style="position: relative; margin-bottom:30px;text-align: center;height: 180px;padding: 14px 0 0;">
+      <div>
+        <span></span>
+        <span></span>
+        <span></span>
+        <span></span>
+        <span></span>
+        <span></span>
+        <span></span>
+        <span></span>
+        <span></span>
+        <!--<ul>
+					<li (click)="goToSecond()">热区原辅料</li>
+					<li>糖化</li>
+					<li>发酵</li>
+					<li>冷储</li>
+					<li>过滤</li>
+					<li>BBT</li>
+					<li>瓶装线</li>
+					<li>听装线</li>
+					<li>桶装线</li>
+				</ul>-->
+	  </div>
+	  <!-- <div class="line">
+		  <em>酿造部</em>
+		  <em>包装部</em>
+	  </div> -->
+      <ul>
+        <li (click)="goToSecondBySubArea(ZP00,'ZP00')">
+          <span></span>
+          <div>{{ZP00}}</div>
+          <div>{{ZP00LossRatio}}%</div>
+          <div>
+            <span>PI偏差</span>
+            <span>{{ZP00DeviationPiSum}}</span>
+          </div>
+          <div>
+            <span>PI总数</span>
+            <span>{{ZP00TotalPiSum}}</span>
+          </div>
+        </li>
+        <li (click)="goToSecondBySubArea(ZP10,'ZP10')">
+          <span></span>
+          <div>{{ZP10}}</div>
+          <div>{{ZP10LossRatio}}%</div>
+          <div>
+            <span>PI偏差</span>
+            <span>{{ZP10DeviationPiSum}}</span>
+          </div>
+          <div>
+            <span>PI总数</span>
+            <span>{{ZP10TotalPiSum}}</span>
+          </div>
+        </li>
+        <li (click)="goToSecondBySubArea(ZP20,'ZP20')">
+          <span></span>
+          <div>{{ZP20}}</div>
+          <div>{{ZP20LossRatio}}%</div>
+          <div>
+            <span>PI偏差</span>
+            <span>{{ZP20DeviationPiSum}}</span>
+          </div>
+          <div>
+            <span>PI总数</span>
+            <span>{{ZP20TotalPiSum}}</span>
+          </div>
+        </li>
+        <li (click)="goToSecondBySubArea(ZP50,'ZP50')">
+          <span></span>
+          <div>{{ZP50}}</div>
+          <div>{{ZP50LossRatio}}%</div>
+          <div>
+            <span>PI偏差</span>
+            <span>{{ZP50DeviationPiSum}}</span>
+          </div>
+          <div>
+            <span>PI总数</span>
+            <span>{{ZP50TotalPiSum}}</span>
+          </div>
+        </li>
+        <li (click)="goToSecondBySubArea(ZP40,'ZP40')">
+          <span></span>
+          <div>{{ZP40}}</div>
+          <div>{{ZP40LossRatio}}%</div>
+          <div>
+            <span>PI偏差</span>
+            <span>{{ZP40DeviationPiSum}}</span>
+          </div>
+          <div>
+            <span>PI总数</span>
+            <span>{{ZP40TotalPiSum}}</span>
+          </div>
+        </li>
+        <li (click)="goToSecondBySubArea(ZP60,'ZP60')">
+          <span></span>
+          <div>{{ZP60}}</div>
+          <div>{{ZP60LossRatio}}%</div>
+          <div>
+            <span>PI偏差</span>
+            <span>{{ZP60DeviationPiSum}}</span>
+          </div>
+          <div>
+            <span>PI总数</span>
+            <span>{{ZP60TotalPiSum}}</span>
+          </div>
+        </li>
+        <li (click)="goToSecondBySubArea(ZP70,'ZP70')">
+          <span></span>
+          <div>{{ZP70}}</div>
+          <div>{{ZP70LossRatio}}%</div>
+          <div>
+            <span>PI偏差</span>
+            <span>{{ZP70DeviationPiSum}}</span>
+          </div>
+          <div>
+            <span>PI总数</span>
+            <span>{{ZP70TotalPiSum}}</span>
+          </div>
+        </li>
+        <li (click)="goToSecondBySubArea(ZP74,'ZP74')">
+          <span></span>
+          <div>{{ZP74}}</div>
+          <div>{{ZP74LossRatio}}%</div>
+          <div>
+            <span>PI偏差</span>
+            <span>{{ZP74DeviationPiSum}}</span>
+          </div>
+          <div>
+            <span>PI总数</span>
+            <span>{{ZP74TotalPiSum}}</span>
+          </div>
+        </li>
+        <li (click)="goToSecondBySubArea(ZP76,'ZP76')">
+          <span></span>
+          <div>{{ZP76}}</div>
+          <div>{{ZP76LossRatio}}%</div>
+          <div>
+            <span>PI偏差</span>
+            <span>{{ZP76DeviationPiSum}}</span>
+          </div>
+          <div>
+            <span>PI总数</span>
+            <span>{{ZP76TotalPiSum}}</span>
+          </div>
+        </li>
+      </ul>
+    </nz-footer>
+     
+    <!-- <div class="footer-data clearfix">
+      <dl>
+        <dt class="clearfix">
+          <div class="left" (click)="goToSecond('酿造热区')">{{nzrq}}<em>%</em><span>酿造热区</span></div>
+          <div class="right" (click)="goToSecond('酿造冷区')">{{nzlq}}<em>%</em><span>酿造冷区</span></div>
+        </dt>
+        <dd (click)="goToSecond('酿造部')">{{nzb}}<em>%</em><span>酿造部</span></dd>
+      </dl>
+      <div class="footer-data-right" (click)="goToSecond('包装部')">
+        {{bzb}}<em>%</em>
+        <span>包装部</span>
+      </div>
+
+    </div> -->
+  </nz-layout>
+</nz-layout>
+<router-outlet></router-outlet>

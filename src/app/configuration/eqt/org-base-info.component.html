@@ -1,0 +1,60 @@
+<div>
+    <div nz-row style="padding:10px;">
+        <div nz-col nzSpan="12" >
+            <nz-upload class="avatar-uploader"
+                nzAction="{{nzAction}}"
+                nzFileType = "image/png,image/jpeg,image/gif,image/bmp"
+                nzName="files"
+                nzListType="picture-card"
+                [nzShowUploadList]="false"
+                [nzBeforeUpload]="beforeUpload"
+                (nzChange)="handleChange($event)">
+                <ng-container *ngIf="!avatarUrl">
+                <i nz-icon type="plus"></i>
+                <div class="ant-upload-text">上传图片</div>
+                </ng-container>
+                <img *ngIf="avatarUrl" [src]="avatarUrl" class="avatar">
+            </nz-upload>
+            <i *ngIf="avatarUrl" (click)="removeImg()" class="anticon ant-modal-close-icon anticon-close" nz-icon="" type="close"
+                ng-reflect-type="close"></i>
+        </div>
+        <div nz-col nzSpan="12" style="padding-left:10px">
+            <form nz-form class="ant-advanced-search-form">
+                <div nz-row [nzGutter]="24">
+                    <div nz-col [nzSpan]="24" *ngIf="org.org_type_id!='1'" >
+                        <label>组织名称</label>
+                        <nz-form-item nzFlex>
+                            <input nz-input   nzSize="large" name="org.org_name"  [(ngModel)]="org.org_name" placeholder="请输入名组名称" >
+                        </nz-form-item>
+                    </div>
+                    <div nz-col [nzSpan]="24" *ngIf="org.org_type_id=='1'">
+                        <label>资源名称:</label>
+                        <nz-form-item nzFlex>
+                            <input nz-input nzSize="large" disabled="disabled"  name="org.org_name" [(ngModel)]="org.org_name" placeholder="请输入资源名称">
+                        </nz-form-item>
+                    </div>
+                    <div nz-col [nzSpan]="24">
+                        <label>区域:</label>
+                        <nz-form-item nzFlex>
+                            <input nz-input nzSize="large" name="org.category_type" [(ngModel)]="org.category_type" placeholder="请输入区域">
+                        </nz-form-item>
+                    </div>
+                    <div nz-col [nzSpan]="24" *ngIf="org.org_type_id!='1'">
+                        <label>描述:</label>
+                        <nz-form-item nzFlex>
+                            <textarea rows="8"  [(ngModel)]="org.org_detail"   name="org.org_detail" nz-input placeholder="请输入描述" ></textarea>
+                        </nz-form-item>
+                    </div>
+                    <div nz-col [nzSpan]="24">
+                        <nz-form-item style=" text-align: center">
+                            <nz-form-control>
+                                <button nz-button class="login-form-button" (click)="submit()" [nzType]="'primary'" >保存</button>
+                            </nz-form-control>
+                        </nz-form-item>
+                    </div>
+                </div> 
+            </form>
+        </div>
+        
+    </div>
+</div>

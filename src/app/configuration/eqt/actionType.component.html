@@ -1,0 +1,229 @@
+<form nz-form class="ant-advanced-search-form">
+    <div nz-row [nzGutter]="24">
+        <div nz-col [nzSpan]="24">
+            <nz-form-item nzFlex>
+                <label>计算规则实例:</label>
+                <input nz-input name="seachs"  [(ngModel)]="seachs" style="width: 90%;" placeholder="请输入计算规则实例" nzSize="default">
+            </nz-form-item>
+        </div>
+    </div>
+    <div nz-row>
+        <div nz-col [nzSpan]="24" style="text-align: center;">
+            <button nz-button [nzType]="'primary'" (click)="searchSubmit()">搜索</button>
+            <button nz-button (click)="resetForm()">清空</button>
+        </div>
+    </div>
+</form>
+<div class="base-table">
+    <div class="table-operations" style=" margin-top: 0px;">
+        <button nz-button [nzType]="'primary'" (click)="showAdd()">新增</button>
+        <!-- <button nz-button [nzType]="'primary'" (click)="isImport=true">导入</button>  -->
+        <button nz-button [nzType]="'primary'" (click)='outputList()'>导出</button>
+    </div>
+    <nz-table   
+        #ajaxTable
+            nzShowSizeChanger
+            [nzFrontPagination]="false"
+            [nzData]="dataSet"
+            [nzLoading]="loading"
+            [nzTotal]="total"
+            [(nzPageIndex)]="pageIndex"
+            [(nzPageSize)]="pageSize"
+            (nzPageIndexChange)="getList()"
+            (nzPageSizeChange)="getList(true)">
+        <thead>
+            <tr>
+            <th>计算规则实例</th>
+            <!-- <th style="width:80px">位置</th> -->
+            <th>行动方案内容</th>
+            <th style="width:80px">创建时间</th>
+            <th style="width:80px">更新时间</th>
+            <th style="width:120px">最新更新人</th>
+            <th style="width:160px">操作</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr *ngFor="let data of ajaxTable.data">
+                <td>{{data.rule_inst_name}}</td>
+                <!-- <td>{{data.eqt_name}}</td> -->
+                <td>{{data.action_detail}}</td>
+                <td>{{data.creation_date}}</td>
+                <td>{{data.last_update}}</td>
+                <td>{{data.last_update_by}}</td>
+                <td> 
+                    <button nz-button [nzType]="'primary'" (click)="showUpdate(data)">修改</button>
+                    <button nz-button [nzType]="'primary'" (click)="delete(data.id)">删除</button>
+                </td>
+            </tr>
+        </tbody>
+    </nz-table>
+</div>
+    
+<nz-modal [(nzVisible)]="isAdd"  nzWidth="720px" nzTitle="新增行动方案" (nzOnCancel)="hideAdd()" (nzOnOk)="addSubmit()">
+    <form nz-form class="ant-advanced-search-form">
+        <div nz-row [nzGutter]="24">
+            <div nz-col [nzSpan]="24"  >
+                <nz-form-item nzFlex>
+                    <label>计算规则实例:</label>
+                    <nz-select  name="add.priority" nzMode="tags" style="width: 100%; max-width: 555px;" [(ngModel)]="add.priority" nzPlaceHolder="请选择计算规则实例"  nzAllowClear >
+                        <nz-option *ngFor="let option of listPriorityOption" [nzLabel]="option.rule_inst_name" [nzValue]="option.id">
+                        </nz-option>
+                    </nz-select>
+                </nz-form-item>
+            </div>
+            <div nz-col [nzSpan]="24"  >
+                <nz-form-item nzFlex>
+                    <label>位置:</label>
+                    <span style="width: 100%; margin-top: 4px;">{{add.add_eqt_name}} </span>
+                </nz-form-item>
+            </div>
+            <div nz-col [nzSpan]="24">
+                <nz-form-item nzFlex>
+                    <label>行动方案内容:</label>
+                    <textarea rows="4" style="width: 100%; max-width: 555px;" [(ngModel)]="add.output_parameter"   name="add.output_parameter" nz-input placeholder="行动方案内容" ></textarea>
+                 </nz-form-item>
+            </div>
+            <div nz-col [nzSpan]="12">
+                <nz-form-item nzFlex>
+                    <label>是否激活:</label>
+                    <div style="width:100%">
+                        <nz-switch  name="add.is_valid" [(ngModel)]="add.is_valid"></nz-switch>
+                    </div>
+                </nz-form-item>
+            </div>
+        </div>  
+    </form>
+</nz-modal>
+
+<nz-modal [(nzVisible)]="isUpdate" nzTitle="修改行动方案" (nzOnCancel)="hideUpdate()" (nzOnOk)="updateSubmit()">
+    <form nz-form class="ant-advanced-search-form">
+        <div nz-row [nzGutter]="24">
+            <div nz-col [nzSpan]="24">
+                <nz-form-item nzFlex>
+                    <label>计算规则实例:</label>
+                    <span  style="width: 100%; margin-top: 4px;">{{update.rule_inst_name}}</span>
+                </nz-form-item>
+            </div>
+            <div nz-col [nzSpan]="24"  >
+                <nz-form-item nzFlex>
+                    <label>位置:</label>
+                    <span style="width: 100%; margin-top: 4px;">{{update.eqt_name}} </span>
+                </nz-form-item>
+            </div>
+            <div nz-col [nzSpan]="24">
+                <nz-form-item nzFlex>
+                    <label>行动方案内容:</label>
+                    <textarea rows="4" [(ngModel)]="update.customized_type" name="update.customized_type" nz-input placeholder="请输入行动方案内容">
+                        
+                    </textarea>
+                </nz-form-item>
+            </div>
+            <div nz-col [nzSpan]="12">
+                <nz-form-item nzFlex>
+                    <label>是否激活:</label>
+                    <div style="width:100%">
+                        <nz-switch name="update.is_valid" [(ngModel)]="update.is_valid"></nz-switch>
+                    </div>
+                </nz-form-item>
+            </div>
+        </div>  
+    </form>
+</nz-modal>
+    
+
+<nz-modal class="fun" [(nzVisible)]="isAddRule" [nzMaskClosable]="false"  nzKeyboard="false"  nzWidth="800"   nzTitle="选择规则" (nzOnCancel)="hideAddRuleModule()" >
+    <mode-rule   (change)="ruleChange($event)"></mode-rule>
+</nz-modal>
+
+<nz-modal class="fun" [(nzVisible)]="isAddMatl" [nzMaskClosable]="false"  nzWidth="800"   nzTitle="选择物料" (nzOnCancel)="hideAddMatlModule()" >
+    <mode-matl (change)="matlChange($event)"></mode-matl>
+</nz-modal>
+
+ 
+
+<!-- <nz-modal [nzVisible]="isShowImg" [nzContent]="modalContent" [nzFooter]="null" (nzOnCancel)="isShowImg=false">
+    <ng-template #modalContent>
+      <img  *ngIf="avatarUrl" [src]="avatarUrl" [ngStyle]="{ 'width': '100%' }" />
+    </ng-template>
+</nz-modal> -->
+
+
+<!-- <nz-modal [nzVisible]="isImport"   [nzFooter]="funTemplate"  (nzOnCancel)="isImport=false">
+    <form nz-form   class="login-form"    >
+        <div nz-row [nzGutter]="24">
+            <nz-form-item nzFlex  >
+                <div nz-col [nzSpan]="24"> -->
+                    <!-- <nz-upload  *ngIf="isImport"  [(nzFileList)]="fileList"  [nzBeforeUpload]="beforeUploadFile"> 
+                        <button nz-button>
+                            <i nz-icon type="upload"></i>
+                            <span>导入文件</span>
+                        </button>
+                    </nz-upload> -->
+                    <!-- <nz-upload nzAction="https://jsonplaceholder.typicode.com/posts/">
+                        <button nz-button>
+                            <i nz-icon nzType="upload"></i><span>Click to Upload</span>
+                        </button>
+                    </nz-upload> -->
+                <!-- </div>
+            </nz-form-item> -->
+            <!-- <div nz-col [nzSpan]="12">
+                <nz-form-item nzFlex  >
+                    <label class="lab-name">导入前清空目标数据:</label>
+                    <nz-switch name="import.is_empty" [(ngModel)]="import.is_empty" ></nz-switch>
+                </nz-form-item>
+            </div>
+            <div nz-col [nzSpan]="12">
+                <nz-form-item nzFlex  >
+                    <label  class="lab-name">导入时不更新语言包:</label>
+                    <nz-switch name="import.is_no_lang" (ngModelChange)="changeLang(false)" [(ngModel)]="import.is_no_lang"></nz-switch>
+                </nz-form-item>
+            </div>
+            <div nz-col [nzSpan]="12">
+                <nz-form-item nzFlex  >
+                    <label  class="lab-name">导入全部数据:</label>
+                    <nz-switch name="import.is_all" (ngModelChange)="changeLang(false)" [(ngModel)]="import.is_all"></nz-switch>
+                </nz-form-item>
+            </div>
+            <div nz-col [nzSpan]="12">
+                <nz-form-item nzFlex  >
+                    <label  class="lab-name">导入多语言数据:</label>
+                    <nz-switch name="import.is_lang"  (ngModelChange)="changeLang(true)" [(ngModel)]="import.is_lang"></nz-switch>
+                </nz-form-item>
+            </div>
+            <div nz-col [nzSpan]="24" *ngIf="import.is_lang==true">
+                <nz-form-item nzFlex>
+                    <label>语言:</label>
+                    <nz-select     name="import.lang_id"  style="width: 100%;" nzPlaceHolder="请选择语言" [(ngModel)]="import.lang_id">
+                        <nz-option *ngFor="let option of listLangOption" [nzLabel]="option.label" [nzValue]="option.value">
+                        </nz-option>
+                    </nz-select>
+                </nz-form-item>
+            </div>
+            <div nz-col [nzSpan]="24" *ngIf="import.is_lang==false">
+                <nz-form-item nzFlex>
+                    <label>语言:</label>
+                    <nz-select   disabled="disabled"   name="import.lang_id"  style="width: 100%;" nzPlaceHolder="请选择语言" [(ngModel)]="import.lang_id">
+                        <nz-option *ngFor="let option of listLangOption" [nzLabel]="option.label" [nzValue]="option.value">
+                        </nz-option>
+                    </nz-select>
+                </nz-form-item>
+            </div> -->
+        <!-- </div>
+    </form>
+</nz-modal> -->
+
+<ng-template #contentTemplate>
+    <div>
+        <p><a href="/assets/excel/rule_inst.xls">导出模板</a></p>
+        <p><a href="{{export}}?type=1&eqt_id={{id}}">导出样例模板</a></p>
+        <p><a href="{{export}}?type=2&eqt_id={{id}}">导出全部数据</a></p>
+        <p><a href="{{export}}?type=3&eqt_id={{id}}">导出语言配置表</a></p>
+    </div>
+</ng-template>
+
+<!-- <ng-template #funTemplate>
+    <button nz-button (click)="isImport=false">取消</button>
+    <button nz-button [nzType]="'primary'" [nzLoading]="uploading" (click)="handleUploadFile()" [disabled]="fileList.length == 0" style="margin-top: 16px">
+        {{ uploading ? 'Uploading' : '确定' }}
+    </button>
+</ng-template> -->

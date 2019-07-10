@@ -1,0 +1,98 @@
+<form *ngIf="isShowSerach" nz-form class="ant-advanced-search-form">
+    <div  nz-row [nzGutter]="24">
+        <div nz-col [nzSpan]="6">
+            <label>工厂</label>
+            <nz-form-item nzFlex>
+                <nz-select name="search.plantCode" style="width: 100%;" (ngModelChange)="selectPlant($event)"  nzPlaceHolder="请选择工厂"
+                    [(ngModel)]="search.plantCode">
+                    <nz-option *ngFor="let option of listPlantOption" [nzLabel]="option.label"
+                        [nzValue]="option.value">
+                    </nz-option>
+                </nz-select>
+            </nz-form-item>
+        </div>
+        <div nz-col [nzSpan]="6">
+            <label>订单类型</label>
+            <nz-form-item nzFlex>
+                <nz-select name="search.shopOrderTypeId" (ngModelChange)="selectOrderType($event)" style="width: 100%;" nzPlaceHolder="请选择订单类型"
+                    [(ngModel)]="search.shopOrderTypeId">
+                    <nz-option *ngFor="let option of listOrderTypeOption" [nzLabel]="option.label"
+                        [nzValue]="option.value">
+                    </nz-option>
+                </nz-select>
+            </nz-form-item>
+        </div>
+        <div nz-col [nzSpan]="6">
+            <label>生产线</label>
+            <nz-form-item nzFlex>
+                <nz-select name="search.workCenterId" style="width: 100%;" nzPlaceHolder="请选择生产线"
+                    [(ngModel)]="search.workCenterId">
+                    <nz-option *ngFor="let option of listWorkCenterOption" [nzLabel]="option.label" [nzValue]="option.value">
+                    </nz-option>
+                </nz-select>
+            </nz-form-item>
+        </div>
+        <div nz-col [nzSpan]="6">
+            <label>订单批次</label>
+            <nz-form-item nzFlex>
+                <input nz-input placeholder="请输入订单批次" name="search.scadaOrderId" nzSize="default"
+                    [(ngModel)]="search.scadaOrderId">
+            </nz-form-item>
+        </div>
+        <div nz-col [nzSpan]="6">
+            <label>物料</label>
+            <nz-form-item nzFlex>
+                <nz-select nzShowSearch nzAllowClear name="search.matlId" style="width: 100%;" nzPlaceHolder="请选择物料"
+                    [(ngModel)]="search.matlId">
+                    <nz-option *ngFor="let option of listPlantMatlOption" [nzLabel]="option.label" [nzValue]="option.value">
+                    </nz-option>
+                </nz-select>
+            </nz-form-item>
+        </div>
+        <div nz-col [nzSpan]="6">
+            <label>计划开始日期</label>
+            <nz-form-item nzFlex>
+                <nz-range-picker name="orderDate" [(ngModel)]="orderDate" [nzFormat]="dateFormat"></nz-range-picker>
+            </nz-form-item>
+        </div>
+        <div nz-col [nzSpan]="6">
+            <label>记账日期 </label>
+            <nz-form-item nzFlex>
+            <nz-range-picker name="gigrDate" [(ngModel)]="gigrDate" [nzFormat]="dateFormat"></nz-range-picker>
+            </nz-form-item>
+        </div>
+        <div nz-col [nzSpan]="6">
+            <label>班次</label>
+            <nz-form-item nzFlex>
+                <nz-select  nzAllowClear name="search.shiftCategoryId" style="width: 100%;" nzPlaceHolder="请选择班次"
+                    [(ngModel)]="search.shiftCategoryId">
+                    <nz-option *ngFor="let option of listShiftCategoryOption" [nzLabel]="option.label" [nzValue]="option.value">
+                    </nz-option>
+                </nz-select>
+            </nz-form-item>
+        </div>
+        
+    </div>
+    <div nz-row>
+        <div nz-col [nzSpan]="24" style="text-align: center;">
+            <button nz-button (click)="searchSubmit()" [nzType]="'primary'">搜索</button>
+            <button nz-button (click)="resetForm()">清空</button>
+        </div>
+    </div>
+</form>
+<div class="show-search-box" (click)="isShowSerach=!isShowSerach">
+    <i *ngIf="isShowSerach" nz-icon type="up" theme="outline"></i>
+    <i *ngIf="!isShowSerach" nz-icon type="down" theme="outline"></i>
+</div>
+<div style="position: relative">
+   <nz-tabset [nzSelectedIndex]='1'>
+          <nz-tab nzTitle="订单总览" (nzClick)="typeChage('订单总览')">
+          <order-review  [search]="search" #orderReview></order-review>
+      </nz-tab>
+          <nz-tab nzTitle="订单投入产出" (nzClick)="typeChage('订单投入产出')">
+          <input-output  [search]="search" #inputOutput></input-output>
+      </nz-tab>
+    </nz-tabset>
+</div>
+ 
+

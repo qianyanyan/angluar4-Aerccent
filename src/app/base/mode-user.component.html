@@ -1,0 +1,30 @@
+
+<div class="base-table">
+    <nz-table   
+        #ajaxTable
+        nzShowSizeChanger
+        [nzFrontPagination]="false"
+        [nzData]="dataSet"
+        [nzLoading]="loading"
+        [nzTotal]="total"
+        [(nzPageIndex)]="pageIndex"
+        [(nzPageSize)]="pageSize"
+        (nzPageIndexChange)="searchData()"
+        (nzPageSizeChange)="searchData(true)">
+        <thead>
+            <tr>
+                <th>登录用户名</th>
+                <th>员工编号</th>
+                <th>员工姓名</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr *ngFor="let data of ajaxTable.data">
+                <td>{{data.account_name}}</td>
+                <td>{{data.emp_no}}</td>
+                <td>{{data.employee_name}}</td>
+            </tr>
+        </tbody>
+    </nz-table>
+</div>
+ 

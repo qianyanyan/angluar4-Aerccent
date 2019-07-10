@@ -1,0 +1,15 @@
+<div style="position: relative">
+    <nz-tabset  [nzSelectedIndex] = 'nzSelectedIndex'>
+      <nz-tab *ngFor="let tab of tabs"   nzTitle="{{tab.module_name}}"  (nzClick)="typeChage(tab.class_name)">
+        <div *ngIf="tab.class_name == 'T_Router'">
+            <deploy *ngIf="type=='T_Router'"></deploy>
+        </div> 
+        <div *ngIf="tab.class_name == 'T_Router_setp'">
+          <process *ngIf="type=='T_Router_setp'"></process>
+        </div>
+        <div *ngIf="tab.class_name == 'T_Router_next_step'">
+          <sequence *ngIf="type=='T_Router_next_step'"></sequence>
+        </div>
+      </nz-tab>
+    </nz-tabset>
+  </div>

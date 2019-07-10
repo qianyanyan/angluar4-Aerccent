@@ -1,0 +1,51 @@
+<form nz-form   class="ant-advanced-search-form">
+    <div nz-row [nzGutter]="24">
+        <div nz-col [nzSpan]="24">
+            <nz-form-item nzFlex>
+                <label>员工姓名:</label>
+                <input nz-input placeholder="请输入员工姓名"  name="search.employee_name" nzSize="default" [(ngModel)]="search.employee_name">
+            </nz-form-item>
+        </div>
+        <div nz-col [nzSpan]="24">
+            <nz-form-item nzFlex>
+                <label>员工编号:</label>
+                <input nz-input placeholder="请输入员工编号"  name="search.emp_no" nzSize="default" [(ngModel)]="search.emp_no">
+            </nz-form-item>
+        </div>
+    </div>
+    <div nz-row>
+        <div nz-col [nzSpan]="24" style="text-align: center;">
+            <button nz-button [nzType]="'primary'" (click)="searchSubmit()">搜索</button>
+            <button nz-button (click)="resetForm()">清空</button>
+        </div>
+    </div>
+</form>
+<div class="base-table">
+    <nz-table   
+        #ajaxTable
+        nzShowSizeChanger
+        [nzFrontPagination]="false"
+        [nzData]="dataSet"
+        [nzLoading]="loading"
+        [nzTotal]="total"
+        [(nzPageIndex)]="pageIndex"
+        [(nzPageSize)]="pageSize"
+        (nzPageIndexChange)="searchData()"
+        (nzPageSizeChange)="searchData(true)">
+        <thead>
+            <tr>
+                <th>员工编号</th>
+                <th>员工姓名</th>
+                <th>手机号</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr *ngFor="let data of ajaxTable.data" (click)="select(data)">
+                <td>{{data.emp_no}}</td>
+                <td>{{data.employee_name}}</td>
+                <td>{{data.mobile_phone}}</td>
+            </tr>
+        </tbody>
+    </nz-table>
+</div>
+ 

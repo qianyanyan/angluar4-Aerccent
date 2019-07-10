@@ -1,0 +1,16 @@
+ 
+<div class="list-nav" [ngClass]="{'active':side }">
+    <ul nz-menu [nzMode]="'inline'" nzTheme='dark' >
+        <li nz-menu-item  *ngFor="let data of moduleList"  (click)="jump(data.url)" >
+            <span title>
+                <i nz-icon type="bars" theme="outline"></i>
+                <span>{{data.module_name}}</span>
+            </span>
+        </li>
+        
+    </ul>
+    <!-- <div class="side-box" (click)=toggle(side)>
+        <div class="side-icon"></div>
+    </div> -->
+</div>
+<router-outlet></router-outlet>

@@ -1,0 +1,90 @@
+<a (click)="DownLoadMXExcel()" class="DownloadExcel" style=" width: 120px;right:110px;top:8px;" href="javascript:;"
+    ><img src="../../assets/images/downPic.png" alt="" />浸出物明细</a>
+<div class="searchDiv" id="tabTwo">
+  <!--2222   {{searchCode}}-->
+  <div class="left">
+    物料描述 : <input [(ngModel)]="TWL"  nz-input placeholder="请输入...."
+      nzSize="small" />
+    机台 : <input [(ngModel)]="TJT"  nz-input placeholder="请输入...."
+      nzSize="small" />
+    班次 : <input [(ngModel)]="TBC"  nz-input placeholder="请输入...."
+      nzSize="small" />
+    订单 : <input [(ngModel)]="TDD" style="width: 200px;" nz-input placeholder="请输入...." nzSize="small" />
+  </div>
+  <div class="right">
+    <button (click)='tab2Search()' nz-button nzType="primary">搜索</button>
+    <button (click)='clear()' style="margin-left: 15px;" nz-button nzType="default">清空</button>
+  </div>
+</div>
+<nz-table class="sortTable" #rowSelectionTable nzShowSizeChanger nzBordered [nzFrontPagination]="false"
+  [nzData]="dataSet" [nzLoading]="loading" [nzTotal]="total" [(nzPageIndex)]="pageNum" [(nzPageSize)]="pageSize"
+  (nzPageIndexChange)="searchOperationData()" (nzPageSizeChange)="searchOperationData(true)"
+  [nzScroll]="{ y: '300px' }">
+  <thead>
+    <tr>
+      <th  nzWidth="6%">工厂</th>
+      <th  nzWidth="6%">记账日期</th>
+      <th id="order_batch"  nzWidth="6%">订单
+        <i class="icon-sort-up" (click)="sortTable($event,dataSet,'asc')"></i>
+        <i class="icon-sort-down" (click)="sortTable($event,dataSet,'desc')"></i>
+      </th>
+      <th  nzWidth="6%">物料描述</th>
+      <th id="work_center"  nzWidth="6%">生产线
+        <i class="icon-sort-up" (click)="sortTable($event,dataSet,'asc')"></i>
+        <i class="icon-sort-down" (click)="sortTable($event,dataSet,'desc')"></i>
+      </th>
+      <!--<th>工序</th>-->
+      <th id="eqtName" nzWidth="6%">机台</th>
+      <th  nzWidth="6%">班次</th>
+      <th  nzWidth="6%">损失类别</th>
+      <th id="input_extract" nzWidth="6%">投入浸出物
+        <i class="icon-sort-up" (click)="sortTable($event,dataSet,'asc')"></i>
+        <i class="icon-sort-down" (click)="sortTable($event,dataSet,'desc')"></i>
+      </th>
+      <th  nzWidth="6%">投入标识</th>
+      <th id="output_extract"  nzWidth="8%">产出浸出物
+        <i class="icon-sort-up" (click)="sortTable($event,dataSet,'asc')"></i>
+        <i class="icon-sort-down" (click)="sortTable($event,dataSet,'desc')"></i>
+      </th>
+      <th  nzWidth="6%">产出标识</th>
+      <th id="loss_extract" nzWidth="8%">损失浸出物
+        <i class="icon-sort-up" (click)="sortTable($event,dataSet,'asc')"></i>
+        <i class="icon-sort-down" (click)="sortTable($event,dataSet,'desc')"></i>
+      </th>
+      <th  nzWidth="6%">单位</th>
+      <th id="loss_ratio" nzWidth="6%">损失率%
+        <i class="icon-sort-up" (click)="sortTable($event,dataSet,'asc')"></i>
+        <i class="icon-sort-down" (click)="sortTable($event,dataSet,'desc')"></i>
+      </th>
+
+      <!-- <th *ngIf="queryParam1">对比标识</th> -->
+      <th nzWidth="6%" id="resultType">对比标识
+		<i class="icon-sort-up" (click)="sortTable($event,dataSet,'asc')"></i>
+		<i class="icon-sort-down" (click)="sortTable($event,dataSet,'desc')"></i>
+	  </th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let result of rowSelectionTable.data">
+      <td>{{result.plantCode}}</td>
+      <td>{{result.postingDate | date:"yyyy-MM-dd "}}</td>
+      <td>{{result.orderBatch}}</td>
+      <td>{{result.matlName}}</td>
+      <td>{{result.workCenterDesc}}</td>
+      <!--<td>{{result.operation}}</td>-->
+      <td>{{result.eqtName}}</td>
+      <td>{{result.shiftCategory}}</td>
+      <td>{{result.lossCategory}}</td>
+      <td>{{result.inputExtract}}</td>
+      <td>{{result.inputDummyFlag}}</td>
+      <td>{{result.outputExtract}}</td>
+      <td>{{result.outputDummyFlag}}</td>
+      <td>{{result.lossExtract}}</td>
+      <td>{{result.extractUnit}}</td>
+      <td>{{result.lossRatio}}</td>
+      <!-- <td *ngIf="queryParam1">{{result.resultType}}</td> -->
+      <td>{{result.resultType}}</td>
+
+    </tr>
+  </tbody>
+</nz-table>

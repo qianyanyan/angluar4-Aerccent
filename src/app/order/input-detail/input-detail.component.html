@@ -1,0 +1,339 @@
+ <div class="tab-name">订单投入</div>
+ <div class="base-table">
+    <div class="table-operations">
+        <button *ngIf="activeGi" nz-button [nzType]="'primary'" (click)="syncSap()">同步SAP</button>
+        <button nz-button [nzType]="'primary'" (click)="showAdd()">新增</button>
+    </div>
+    <nz-table #ajaxTable  [nzData]="dataSet" [nzFrontPagination]="false"
+    [nzShowPagination]="false">
+      <thead>
+        <tr>
+          <th>工厂</th>
+          <th>ERP订单</th>
+          <th>订单批次</th>
+          <th>投入物料</th>
+          <th>投入数量</th>
+          <th>单位</th>
+          <th>投入批次</th>
+          <th>来源资源</th>
+          <th >同步状态</th>
+          <th *ngIf="isQuantity">OG\浸出率</th>
+          <th *ngIf="isQuantity">浸出物</th>
+          <th style="width:160px">操作</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let data of ajaxTable.data">
+          <td>{{data.plantCode}}</td>
+          <td>{{data.erpOrder}}</td>
+          <td>{{data.scadaOrderId}}</td>
+          <td>{{data.matlName}}</td>
+          <td>{{data.quantity}}</td>
+          <td>{{data.unitName}}</td>
+          <td>{{data.erpBatchNumber}}</td>
+          <td>{{data.resourceName}}</td> 
+          <td>
+            <span *ngIf="data.sapSyncStatus=='1'">
+              已同步
+            </span>
+            <span *ngIf="data.sapSyncStatus=='1'" class="gi-sync-1">
+              <i nz-icon type="check" theme="outline"></i>
+            </span>
+            <span *ngIf="data.sapSyncStatus!='1'">
+              未同步
+            </span>
+            <span *ngIf="data.sapSyncStatus!='1'" class="gi-sync-2">!</span>
+          </td>
+          <td *ngIf="isQuantity">{{data.ogValue}}</td>
+          <td *ngIf="isQuantity">{{data.quantityExtract}}</td>
+         <td>
+            <button nz-button [nzType]="'primary'" (click)="showUpdate(data.id)">修改</button>
+            <button nz-button [nzType]="'primary'" (click)="delete(data.id)">删除</button>
+          </td>
+        </tr>
+      </tbody>
+    </nz-table>
+  </div>
+ 
+  <nz-modal [(nzVisible)]="isAdd" nzTitle="添加订单投入" nzWidth="800" (nzOnCancel)="hideAdd()" (nzOnOk)="addSubmit()">
+    <form nz-form class="ant-advanced-search-form">
+      <div nz-row [nzGutter]="24">
+        <div nz-col [nzSpan]="12">
+          <label class="ant-form-item-required">工厂</label>
+          <nz-form-item nzFlex>
+            <nz-select name="add.plantCode" style="width: 100%;" nzPlaceHolder="请选择工厂"   (ngModelChange)="selectPlant($event)"  [(ngModel)]="add.plantCode">
+              <nz-option *ngFor="let option of listPlantOption" [nzLabel]="option.label" [nzValue]="option.value">
+              </nz-option>
+            </nz-select>
+          </nz-form-item>
+        </div>
+        <div nz-col [nzSpan]="12">
+          <label class="ant-form-item-required">单位</label>
+          <nz-form-item nzFlex>
+            <nz-select nzShowSearch nzAllowClear name="add.unitId" style="width: 100%;" nzPlaceHolder="请选择单位"
+              [(ngModel)]="add.unitId">
+              <nz-option *ngFor="let option of listUintOption" [nzLabel]="option.label" [nzValue]="option.value">
+              </nz-option>
+            </nz-select>
+          </nz-form-item>
+        </div>
+        <!-- <div nz-col [nzSpan]="12">
+          <label>订单类型</label>
+          <nz-form-item nzFlex>
+            <nz-select name="shopOrderTypeId" (ngModelChange)="selectOrderType($event)" style="width: 100%;"
+              nzPlaceHolder="请选择订单类型" [(ngModel)]="shopOrderTypeId">
+              <nz-option *ngFor="let option of listOrderTypeOption" [nzLabel]="option.label" [nzValue]="option.value">
+              </nz-option>
+            </nz-select>
+          </nz-form-item>
+        </div> -->
+        <div nz-col [nzSpan]="12">
+          <label class="ant-form-item-required">原浓\浸出率</label>
+          <nz-form-item nzFlex>
+            <input nz-input placeholder="请输入原浓\浸出率" maxlength="20" name="add.og" nzSize="default"
+              [(ngModel)]="add.og">
+          </nz-form-item>
+        </div>
+        <div nz-col [nzSpan]="12">
+          <label class="ant-form-item-required">数量</label>
+          <nz-form-item nzFlex>
+            <input nz-input placeholder="请输入数量" maxlength="20" name="add.quantity" nzSize="default" [(ngModel)]="add.quantity">
+          </nz-form-item>
+        </div>
+        <div nz-col [nzSpan]="12">
+          <label class="ant-form-item-required">投入资源</label>
+          <nz-form-item nzFlex>
+              <nz-select nzShowSearch nzAllowClear name="add.issuedResourceId"  (ngModelChange)="selectResource($event,1)" style="width: 100%;" nzPlaceHolder="请选择投入资源" [(ngModel)]="add.issuedResourceId">
+                <nz-option *ngFor="let option of listResourceOption" [nzLabel]="option.label" [nzValue]="option.value">
+                </nz-option>
+              </nz-select>
+          </nz-form-item>
+        </div>
+        <div nz-col [nzSpan]="12">
+          <label class="ant-form-item-required">产出资源</label>
+          <nz-form-item nzFlex>
+            <nz-select nzShowSearch nzAllowClear name="add.producingResourceId"  (ngModelChange)="selectResource($event,2)" style="width: 100%;" nzPlaceHolder="请选择产出资源" [(ngModel)]="add.producingResourceId">
+              <nz-option *ngFor="let option of listResourceOption" [nzLabel]="option.label" [nzValue]="option.value">
+              </nz-option>
+            </nz-select>
+          </nz-form-item> 
+        </div>
+        <div nz-col [nzSpan]="12">
+          <label class="ant-form-item-required">投入scadaid</label>
+          <nz-form-item nzFlex>
+            <nz-select nzShowSearch nzAllowClear name="add.issuedScadaOpRunId" style="width: 100%;" nzPlaceHolder="请选择投入scadaid"
+              [(ngModel)]="add.issuedScadaOpRunId">
+              <nz-option *ngFor="let option of listScadaOpRunIdGiOption" [nzLabel]="option.label" [nzValue]="option.value">
+              </nz-option>
+            </nz-select>
+          </nz-form-item>
+        </div>
+        <div nz-col [nzSpan]="12">
+          <label class="ant-form-item-required">产出scadaid</label>
+          <nz-form-item nzFlex>
+            <nz-select nzShowSearch nzAllowClear name="add.producingScadaOpRunId" style="width: 100%;" nzPlaceHolder="请选择产出scadaid"
+              [(ngModel)]="add.producingScadaOpRunId">
+              <nz-option *ngFor="let option of listScadaOpRunIdGrOption" [nzLabel]="option.label" [nzValue]="option.value">
+              </nz-option>
+            </nz-select>
+          </nz-form-item>
+        </div>
+        <div nz-col [nzSpan]="12">
+          <label class="ant-form-item-required">投入物料</label>
+          <nz-form-item nzFlex>
+            <nz-select nzShowSearch nzAllowClear name="add.issuedMatlId" style="width: 100%;" (ngModelChange)="selectMatl($event,1)"  nzPlaceHolder="请选择投入物料"
+              [(ngModel)]="add.issuedMatlId">
+              <nz-option *ngFor="let option of listPlantMatlOption" [nzLabel]="option.label" [nzValue]="option.value">
+              </nz-option>
+            </nz-select>
+          </nz-form-item>
+        </div>
+        <div nz-col [nzSpan]="12">
+          <label>产出物料</label>
+          <nz-form-item nzFlex>
+            <nz-select nzShowSearch nzAllowClear name="add.producingMatlId" (ngModelChange)="selectMatl($event,1)" style="width: 100%;" nzPlaceHolder="请选择产出物料"
+              [(ngModel)]="add.producingMatlId">
+              <nz-option *ngFor="let option of listPlantMatlOption" [nzLabel]="option.label" [nzValue]="option.value">
+              </nz-option>
+            </nz-select>
+          </nz-form-item>
+        </div>
+        <div nz-col [nzSpan]="12">
+          <label class="ant-form-item-required">投入erp批次</label>
+          <nz-form-item nzFlex>
+            <nz-select  nzMode="tags" nzMaxMultipleCount="1" nzShowSearch nzAllowClear name="add.issuedErpBatchNumberList" style="width: 100%;" nzPlaceHolder="请选择投入erp批次"
+              [(ngModel)]="add.issuedErpBatchNumberList">
+              <nz-option *ngFor="let option of listErpBatchGiOption" [nzLabel]="option.label" [nzValue]="option.value">
+              </nz-option>
+            </nz-select>
+          </nz-form-item>
+        </div>
+        <div nz-col [nzSpan]="12">
+          <label>生产erp批次</label>
+          <nz-form-item nzFlex>
+            <nz-select nzMode="tags" nzMaxMultipleCount="1" nzShowSearch nzAllowClear name="add.producingErpBatchNumberList" style="width: 100%;"
+              nzPlaceHolder="请选择生产erp批次" [(ngModel)]="add.producingErpBatchNumberList">
+              <nz-option *ngFor="let option of listErpBatchGrOption" [nzLabel]="option.label" [nzValue]="option.value">
+              </nz-option>
+            </nz-select>
+          </nz-form-item>
+        </div>
+        <div nz-col [nzSpan]="12">
+          <label class="ant-form-item-required">记账日期</label>
+          <nz-form-item nzFlex> 
+              <nz-date-picker class="ant-from" name="add.shiftDate" [(ngModel)]="add.shiftDate" [nzFormat]="dateFormat"></nz-date-picker>
+          </nz-form-item>
+        </div>
+        
+        <div nz-col [nzSpan]="12">
+          <label class="ant-form-item-required">班次</label>
+          <nz-form-item nzFlex>
+            <nz-select nzAllowClear name="add.shiftCategoryId" style="width: 100%;" nzPlaceHolder="请选择班次" [(ngModel)]="add.shiftCategoryId">
+              <nz-option *ngFor="let option of listShiftCategoryOption" [nzLabel]="option.label" [nzValue]="option.value">
+              </nz-option>
+            </nz-select>
+          </nz-form-item>
+        </div>  
+      </div>
+    </form>
+  </nz-modal>
+
+  <nz-modal [(nzVisible)]="isUpdate" nzTitle="更新订单投入" nzWidth="800"  (nzOnCancel)="hideUpdate()"
+    (nzOnOk)="updateSubmit()">
+    <form nz-form class="ant-advanced-search-form">
+      <div nz-row [nzGutter]="24">
+        <div nz-col [nzSpan]="12">
+          <label class="ant-form-item-required">工厂</label>
+          <nz-form-item nzFlex>
+            <nz-select name="update.plantCode" style="width: 100%;" nzPlaceHolder="请选择工厂" (ngModelChange)="selectPlant($event)"
+              [(ngModel)]="update.plantCode">
+              <nz-option *ngFor="let option of listPlantOption" [nzLabel]="option.label" [nzValue]="option.value">
+              </nz-option>
+            </nz-select>
+          </nz-form-item>
+        </div>
+        <div nz-col [nzSpan]="12">
+          <label class="ant-form-item-required">单位</label>
+          <nz-form-item nzFlex>
+            <nz-select nzShowSearch nzAllowClear name="update.unitId" style="width: 100%;" nzPlaceHolder="请选择单位"
+              [(ngModel)]="update.unitId">
+              <nz-option *ngFor="let option of listUintOption" [nzLabel]="option.label" [nzValue]="option.value">
+              </nz-option>
+            </nz-select>
+          </nz-form-item>
+        </div>
+        <div nz-col [nzSpan]="12">
+          <label class="ant-form-item-required">原浓\浸出率</label>
+          <nz-form-item nzFlex>
+            <input nz-input placeholder="请输入原浓\浸出率" maxlength="20" name="update.og" nzSize="default" [(ngModel)]="update.og">
+          </nz-form-item>
+        </div>
+        <div nz-col [nzSpan]="12">
+          <label class="ant-form-item-required">数量</label>
+          <nz-form-item nzFlex>
+            <input nz-input placeholder="请输入数量" maxlength="20" name="update.quantity" nzSize="default"
+              [(ngModel)]="update.quantity">
+          </nz-form-item>
+        </div>
+        <div nz-col [nzSpan]="12">
+          <label class="ant-form-item-required">投入资源</label>
+          <nz-form-item nzFlex>
+            <nz-select nzShowSearch nzAllowClear name="update.issuedResourceId" (ngModelChange)="selectResource($event,1)"
+              style="width: 100%;" nzPlaceHolder="请选择投入资源" [(ngModel)]="update.issuedResourceId">
+              <nz-option *ngFor="let option of listResourceOption" [nzLabel]="option.label" [nzValue]="option.value">
+              </nz-option>
+            </nz-select>
+          </nz-form-item>
+        </div>
+        <div nz-col [nzSpan]="12">
+          <label class="ant-form-item-required">产出资源</label>
+          <nz-form-item nzFlex>
+            <nz-select nzShowSearch nzAllowClear name="update.producingResourceId" (ngModelChange)="selectResource($event,2)"
+              style="width: 100%;" nzPlaceHolder="请选择产出资源" [(ngModel)]="update.producingResourceId">
+              <nz-option *ngFor="let option of listResourceOption" [nzLabel]="option.label" [nzValue]="option.value">
+              </nz-option>
+            </nz-select>
+          </nz-form-item>
+        </div>
+        <div nz-col [nzSpan]="12">
+          <label class="ant-form-item-required">投入scadaid</label>
+          <nz-form-item nzFlex>
+            <nz-select nzShowSearch nzAllowClear name="update.issuedScadaOpRunId" style="width: 100%;"
+              nzPlaceHolder="请选择投入scadaid" [(ngModel)]="update.issuedScadaOpRunId">
+              <nz-option *ngFor="let option of listScadaOpRunIdGiOption" [nzLabel]="option.label" [nzValue]="option.value">
+              </nz-option>
+            </nz-select>
+          </nz-form-item>
+        </div>
+        <div nz-col [nzSpan]="12">
+          <label class="ant-form-item-required">产出scadaid</label>
+          <nz-form-item nzFlex>
+            <nz-select nzShowSearch nzAllowClear name="update.producingScadaOpRunId" style="width: 100%;"
+              nzPlaceHolder="请选择产出scadaid" [(ngModel)]="update.producingScadaOpRunId">
+              <nz-option *ngFor="let option of listScadaOpRunIdGrOption" [nzLabel]="option.label" [nzValue]="option.value">
+              </nz-option>
+            </nz-select>
+          </nz-form-item>
+        </div>
+        <div nz-col [nzSpan]="12">
+          <label class="ant-form-item-required">投入物料</label>
+          <nz-form-item nzFlex>
+            <nz-select nzShowSearch nzAllowClear name="update.issuedMatlId" style="width: 100%;"
+              (ngModelChange)="selectMatl($event,1)" nzPlaceHolder="请选择投入物料" [(ngModel)]="update.issuedMatlId">
+              <nz-option *ngFor="let option of listPlantMatlOption" [nzLabel]="option.label" [nzValue]="option.value">
+              </nz-option>
+            </nz-select>
+          </nz-form-item>
+        </div>
+        <div nz-col [nzSpan]="12">
+          <label>产出物料</label>
+          <nz-form-item nzFlex>
+            <nz-select nzShowSearch nzAllowClear name="update.producingMatlId" (ngModelChange)="selectMatl($event,1)"
+              style="width: 100%;" nzPlaceHolder="请选择产出物料" [(ngModel)]="update.producingMatlId">
+              <nz-option *ngFor="let option of listPlantMatlOption" [nzLabel]="option.label" [nzValue]="option.value">
+              </nz-option>
+            </nz-select>
+          </nz-form-item>
+        </div>
+        <div nz-col [nzSpan]="12">
+          <label class="ant-form-item-required">投入erp批次</label>
+          <nz-form-item nzFlex>
+            <nz-select nzMode="tags" nzMaxMultipleCount="1" nzShowSearch nzAllowClear name="update.issuedErpBatchNumberList"
+              style="width: 100%;" nzPlaceHolder="请选择投入erp批次" [(ngModel)]="update.issuedErpBatchNumberList">
+              <nz-option *ngFor="let option of listErpBatchGiOption" [nzLabel]="option.label" [nzValue]="option.value">
+              </nz-option>
+            </nz-select>
+          </nz-form-item>
+        </div>
+        <div nz-col [nzSpan]="12">
+          <label>生产erp批次</label>
+          <nz-form-item nzFlex>
+            <nz-select nzMode="tags" nzMaxMultipleCount="1" nzShowSearch nzAllowClear name="update.producingErpBatchNumberList"
+              style="width: 100%;" nzPlaceHolder="请选择投入erp批次" [(ngModel)]="update.producingErpBatchNumberList">
+              <nz-option *ngFor="let option of listErpBatchGrOption" [nzLabel]="option.label" [nzValue]="option.value">
+              </nz-option>
+            </nz-select>
+          </nz-form-item>
+        </div>
+        <div nz-col [nzSpan]="12">
+          <label class="ant-form-item-required">记账日期</label>
+          <nz-form-item nzFlex>
+            <nz-date-picker class="ant-from" name="update.shiftDate" [(ngModel)]="update.shiftDate" [nzFormat]="dateFormat">
+            </nz-date-picker>
+          </nz-form-item>
+        </div>
+        
+        <div nz-col [nzSpan]="12">
+          <label class="ant-form-item-required">班次</label>
+          <nz-form-item nzFlex>
+            <nz-select nzAllowClear name="update.shiftCategoryId" style="width: 100%;" nzPlaceHolder="请选择班次"
+              [(ngModel)]="update.shiftCategoryId">
+              <nz-option *ngFor="let option of listShiftCategoryOption" [nzLabel]="option.label" [nzValue]="option.value">
+              </nz-option>
+            </nz-select>
+          </nz-form-item>
+        </div>
+      </div>
+    </form>
+  </nz-modal>
+

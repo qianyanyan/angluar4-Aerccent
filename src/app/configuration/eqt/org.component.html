@@ -1,0 +1,567 @@
+<div class="base-table">
+    <div class="table-operations">
+        <button nz-button [nzType]="'primary'" (click)="showAdd()">新增</button>
+        <button nz-button [nzType]="'primary'" (click)="isImport=true">导入</button>
+        <button nz-button [nzType]="'primary'" nz-popover nzTitle="导出类型" [nzContent]="contentTemplate"
+            nzPlacement="bottomRight">导出</button>
+    </div>
+    <nz-table #nzTable [nzData]="data" [nzLoading]="loading" [nzFrontPagination]="false" [nzScroll]="{ y: height }"
+        [nzShowPagination]="false">
+        <thead>
+            <tr>
+                <th nzWidth="10%">编码</th>
+                <th nzWidth="30%">名称</th>
+                <th nzWidth="10%">类型</th>
+                <!-- <th nzWidth="10%">简称</th> -->
+                <th nzWidth="5%">排序</th>
+                <th nzWidth="12%">操作</th>
+            </tr>
+        </thead>
+        <tbody>
+            <ng-template ngFor let-data [ngForOf]="nzTable.data">
+                <ng-template ngFor let-item [ngForOf]="expandDataCache[data.id]">
+                    <tr *ngIf="(item.parent&&item.parent.expand)||!(item.parent)" (click)="jumpDetail(item)">
+                        <td>{{item.org_code}}</td>
+                        <td [nzIndentSize]="item.level*20" (click)="stop($event)" [nzShowExpand]="!!item.children"
+                            [(nzExpand)]="item.expand"
+                            (nzExpandChange)="collapse(expandDataCache[data.id],item,$event)">
+                            {{item.org_name}}
+                        </td>
+                        <td>{{item.org_type_name}}</td>
+                        <!-- <td>{{item.short_name}}</td> -->
+                        <td>{{item.sort}}</td>
+                        <td>
+                            <button  nz-button [nzType]="'primary'" (click)="showUpdate(item,$event)">修改</button>
+                            <!-- <button *ngIf='item.org_type_id!=1' nz-button [nzType]="'primary'" (click)="showUpdate(item,$event)">修改</button> -->
+                            <!-- <button *ngIf='item.org_type_id==1' nz-button [nzType]="'primary'" (click)="showEqtUpdate(item,$event)">修改</button> -->
+                            <button nz-button [nzType]="'primary'" (click)="delete(item.id,$event)">删除</button>
+                        </td>
+                    </tr>
+                </ng-template>
+            </ng-template>
+        </tbody>
+    </nz-table>
+</div>
+
+<nz-modal [(nzVisible)]="isAdd" nzTitle="新增" nzWidth ="820" (nzOnCancel)="hideAdd()" (nzOnOk)="addSubmit()">
+    <form nz-form class="ant-advanced-search-form">
+        <div nz-row [nzGutter]="24">
+             <div nz-col [nzSpan]="12">
+                <nz-form-item nzFlex>
+                    <nz-form-label [nzSm]="8" [nzXs]="24" nzRequired>工厂代码</nz-form-label>
+                        <nz-select name="add.plant_code"   nzShowSearch
+                            nzAllowClear style="width: 100%;" nzPlaceHolder="请选择工厂代码"
+                            [(ngModel)]="add.plant_code" >
+                            <nz-option *ngFor="let option of listPlaneOption" [nzLabel]="option.plant_code"
+                                [nzValue]="option.plant_code">
+                            </nz-option>
+                        </nz-select>
+                </nz-form-item>
+            </div>
+            <div nz-col [nzSpan]="12">
+                <nz-form-item nzFlex>
+                    <nz-form-label [nzSm]="8" [nzXs]="24" nzRequired >组织类型</nz-form-label>
+                    <nz-select name="add.org_type_id" style="width: 100%;" nzPlaceHolder="请选择组织类型" 
+                        [(ngModel)]="add.org_type_id" (ngModelChange)="SelectFn()">
+                        <nz-option *ngFor="let option of listTypeOption" [nzLabel]="option.label"
+                            [nzValue]="option.value">
+                        </nz-option>
+                    </nz-select>
+                </nz-form-item>
+            </div>
+            <div nz-col [nzSpan]="12">
+                    <nz-form-item nzFlex>
+                        <nz-form-label [nzSm]="8" [nzXs]="24" nzRequired >组织名称</nz-form-label>
+                        <input  *ngIf='!org_type_label' nz-input placeholder="请输入组织名称" maxlength="20" name="add.org_name" nzSize="default"
+                            [(ngModel)]="add.org_name"> 
+                        <nz-select *ngIf='listPlaneStatus'  name="add.org_name"   nzShowSearch
+                            nzAllowClear style="width: 100%;" nzPlaceHolder="请选择组织名称"
+                            [(ngModel)]="add.org_name"  (ngModelChange)="SelectCode()">
+                            <nz-option *ngFor="let option of listPlaneOption" [nzLabel]="option.plant_name"
+                                [nzValue]="option.plant_name">
+                            </nz-option>
+                        </nz-select> 
+                        <nz-select *ngIf='ProdLineStatus' name="add.org_name" style="width: 100%;" nzPlaceHolder="请选择组织名称" 
+                            [(ngModel)]="add.org_name" (ngModelChange)="SelectCode()">
+                            <nz-option *ngFor="let option of listProOption" [nzLabel]="option.prod_line_name"
+                                [nzValue]="option.prod_line_name">
+                            </nz-option>
+                        </nz-select>   
+                        <nz-select *ngIf='PlantCodeList' name="add.org_name" style="width: 100%;" nzPlaceHolder="请选择组织名称" 
+                            [(ngModel)]="add.org_name" (ngModelChange)="SelectCode()">
+                            <nz-option *ngFor="let option of orgzineTypeOption" [nzLabel]="option.resource_name"
+                                [nzValue]="option.resource_name">
+                            </nz-option>
+                        </nz-select>    
+                    </nz-form-item>
+            </div>
+            <div nz-col [nzSpan]="12">
+                <nz-form-item nzFlex>
+                    <nz-form-label [nzSm]="8" [nzXs]="24" >组织编码</nz-form-label>
+                    <input nz-input placeholder="请输入组织编码" maxlength="50" name="add.org_code" nzSize="default"
+                        [(ngModel)]="add.org_code" [disabled]="true">
+                </nz-form-item>
+            </div>
+            <div nz-col [nzSpan]="12">
+                <nz-form-item nzFlex (mouseleave)="treeState(false)">
+                    <nz-form-label [nzSm]="8" [nzXs]="24">上级组织</nz-form-label>
+                    <input nz-input placeholder="请选择上级组织" AUTOCOMPLETE="off" (click)="treeState(true)" maxlength="10"
+                        name="add.parent_org_name" nzSize="default" [(ngModel)]="add.parent_org_name">
+                    <div class="tree-input" *ngIf='isShowTree'>
+                    <nz-tree #treeCom [nzData]="nodes" (nzClick)="nzClick($event)">
+                    </nz-tree>
+                    </div>
+                </nz-form-item>
+            </div>
+            <div nz-col [nzSpan]="12">
+                <nz-form-item nzFlex>
+                    <nz-form-label [nzSm]="8" [nzXs]="24">ERP代码</nz-form-label>
+                    <input nz-input placeholder="请输入ERP代码" maxlength="20" name="add.erp_resource_code" nzSize="default"
+                        [(ngModel)]="add.erp_resource_code">
+                </nz-form-item>
+            </div>
+            <div nz-col [nzSpan]="12">
+                <nz-form-item nzFlex>
+                    <nz-form-label [nzSm]="8" [nzXs]="24">排序</nz-form-label>
+                    <input nz-input placeholder="请输入排序"  
+                    onkeyup="value=value.replace(/[^\d]/g,'')"  
+                    onblur="value=value.replace(/[^\d]/g,'')" maxlength="3" name="add.sort" nzSize="default" [(ngModel)]="add.sort">
+                </nz-form-item>
+            </div>
+            <div nz-col [nzSpan]="12">
+                <nz-form-item nzFlex>
+                    <nz-form-label [nzSm]="8" [nzXs]="24">是否激活</nz-form-label>
+                    <nz-switch name="add.is_valid" [(ngModel)]="add.is_valid"></nz-switch>
+                </nz-form-item>
+            </div>
+            <div nz-col [nzSpan]="12">
+                <nz-form-item nzFlex>
+                    <nz-form-label [nzSm]="8" [nzXs]="24">授予角色</nz-form-label>
+                    <nz-select name="add.role_id" style="width: 100%;" nzPlaceHolder="请选择角色" [(ngModel)]="add.role_id">
+                        <nz-option *ngFor="let option of roleListOption" [nzLabel]="option.label" [nzValue]="option.value">
+                        </nz-option>
+                    </nz-select>
+                    <!-- <nz-select name="add.listOfSelectedValue" style="width: 100%" nzMode="multiple" nzPlaceHolder="Please select"  [(ngModel)]="add.listOfSelectedValue">
+                        <nz-option *ngFor="let option of listOfOption" [nzLabel]="option.label" [nzValue]="option.value"></nz-option>
+                    </nz-select>  -->
+                </nz-form-item>
+            </div>
+    
+        </div>
+    </form>
+</nz-modal>
+ <nz-modal [(nzVisible)]="isUpdate" nzTitle="更新组织架构" nzWidth ="820" (nzOnCancel)="hideUpdate()" (nzOnOk)="updateSubmit()">
+        <form nz-form class="ant-advanced-search-form">
+            <div nz-row [nzGutter]="24">
+                 <div nz-col [nzSpan]="12">
+                    <nz-form-item nzFlex>
+                        <nz-form-label [nzSm]="8" [nzXs]="24" nzRequired>工厂代码</nz-form-label>
+                            <nz-select name="add.plant_code"   nzShowSearch
+                                nzAllowClear style="width: 100%;" nzPlaceHolder="请选择工厂代码"
+                                [(ngModel)]="add.plant_code" >
+                                <nz-option *ngFor="let option of listPlaneOption" [nzLabel]="option.plant_code"
+                                    [nzValue]="option.plant_code">
+                                </nz-option>
+                            </nz-select>
+                    </nz-form-item>
+                </div>
+                <div nz-col [nzSpan]="12">
+                    <nz-form-item nzFlex>
+                        <nz-form-label [nzSm]="8" [nzXs]="24" nzRequired >组织类型</nz-form-label>
+                        <nz-select name="add.org_type_id" style="width: 100%;" nzPlaceHolder="请选择组织类型" 
+                            [(ngModel)]="add.org_type_id" (ngModelChange)="SelectFn()">
+                            <nz-option *ngFor="let option of listTypeOption" [nzLabel]="option.label"
+                                [nzValue]="option.value">
+                            </nz-option>
+                        </nz-select>
+                    </nz-form-item>
+                </div>
+                <div nz-col [nzSpan]="12">
+                        <nz-form-item nzFlex>
+                            <nz-form-label [nzSm]="8" [nzXs]="24" nzRequired >组织名称</nz-form-label>
+                            <input  *ngIf='!org_type_label' nz-input placeholder="请输入组织名称" maxlength="20" name="add.org_name" nzSize="default"
+                                [(ngModel)]="add.org_name"> 
+                            <nz-select *ngIf='listPlaneStatus'  name="add.org_name"   nzShowSearch
+                                nzAllowClear style="width: 100%;" nzPlaceHolder="请选择组织名称"
+                                [(ngModel)]="add.org_name"  (ngModelChange)="SelectCode()">
+                                <nz-option *ngFor="let option of listPlaneOption" [nzLabel]="option.plant_name"
+                                    [nzValue]="option.plant_name">
+                                </nz-option>
+                            </nz-select> 
+                            <nz-select *ngIf='ProdLineStatus' name="add.org_name" style="width: 100%;" nzPlaceHolder="请选择组织名称" 
+                                [(ngModel)]="add.org_name" (ngModelChange)="SelectCode()">
+                                <nz-option *ngFor="let option of listProOption" [nzLabel]="option.prod_line_name"
+                                    [nzValue]="option.prod_line_name">
+                                </nz-option>
+                            </nz-select>   
+                            <nz-select *ngIf='PlantCodeList' name="add.org_name" style="width: 100%;" nzPlaceHolder="请选择组织名称" 
+                                [(ngModel)]="add.org_name" (ngModelChange)="SelectCode()">
+                                <nz-option *ngFor="let option of orgzineTypeOption" [nzLabel]="option.resource_name"
+                                    [nzValue]="option.resource_name">
+                                </nz-option>
+                            </nz-select>    
+                        </nz-form-item>
+                </div>
+                <div nz-col [nzSpan]="12">
+                    <nz-form-item nzFlex>
+                        <nz-form-label [nzSm]="8" [nzXs]="24" >组织编码</nz-form-label>
+                        <input nz-input placeholder="请输入组织编码" maxlength="50" name="add.org_code" nzSize="default"
+                            [(ngModel)]="add.org_code" [disabled]="true">
+                    </nz-form-item>
+                </div>
+                <div nz-col [nzSpan]="12">
+                    <nz-form-item nzFlex (mouseleave)="treeState(false)">
+                        <nz-form-label [nzSm]="8" [nzXs]="24">上级组织</nz-form-label>
+                        <input nz-input placeholder="请选择上级组织" AUTOCOMPLETE="off" (click)="treeState(true)" maxlength="10"
+                            name="add.parent_org_name" nzSize="default" [(ngModel)]="add.parent_org_name">
+                        <div class="tree-input" *ngIf='isShowTree'>
+                        <nz-tree #treeCom [nzData]="nodes" (nzClick)="nzClick($event)">
+                        </nz-tree>
+                        </div>
+                    </nz-form-item>
+                </div>
+                <div nz-col [nzSpan]="12">
+                    <nz-form-item nzFlex>
+                        <nz-form-label [nzSm]="8" [nzXs]="24">ERP代码</nz-form-label>
+                        <input nz-input placeholder="请输入ERP代码" maxlength="20" name="add.erp_resource_code" nzSize="default"
+                            [(ngModel)]="add.erp_resource_code">
+                    </nz-form-item>
+                </div>
+                <div nz-col [nzSpan]="12">
+                    <nz-form-item nzFlex>
+                        <nz-form-label [nzSm]="8" [nzXs]="24">排序</nz-form-label>
+                        <input nz-input placeholder="请输入排序"  
+                        onkeyup="value=value.replace(/[^\d]/g,'')"  
+                        onblur="value=value.replace(/[^\d]/g,'')" maxlength="3" name="add.sort" nzSize="default" [(ngModel)]="add.sort">
+                    </nz-form-item>
+                </div>
+                <div nz-col [nzSpan]="12">
+                    <nz-form-item nzFlex>
+                        <nz-form-label [nzSm]="8" [nzXs]="24">是否激活</nz-form-label>
+                        <nz-switch name="add.is_valid" [(ngModel)]="add.is_valid"></nz-switch>
+                    </nz-form-item>
+                </div>
+                <div nz-col [nzSpan]="12">
+                    <nz-form-item nzFlex>
+                        <nz-form-label [nzSm]="8" [nzXs]="24">授予角色</nz-form-label>
+                        <nz-select name="add.role_id" style="width: 100%;" nzPlaceHolder="请选择角色" [(ngModel)]="add.role_id">
+                            <nz-option *ngFor="let option of roleListOption" [nzLabel]="option.label" [nzValue]="option.value">
+                            </nz-option>
+                        </nz-select>
+                    </nz-form-item>
+                </div>
+        
+            </div>
+        </form>
+    </nz-modal> 
+<!-- <nz-modal [(nzVisible)]="isUpdate" nzTitle="更新组织架构" (nzOnCancel)="hideUpdate()" (nzOnOk)="updateSubmit()">
+    <form nz-form class="ant-advanced-search-form">
+        <div nz-row [nzGutter]="24">
+            <div nz-col [nzSpan]="24">
+                <nz-form-item nzFlex>
+                    <label>组织编码:</label>
+                    <input nz-input placeholder="请输入组织编码" maxlength="20" name="update.org_code" nzSize="default"
+                        [(ngModel)]="update.org_code">
+                </nz-form-item>
+            </div>
+            <div nz-col [nzSpan]="24">
+                <nz-form-item nzFlex>
+                    <label>组织名称:</label>
+                    <input nz-input placeholder="请输入组织名称" maxlength="50" name="update.org_name" nzSize="default"
+                        [(ngModel)]="update.org_name">
+                </nz-form-item>
+            </div>
+            <div nz-col [nzSpan]="24">
+                <nz-form-item nzFlex>
+                    <label>组织简称:</label>
+                    <input nz-input placeholder="请输组织简称" maxlength="20" name="update.short_name" nzSize="default"
+                        [(ngModel)]="update.short_name">
+                </nz-form-item>
+            </div>
+            <div nz-col [nzSpan]="24">
+                <nz-form-item nzFlex>
+                    <label>组织类型:</label>
+                    <nz-select name="update.org_type_id" style="width: 100%;" nzPlaceHolder="请选择组织类型"
+                        [(ngModel)]="update.org_type_id">
+                        <nz-option *ngFor="let option of listTypeOption" [nzLabel]="option.label" [nzValue]="option.value">
+                        </nz-option>
+                    </nz-select>
+                </nz-form-item>
+            </div>
+            <div nz-col [nzSpan]="24">
+                <nz-form-item nzFlex (mouseleave)="treeState(false)">
+                    <label>上级组织:</label>
+                    <input nz-input placeholder="请选择上级组织" AUTOCOMPLETE="off" (click)="treeState(true)" maxlength="10"
+                        name="update.parent_org_name" nzSize="default" [(ngModel)]="update.parent_org_name">
+                    <div class="tree-input" *ngIf='isShowTree'>
+                        <nz-tree #treeCom [nzData]="nodes" (nzClick)="nzClick($event)">
+                        </nz-tree>
+                    </div>
+                </nz-form-item>
+            </div>
+            <div nz-col [nzSpan]="24">
+                <nz-form-item nzFlex>
+                    <label>排序:</label>
+                    <input nz-input placeholder="请输入排序" maxlength="20" name="update.sort" nzSize="default"
+                        [(ngModel)]="update.sort">
+                </nz-form-item>
+            </div>
+            <div nz-col [nzSpan]="24">
+                <nz-form-item nzFlex>
+                    <label>区域:</label>
+                    <input nz-input placeholder="请输入区域" maxlength="20" name="update.category_type" nzSize="default"
+                        [(ngModel)]="update.category_type">
+                </nz-form-item>
+            </div>
+            <div nz-col [nzSpan]="24">
+                <nz-form-item nzFlex>
+                    <label>工厂编号:</label>
+                    <input nz-input placeholder="请输入工厂编号" maxlength="20" name="update.plant_id" nzSize="default"
+                        [(ngModel)]="update.plant_id">
+                </nz-form-item>
+            </div>
+            <div nz-col [nzSpan]="12">
+                <nz-form-item nzFlex>
+                    <label>是否激活:</label>
+                    <nz-switch name="update.is_valid" [(ngModel)]="update.is_valid"></nz-switch>
+                </nz-form-item>
+            </div>
+        </div>
+    </form>
+</nz-modal> -->
+
+<!-- <nz-modal [(nzVisible)]="isAddEqt" nzTitle="新增资源" (nzOnCancel)="hideAdd()" (nzOnOk)="addEqtSubmit()">
+    <form nz-form class="ant-advanced-search-form">
+        <div nz-row [nzGutter]="24">
+            <div nz-col [nzSpan]="24">
+                <nz-form-item nzFlex>
+                    <label>资源编码:</label>
+                    <input nz-input placeholder="请输入资源编码" maxlength="20" name="add.org_code" nzSize="default"
+                        [(ngModel)]="add.org_code">
+                </nz-form-item>
+            </div>
+            <div nz-col [nzSpan]="24">
+                
+                <nz-form-item nzFlex>
+                    <label>资源名称:</label>
+                    <nz-select nzShowSearch  (ngModelChange)=selectEqt() name="add.resource_id" style="width: 100%;" nzPlaceHolder="请选择资源名称" [(ngModel)]="add.resource_id">
+                        <nz-option *ngFor="let option of eqtListOption" [nzLabel]="option.label" [nzValue]="option.value">
+                        </nz-option>
+                    </nz-select>
+                </nz-form-item>
+            </div>
+            
+            <div nz-col [nzSpan]="24">
+                <nz-form-item nzFlex>
+                    <label>资源简称:</label>
+                    <input nz-input placeholder="请输资源简称" maxlength="20" name="add.short_name" nzSize="default"
+                        [(ngModel)]="add.short_name">
+                </nz-form-item>
+            </div>
+             
+            <div nz-col [nzSpan]="24">
+                <nz-form-item nzFlex (mouseleave)="treeState(false)">
+                    <label>上级组织:</label>
+                    <input nz-input placeholder="请选择上级组织" AUTOCOMPLETE="off" (click)="treeState(true)" maxlength="10"
+                        name="add.parent_org_name" nzSize="default" [(ngModel)]="add.parent_org_name">
+                        <div class="tree-input" *ngIf='isShowTree'>
+                            <nz-tree #treeCom [nzData]="nodes" (nzClick)="nzClick($event)">
+                            </nz-tree>
+                        </div>
+                </nz-form-item>
+            </div>
+            <div nz-col [nzSpan]="24">
+                <nz-form-item nzFlex>
+                    <label>排序:</label>
+                    <input nz-input placeholder="请输入排序" maxlength="20" name="add.sort" nzSize="default" type="number"
+                        [(ngModel)]="add.sort">
+                </nz-form-item>
+            </div>
+            <div nz-col [nzSpan]="24">
+                <nz-form-item nzFlex>
+                    <label>区域:</label>
+                    <input nz-input placeholder="请输入排序" maxlength="20" name="add.category_type" nzSize="default"
+                        [(ngModel)]="add.category_type">
+                </nz-form-item>
+            </div>
+            <div nz-col [nzSpan]="24">
+                <nz-form-item nzFlex>
+                    <label>工厂编号:</label>
+                    <input nz-input placeholder="请输入工厂编号" maxlength="20" name="add.plant_id" nzSize="default"
+                        [(ngModel)]="add.plant_id">
+                </nz-form-item>
+            </div>
+            <div nz-col [nzSpan]="24">
+                <nz-form-item nzFlex>
+                    <label>授予角色:</label>
+                    <nz-select name="add.role_id" style="width: 100%;" nzPlaceHolder="请选择角色" [(ngModel)]="add.role_id">
+                        <nz-option *ngFor="let option of roleListOption" [nzLabel]="option.label"
+                            [nzValue]="option.value">
+                        </nz-option>
+                    </nz-select>
+                </nz-form-item>
+            </div>
+            <div nz-col [nzSpan]="12">
+                <nz-form-item nzFlex>
+                    <label>是否激活:</label>
+                    <nz-switch name="add.is_valid" [(ngModel)]="add.is_valid"></nz-switch>
+                </nz-form-item>
+            </div>
+        </div>
+    </form>
+</nz-modal> -->
+
+<!-- <nz-modal [(nzVisible)]="isUpdateEqt" nzTitle="更新资源" (nzOnCancel)="hideUpdate()" (nzOnOk)="updateEqtSubmit()">
+    <form nz-form class="ant-advanced-search-form">
+        <div nz-row [nzGutter]="24">
+            <div nz-col [nzSpan]="24">
+                <nz-form-item nzFlex>
+                    <label>资源编码:</label>
+                    <input nz-input placeholder="请输入资源编码" maxlength="20" name="update.org_code" nzSize="default"
+                        [(ngModel)]="update.org_code">
+                </nz-form-item>
+            </div>
+            <div nz-col [nzSpan]="24">
+
+                <nz-form-item nzFlex>
+                    <label>资源名称:</label>
+                    <nz-select nzShowSearch (ngModelChange)=selectEqt() name="update.resource_id" style="width: 100%;"
+                        nzPlaceHolder="请选择资源名称" [(ngModel)]="update.resource_id">
+                        <nz-option *ngFor="let option of eqtListOption" [nzLabel]="option.label"
+                            [nzValue]="option.value">
+                        </nz-option>
+                    </nz-select>
+                </nz-form-item>
+            </div>
+
+            <div nz-col [nzSpan]="24">
+                <nz-form-item nzFlex>
+                    <label>资源简称:</label>
+                    <input nz-input placeholder="请输资源简称" maxlength="20" name="update.short_name" nzSize="default"
+                        [(ngModel)]="update.short_name">
+                </nz-form-item>
+            </div>
+
+            <div nz-col [nzSpan]="24">
+                <nz-form-item nzFlex (mouseleave)="treeState(false)">
+                    <label>上级组织:</label>
+                    <input nz-input placeholder="请选择上级组织" AUTOCOMPLETE="off" (click)="treeState(true)" maxlength="10"
+                        name="update.parent_org_name" nzSize="default" [(ngModel)]="update.parent_org_name">
+                    <div class="tree-input" *ngIf='isShowTree'>
+                        <nz-tree #treeCom [nzData]="nodes" (nzClick)="nzClick($event)">
+                        </nz-tree>
+                    </div>
+                </nz-form-item>
+            </div>
+            <div nz-col [nzSpan]="24">
+                <nz-form-item nzFlex>
+                    <label>排序:</label>
+                    <input nz-input placeholder="请输入排序" maxlength="20" name="update.sort" nzSize="default"
+                        [(ngModel)]="update.sort">
+                </nz-form-item>
+            </div>
+            <div nz-col [nzSpan]="24">
+                <nz-form-item nzFlex>
+                    <label>区域:</label>
+                    <input nz-input placeholder="请输入排序" maxlength="20" name="update.category_type" nzSize="default"
+                        [(ngModel)]="update.category_type">
+                </nz-form-item>
+            </div>
+            <div nz-col [nzSpan]="24">
+                <nz-form-item nzFlex>
+                    <label>工厂编号:</label>
+                    <input nz-input placeholder="请输入工厂编号" maxlength="20" name="update.plant_id" nzSize="default"
+                        [(ngModel)]="update.plant_id">
+                </nz-form-item>
+            </div>
+            <div nz-col [nzSpan]="12">
+                <nz-form-item nzFlex>
+                    <label>是否激活:</label>
+                    <nz-switch name="update.is_valid" [(ngModel)]="update.is_valid"></nz-switch>
+                </nz-form-item>
+            </div>
+        </div>
+    </form>
+</nz-modal> -->
+
+<nz-modal [nzVisible]="isImport" [nzFooter]="funTemplate" (nzOnCancel)="isImport=false">
+    <form nz-form class="login-form">
+        <div nz-row [nzGutter]="24">
+            <nz-form-item nzFlex>
+                <div nz-col [nzSpan]="24">
+                    <nz-upload *ngIf="isImport" [(nzFileList)]="fileList" [nzBeforeUpload]="beforeUpload">
+                        <button nz-button>
+                            <i nz-icon type="upload"></i><span>导入文件</span>
+                        </button>
+                    </nz-upload>
+                </div>
+            </nz-form-item>
+            <div nz-col [nzSpan]="12">
+                <nz-form-item nzFlex>
+                    <label class="lab-name">导入前清空目标数据:</label>
+                    <nz-switch name="import.is_empty" [(ngModel)]="import.is_empty"></nz-switch>
+                </nz-form-item>
+            </div>
+            <div nz-col [nzSpan]="12">
+                <nz-form-item nzFlex>
+                    <label class="lab-name">导入时不更新语言包:</label>
+                    <nz-switch name="import.is_no_lang" (ngModelChange)="changeLang(false)"
+                        [(ngModel)]="import.is_no_lang"></nz-switch>
+                </nz-form-item>
+            </div>
+            <div nz-col [nzSpan]="12">
+                <nz-form-item nzFlex>
+                    <label class="lab-name">导入全部数据:</label>
+                    <nz-switch name="import.is_all" (ngModelChange)="changeLang(false)" [(ngModel)]="import.is_all">
+                    </nz-switch>
+                </nz-form-item>
+            </div>
+            <div nz-col [nzSpan]="12">
+                <nz-form-item nzFlex>
+                    <label class="lab-name">导入多语言数据:</label>
+                    <nz-switch name="import.is_lang" (ngModelChange)="changeLang(true)" [(ngModel)]="import.is_lang">
+                    </nz-switch>
+                </nz-form-item>
+            </div>
+            <!-- <div nz-col [nzSpan]="24" *ngIf="import.is_lang==true">
+                <nz-form-item nzFlex>
+                    <label>语言:</label>
+                    <nz-select name="import.lang_id" style="width: 100%;" nzPlaceHolder="请选择语言"
+                        [(ngModel)]="import.lang_id">
+                        <nz-option *ngFor="let option of listLangOption" [nzLabel]="option.label"
+                            [nzValue]="option.value">
+                        </nz-option>
+                    </nz-select>
+                </nz-form-item>
+            </div> -->
+            <!-- <div nz-col [nzSpan]="24" *ngIf="import.is_lang==false">
+                <nz-form-item nzFlex>
+                    <label>语言:</label>
+                    <nz-select disabled="disabled" name="import.lang_id" style="width: 100%;" nzPlaceHolder="请选择语言"
+                        [(ngModel)]="import.lang_id">
+                        <nz-option *ngFor="let option of listLangOption" [nzLabel]="option.label"
+                            [nzValue]="option.value">
+                        </nz-option>
+                    </nz-select>
+                </nz-form-item>
+            </div> -->
+        </div>
+    </form>
+</nz-modal>
+
+<ng-template #contentTemplate>
+    <div>
+        <p><a href="{{export}}?type=1">导出模板</a></p>
+        <p><a href="{{export}}?type=2">导出样例模板</a></p>
+        <p><a href="{{export}}?type=3">导出全部数据</a></p>
+        <p><a href="{{export}}?type=4">导出语言配置表</a></p>
+    </div>
+</ng-template>
+
+<ng-template #funTemplate>
+    <button nz-button (click)="isImport=false">取消</button>
+    <button nz-button [nzType]="'primary'" [nzLoading]="uploading" (click)="handleUpload()"
+        [disabled]="fileList.length == 0" style="margin-top: 16px">
+        {{ uploading ? 'Uploading' : '确定' }}
+    </button>
+</ng-template>

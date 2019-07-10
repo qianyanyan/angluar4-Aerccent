@@ -1,0 +1,58 @@
+<!-- <div class="table-title max-dropdown " style="margin-top:10px">指标监控结果</div> -->
+<nz-input-group class="seach_box" nzSearch >
+    <input class="seach_input" #seach_input type="text" nz-input placeholder="输入指标项" />
+    <button class='seach_btn' (click)="getAlarmEqt(seach_input)"  nz-button nzType="primary" nzSearch>
+        <i nz-icon type="search"></i>
+    </button>
+</nz-input-group>
+
+<nz-table class="table-border" #filterTable [nzData]="displayData" [nzLoading]="loading" [nzFrontPagination]="false"
+    [nzScroll]="{ y: height }" [nzShowPagination]="false">
+    <thead (nzSortChange)="sort($event)" nzSingleSort>
+        <tr>
+            <th nzWidth="4%">序号</th>
+            <th nzWidth="13%" nzSortKey="rule_inst_name" nzShowFilter [nzFilterMultiple]="false"
+                [nzFilters]="ruleInstNameList" (nzFilterChange)="filter($event,1)">指标项</th>
+            <th nzWidth="7%" nzSortKey="eqt_name" nzShowFilter [nzFilterMultiple]="false" [nzFilters]="eqtNameList"
+                (nzFilterChange)="filter($event,2)"> 位置</th>
+            <th nzWidth="7%" nzSortKey="priority" nzShowFilter [nzFilterMultiple]="false" [nzFilters]="priorityList"
+                (nzFilterChange)="filter($event,3)">优先级</th>
+            <th nzWidth="7%" class="more" nzSortKey="customized_name_1" nzShowFilter [nzFilterMultiple]="false"
+                [nzFilters]="customizedName1" (nzFilterChange)="filter($event,4)">自定义类型1</th>
+            <th nzWidth="7%" class="more" nzSortKey="customized_name_2" nzShowFilter [nzFilterMultiple]="false"
+                [nzFilters]="customizedName2" (nzFilterChange)="filter($event,5)">自定义类型2</th>
+            <th nzWidth="7%" class="more" nzSortKey="customized_name_3" nzShowFilter [nzFilterMultiple]="false"
+                [nzFilters]="customizedName3" (nzFilterChange)="filter($event,6)">自定义类型3</th>
+            <th nzWidth="10%">输出值</th>
+            <th nzWidth="10%">单位</th>
+            <th nzWidth="15%">发生时间</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr *ngFor="let data of filterTable.data;   let i = index" (mouseover)="gotoCover(i)">
+            <td>{{i+1}}</td>
+            <td>{{data.rule_inst_name}}</td>
+            <td>{{data.eqt_name}}</td>
+            <td>{{data.priority}}</td>
+            <td>{{data.customized_name_1}}</td>
+            <td>{{data.customized_name_2}}</td>
+            <td>{{data.customized_name_3}}</td>
+            <td>
+                <span *ngIf="data.formula_value" (click)="historicalTrend(data)">{{data.formula_value | number:'1.3-3'}}
+                </span>
+            </td>
+            <td>{{data.unit_name}}</td>
+            <td>{{data.occur_date}}</td>
+        </tr>
+    </tbody>
+</nz-table>
+
+<nz-modal class="footer-hide" [(nzVisible)]="isVisible" nzTitle="{{trendName}}" nzWidth="{{nzWidth}}"
+    (nzOnCancel)="handleCancel()">
+    <nz-radio-group [(ngModel)]="trendSize">
+        <label (click)="checkChange()" nz-radio-button nzValue="0">当天</label>
+        <label (click)="checkChange()" nz-radio-button nzValue="6">7天</label>
+    </nz-radio-group>
+    <div echarts [options]="trendOptions" [loading]="showloading" (chartInit)="onTrendInit($event)"
+        class="modal-echart-box" style="    height: 400px;"></div>
+</nz-modal>

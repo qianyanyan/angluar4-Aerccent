@@ -1,0 +1,84 @@
+<div class="tab-box">
+  <nz-table #nzTable [nzData]="data" [nzFrontPagination]="false" [nzScroll]="{ y: height }" [nzShowPagination]="false">
+    <thead>
+      <tr>
+        <th nzWidth="30%">名称</th>
+        <th nzWidth="10%">类型</th>
+        <!-- <th nzWidth="10%">描述</th> -->
+        <th nzWidth="10%">运行状态</th>
+        <th nzWidth="10%">当前报警数</th>
+        <th nzWidth="10%">报警优先级H</th>
+        <th nzWidth="10%">待确认报警数</th>
+        <th nzWidth="10%">指标监控数量</th>
+      </tr>
+    </thead>
+    <tbody>
+      <ng-template ngFor let-data [ngForOf]="nzTable.data">
+        <ng-template ngFor let-item [ngForOf]="expandDataCache[data.id]">
+          <tr *ngIf="(item.parent&&item.parent.expand)||!(item.parent)" (click)="jumpDetail(item)">
+            <td 
+            [nzIndentSize]="item.level*20" 
+            (click)="stop($event)" 
+            [nzShowExpand]="!!item.children"
+            [(nzExpand)]="item.expand" 
+            (nzExpandChange)="collapse(expandDataCache[data.id],item,$event)">
+              {{item.eqt_name}}
+            </td>
+            <td>{{item.eqt_type_name}}</td>
+            <!-- <td>{{item.eqt_detail}}</td> -->
+            <td *ngIf='item.eqt_type_name == "生产线" && item.eqt_name == "大米立仓"'>{{item.getAlarmStatus | runStatus}}</td>
+            <td *ngIf='item.eqt_type_name == "生产线" && item.eqt_name == "麦芽立仓"'>{{item.getAlarmStatus | runStatus}}</td>
+            <td *ngIf='item.eqt_type_name == "生产线" && item.eqt_name == "糖化1期"'>{{item.getAlarmStatus | runStatus}}</td>
+            <td *ngIf='item.eqt_type_name == "生产线" && item.eqt_name == "糖化2期"'>{{item.getAlarmStatus | runStatus}}</td>
+            <td *ngIf='item.eqt_type_name == "生产线" && item.eqt_name == "糖化3期"'>{{item.getAlarmStatus | runStatus}}</td>
+            <td *ngIf='item.eqt_type_name == "生产线" && item.eqt_name == "糖化4期"'>{{item.getAlarmStatus | runStatus}}</td>
+            <td *ngIf='item.eqt_type_name == "生产线" && item.eqt_name == "发酵"'>{{item.getAlarmStatus | runStatus}}</td>
+            <td *ngIf='item.eqt_type_name == "生产线" && item.eqt_name == "错流"'>{{item.getAlarmStatus | runStatus}}</td>
+            <td *ngIf='item.eqt_type_name == "生产线" && item.eqt_name == "过滤"'>{{item.getAlarmStatus | runStatus}}</td>
+            <td *ngIf='item.eqt_type_name == "生产线" && item.eqt_name == "清酒"'>{{item.getAlarmStatus | runStatus}}</td>
+            <td *ngIf='item.eqt_type_name == "生产线" && item.eqt_name == "CIP系统"'>{{item.getAlarmStatus | runStatus}}</td>
+            <td *ngIf='item.eqt_type_name == "生产线" && item.eqt_name == "瓶装一线" && item.children[1].getAlarmStatus == 1'> 运行</td>
+            <td *ngIf='item.eqt_type_name == "生产线" && item.eqt_name == "瓶装二线" && item.children[3].getAlarmStatus == 1'> 运行</td>
+            <td *ngIf='item.eqt_type_name == "生产线" && item.eqt_name == "瓶装三线" && item.children[3].getAlarmStatus == 1'> 运行</td>
+            <td *ngIf='item.eqt_type_name == "生产线" && item.eqt_name == "瓶装五线" && item.children[5].getAlarmStatus == 1'> 运行</td>
+            <td *ngIf='item.eqt_type_name == "生产线" && item.eqt_name == "瓶装六线" && item.children[3].getAlarmStatus == 1'> 运行</td>
+            <td *ngIf='item.eqt_type_name == "生产线" && item.eqt_name == "瓶装七线" && item.children[2].getAlarmStatus == 1'> 运行</td>
+            <td *ngIf='item.eqt_type_name == "生产线" && item.eqt_name == "听装一线" && item.children[2].getAlarmStatus == 1'> 运行</td>
+            <td *ngIf='item.eqt_type_name == "生产线" && item.eqt_name == "听装二线" && item.children[2].getAlarmStatus == 1'> 运行</td>
+            <td *ngIf='item.eqt_type_name == "生产线" && item.eqt_name == "听装三线" && item.children[6].getAlarmStatus == 1'> 运行</td>
+            <td *ngIf='item.eqt_type_name == "生产线" && item.eqt_name == "桶装一线" && item.children[2].getAlarmStatus == 1'> 运行</td>
+            <td *ngIf='item.eqt_type_name == "生产线" && item.eqt_name == "瓶装一线" && item.children[1].getAlarmStatus > 1'> 异常</td>
+            <td *ngIf='item.eqt_type_name == "生产线" && item.eqt_name == "瓶装二线" && item.children[3].getAlarmStatus > 1'> 异常</td>
+            <td *ngIf='item.eqt_type_name == "生产线" && item.eqt_name == "瓶装三线" && item.children[3].getAlarmStatus > 1'> 异常</td>
+            <td *ngIf='item.eqt_type_name == "生产线" && item.eqt_name == "瓶装五线" && item.children[5].getAlarmStatus > 1'> 异常</td>
+            <td *ngIf='item.eqt_type_name == "生产线" && item.eqt_name == "瓶装六线" && item.children[3].getAlarmStatus > 1'> 异常</td>
+            <td *ngIf='item.eqt_type_name == "生产线" && item.eqt_name == "瓶装七线" && item.children[2].getAlarmStatus > 1'> 异常</td>
+            <td *ngIf='item.eqt_type_name == "生产线" && item.eqt_name == "听装一线" && item.children[2].getAlarmStatus > 1'> 异常</td>
+            <td *ngIf='item.eqt_type_name == "生产线" && item.eqt_name == "听装二线" && item.children[2].getAlarmStatus > 1'> 异常</td>
+            <td *ngIf='item.eqt_type_name == "生产线" && item.eqt_name == "听装三线" && item.children[6].getAlarmStatus > 1'> 异常</td>
+            <td *ngIf='item.eqt_type_name == "生产线" && item.eqt_name == "桶装一线" && item.children[2].getAlarmStatus > 1'> 异常</td>
+            <td *ngIf='item.eqt_type_name == "生产线" && item.eqt_name == "瓶装一线" && item.children[1].getAlarmStatus == null'></td>
+            <td *ngIf='item.eqt_type_name == "生产线" && item.eqt_name == "瓶装二线" && item.children[3].getAlarmStatus == null'> </td>
+            <td *ngIf='item.eqt_type_name == "生产线" && item.eqt_name == "瓶装三线" && item.children[3].getAlarmStatus == null'></td>
+            <td *ngIf='item.eqt_type_name == "生产线" && item.eqt_name == "瓶装五线" && item.children[5].getAlarmStatus == null'> </td>
+            <td *ngIf='item.eqt_type_name == "生产线" && item.eqt_name == "瓶装六线" && item.children[3].getAlarmStatus == null'> </td>
+            <td *ngIf='item.eqt_type_name == "生产线" && item.eqt_name == "瓶装七线" && item.children[2].getAlarmStatus == null'> </td>
+            <td *ngIf='item.eqt_type_name == "生产线" && item.eqt_name == "听装一线" && item.children[2].getAlarmStatus == null'> </td>
+            <td *ngIf='item.eqt_type_name == "生产线" && item.eqt_name == "听装二线" && item.children[2].getAlarmStatus == null'> </td>
+            <td *ngIf='item.eqt_type_name == "生产线" && item.eqt_name == "听装三线" && item.children[6].getAlarmStatus == null'> </td>
+            <td *ngIf='item.eqt_type_name == "生产线" && item.eqt_name == "桶装一线" && item.children[2].getAlarmStatus == null'> </td>
+            <td *ngIf='item.eqt_type_name != "生产线" '>{{item.getAlarmStatus | runStatus}}</td>
+            <td>{{item.alarmCount}}</td>
+            <td>{{item.alarmHCount}}</td>
+            <td>{{item.waitConfirmCount}}</td>
+            <td>{{item.monitorCount}}</td>
+          </tr>
+        </ng-template>
+      </ng-template>
+    </tbody>
+  </nz-table>
+
+  <div>
+    
+  </div>
+</div>

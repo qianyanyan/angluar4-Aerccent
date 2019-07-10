@@ -1,0 +1,86 @@
+      <div class="searchDiv" id="tabThree">
+        <!--3333   {{searchCode}}-->
+        <div class="left">
+          机台 : <input [(ngModel)]="THJT" nz-input placeholder="请输入...."
+            nzSize="small" />
+          工艺参数 : <input [(ngModel)]="THGYCS" nz-input placeholder="请输入...." nzSize="small" />
+          订单 : <input [(ngModel)]="THDD" nz-input placeholder="请输入...." nzSize="small" />
+        </div>
+        <div class="right">
+          <button (click)='tab3Search()' nz-button nzType="primary">搜索</button>
+          <button (click)='clear()' style="margin-left: 15px;" nz-button nzType="default">清空</button>
+        </div>
+      </div>
+
+      <nz-table class="sortTable"  #rowSelectionTable1 nzShowSizeChanger nzBordered [nzFrontPagination]="false" [nzData]="dataSet1"
+        [nzLoading]="loading1" [nzTotal]="total1" [(nzPageIndex)]="pageNum1" [(nzPageSize)]="pageSize1"
+        (nzPageIndexChange)="searchOperationParamData()" (nzPageSizeChange)="searchOperationParamData(true)" [nzScroll]="{ y: '300px' }">
+        <thead>
+          <tr>
+            <th nzWidth="7%">工厂</th>
+            <th id="postingDate"  nzWidth="7%">记账日期
+               <i class="icon-sort-up" (click)="sortTable1($event,dataSet1,'asc')"></i>
+               <i class="icon-sort-down" (click)="sortTable1($event,dataSet1,'desc')"></i>
+            </th>
+            <th id="erpOrder" nzWidth="7%">订单
+              <i class="icon-sort-up" (click)="sortTable1($event,dataSet1,'asc')"></i>
+                  <i class="icon-sort-down" (click)="sortTable1($event,dataSet1,'desc')"></i>
+            </th>
+            <th nzWidth="10%">物料描述</th>
+            <th id="workCenterCode" nzWidth="7%">生产线
+              <i class="icon-sort-up" (click)="sortTable1($event,dataSet1,'asc')"></i>
+               <i class="icon-sort-down" (click)="sortTable1($event,dataSet1,'desc')"></i>
+            </th>
+            <!-- <th>工序</th> -->
+            <th id="eqtName" nzWidth="10%">机台
+              <i class="icon-sort-up" (click)="sortTable1($event,dataSet1,'asc')"></i>
+                <i class="icon-sort-down" (click)="sortTable1($event,dataSet1,'desc')"></i>
+            </th>
+            <th id="shiftCategory" nzWidth="7%">班次
+              <i class="icon-sort-up" (click)="sortTable1($event,dataSet1,'asc')"></i>
+                <i class="icon-sort-down" (click)="sortTable1($event,dataSet1,'desc')"></i>
+            </th>
+            <th id="ruleInstName"  nzWidth="10%">工艺参数
+              <i class="icon-sort-up" (click)="sortTable1($event,dataSet1,'asc')"></i>
+                <i class="icon-sort-down" (click)="sortTable1($event,dataSet1,'desc')"></i>
+            </th>
+            <th id="value"  nzWidth="7%">参数值
+              <i class="icon-sort-up" (click)="sortTable1($event,dataSet1,'asc')"></i>
+                <i class="icon-sort-down" (click)="sortTable1($event,dataSet1,'desc')"></i>
+            </th>
+            <th  nzWidth="7%">标准值</th>
+            <th  nzWidth="7%">单位</th>
+            <th  nzWidth="7%">偏差状态</th>
+            <!-- <th *ngIf="queryParam1">对比标识</th> -->
+            <th  nzWidth="7%" id="resultType">对比标识
+              <i class="icon-sort-up" (click)="sortTable1($event,dataSet1,'asc')"></i>
+              <i class="icon-sort-down" (click)="sortTable1($event,dataSet1,'desc')"></i>
+            </th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let result of rowSelectionTable1.data">
+            <td>{{result.plantCode}}</td>
+            <td>{{result.postingDate}}</td>
+            <td>{{result.erpOrder}}</td>
+            <td>{{result.matlName}}</td><!-- 物料描述 -->
+            <td>{{result.workCenterDesc}}</td>
+            <!-- <td>{{result.operationName}}</td> -->
+            <td>{{result.eqtName}}</td>
+            <td>{{result.shiftCategory}}</td>
+            <td>{{result.ruleInstName}}</td>
+            <td>{{result.value}}</td>
+            <td>{{result.targetValue}}</td>
+            <td>{{result.unit}}</td>
+            <td><span *ngIf="result.status=='green'">
+                <i class="icon-green"></i>
+              </span>
+              <span *ngIf="result.status=='red'">
+                <i class="icon-red"></i>
+              </span>
+            </td>
+            <!-- <td *ngIf="queryParam1">{{result.resultType}}</td> -->
+            <td>{{result.resultType}}</td>
+          </tr>
+        </tbody>
+      </nz-table>

@@ -1,0 +1,54 @@
+<div nz-row>
+  <div nz-col nzSpan="12">
+    <div class="logo-box">
+      <img src="assets/images/logo.png"/>
+      <div class="logo-text">Smart Brewery</div>
+    </div>
+    
+    <form nz-form [formGroup]="validateForm" class="login-form"   (ngSubmit)="submitForm()">
+      <nz-form-item>
+        <nz-form-control>
+          <nz-input-group [nzPrefix]="prefixUser">
+            <input type="text" nz-input formControlName="userName" placeholder="{{ 'LOGIN.用户名' | translate }}">
+          </nz-input-group>
+          <nz-form-explain *ngIf="validateForm.get('userName').dirty && validateForm.get('userName').errors">{{ 'LOGIN.请输入用户名!' | translate }}</nz-form-explain>
+        </nz-form-control>
+      </nz-form-item>
+      <nz-form-item>
+        <nz-form-control>
+          <nz-input-group [nzPrefix]="prefixLock">
+            <input type="password" nz-input formControlName="password" placeholder="{{ 'LOGIN.密码' | translate }}">
+          </nz-input-group>
+          <nz-form-explain *ngIf="validateForm.get('password').dirty && validateForm.get('password').errors">{{ 'LOGIN.请输入密码!' | translate }}</nz-form-explain>
+        </nz-form-control>
+      </nz-form-item>
+      <nz-form-item>
+        <nz-form-control >
+          <div class="ant-input-affix-wrapper">
+              <span class="ant-input-prefix"> <i nz-icon type="global" theme="outline"></i></span>
+              <select class="form-control" (change)="changeLang()"  formControlName="lang" [(ngModel)]="lang">
+                <option  *ngFor="let option of langs"    [value]="option.value">{{option.label}}</option>
+              </select>
+          </div> 
+        </nz-form-control>
+      </nz-form-item>
+      <nz-form-item style="margin-top: 90px;">
+        <nz-form-control>
+          <nz-form-explain  *ngIf="msg">{{ msg }}</nz-form-explain>
+          <button nz-button class="login-form-button" [nzType]="'primary'" >{{ 'LOGIN.登录' | translate }}</button>
+     
+        </nz-form-control>
+      </nz-form-item>
+    </form>
+    <div class="forget-box">忘记密码?<span>联系管理员</span></div>
+    <ng-template #prefixUser><i nz-icon type="user"></i></ng-template>
+    <ng-template #prefixLock><i nz-icon type="lock"></i></ng-template>
+  </div>
+  <div nz-col nzSpan="12">
+    <div class="login-bg-box">
+        <img class="login-bg" src="assets/images/login-bg.png" />
+    </div>
+      
+  </div>
+</div>
+
