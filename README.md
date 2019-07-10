@@ -35,3 +35,5 @@ $ ng build --prod --aot
 ng build --prod --build-optimizer
 
 angluar4项目，组件化开发，父子组件传值
+
+内网才能登录进去
