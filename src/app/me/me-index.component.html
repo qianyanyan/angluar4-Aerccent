@@ -27,12 +27,7 @@
         </nz-date-picker>
       </span>
     </li>
-    <li nz-menu-item>
-      <span>
-        <i nz-icon style="text-align: center;">|</i>
-
-      </span>
-    </li>
+ 
     <li nz-menu-item>
       <span>
         <i nz-icon>结束时间</i>
@@ -176,6 +171,19 @@
             <span>{{ZP20TotalPiSum}}</span>
           </div>
         </li>
+        <li (click)="goToSecondBySubArea(ZP40,'ZP40')">
+            <span></span>
+            <div>{{ZP40}}</div>
+            <div>{{ZP40LossRatio}}%</div>
+            <div>
+              <span>PI偏差</span>
+              <span>{{ZP40DeviationPiSum}}</span>
+            </div>
+            <div>
+              <span>PI总数</span>
+              <span>{{ZP40TotalPiSum}}</span>
+            </div>
+        </li>
         <li (click)="goToSecondBySubArea(ZP50,'ZP50')">
           <span></span>
           <div>{{ZP50}}</div>
@@ -189,19 +197,7 @@
             <span>{{ZP50TotalPiSum}}</span>
           </div>
         </li>
-        <li (click)="goToSecondBySubArea(ZP40,'ZP40')">
-          <span></span>
-          <div>{{ZP40}}</div>
-          <div>{{ZP40LossRatio}}%</div>
-          <div>
-            <span>PI偏差</span>
-            <span>{{ZP40DeviationPiSum}}</span>
-          </div>
-          <div>
-            <span>PI总数</span>
-            <span>{{ZP40TotalPiSum}}</span>
-          </div>
-        </li>
+       
         <li (click)="goToSecondBySubArea(ZP60,'ZP60')">
           <span></span>
           <div>{{ZP60}}</div>

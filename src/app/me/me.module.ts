@@ -6,7 +6,7 @@ import { GXCJComponent } from './GXCJ.component';
 import { TabFromcomponent } from './tabForm.component';
 import { TabGYcomponent } from './tabGY.component';
 import { TabProcedure } from './tabProcedure.component';
-
+import { requestOptionsProvider } from '../core/common/set-request.options';
 @NgModule({
 	imports: [
 		SharedModule,
@@ -21,7 +21,7 @@ import { TabProcedure } from './tabProcedure.component';
 		TabProcedure
 
 	],
-	//  providers: [ MEService ],
+	providers: [requestOptionsProvider ],
 	exports: [
 		TabFromcomponent,
 		TabGYcomponent,

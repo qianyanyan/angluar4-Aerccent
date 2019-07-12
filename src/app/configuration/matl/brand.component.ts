@@ -232,7 +232,9 @@ export class BrandComponent implements OnInit, OnDestroy {
             last_update_by:'1',
             is_valid:''
         }
-       
+        this.indeterminate = false;
+        this.upData = [];
+        this.checkList =[]
     }
 
     searchSubmit(){
@@ -290,13 +292,6 @@ export class BrandComponent implements OnInit, OnDestroy {
         this.getList(true);
     }
 
-    // showUpdate(data:any): void {
-    //     this.isUpdate = true;
-    //     data.is_valid = data.is_valid == 1 ? true:false;
-    //     this.update = this.format.extend(true, {}, data);
-    // }
-
-  
     hideUpdate():any{
         this.setInit();
         this.isUpdate = false;
@@ -464,6 +459,7 @@ export class BrandComponent implements OnInit, OnDestroy {
        });
    }
    refreshStatus() {
+       debugger
        const allChecked = this.dataSet.every(value => value.checked === true);
        const allUnChecked = this.dataSet.every(value => !value.checked);
        this.allChecked = allChecked;

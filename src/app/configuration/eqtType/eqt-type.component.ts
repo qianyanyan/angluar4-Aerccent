@@ -164,6 +164,9 @@ export class EqtTypeComponent implements OnInit, OnDestroy {
             remark: '',
             is_valid: true
         }
+        this.indeterminate = false;
+        this.upData = [];
+        this.checkList =[]
     }
 
     searchSubmit(): void {

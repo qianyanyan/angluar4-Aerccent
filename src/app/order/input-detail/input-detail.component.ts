@@ -33,6 +33,7 @@ export class InputDetailComponent implements OnInit, OnDestroy {
   dataSet = [];
   @Output() changeGi: EventEmitter<any> = new EventEmitter();//创建实力
   add: any;
+  syncList = [];
   isAdd = false;
   update: any;
   isUpdate = false;
@@ -47,8 +48,8 @@ export class InputDetailComponent implements OnInit, OnDestroy {
   listScadaOpRunIdGrOption = [];
   listErpBatchGiOption = [];
   listErpBatchGrOption = [];
-  syncList = [];
   listOfTagOptions = null;
+  shopOrderHeader:{} = {};
   dateFormat = 'yyyy/MM/dd';
   shopOrderTypeId = null;
   constructor(

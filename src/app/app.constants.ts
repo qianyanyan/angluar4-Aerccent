@@ -10,18 +10,24 @@ if(ipAdress.indexOf('localhost') >=1) {
       // ipAdress = 'http:/172.29.34.39:2809';  //叶东服务
     //   ipAdress = 'http://172.29.39.235:2810';
 }
-  ipAdress = "http://172.31.193.126:2818";
+//  ipAdress = "http://172.31.193.151:2818";//生产
+ ipAdress = "http://172.31.193.126:2818";
 // const wuhanIpAddress = 'http://172.31.193.128:8030/api/v1.0/';
 //const wuhanIpAddress = 'http://172.31.193.126:9110/api/v1.0/';   //测试环境
-const wuhanIpAddress = 'http://172.31.193.126:2818/wuhanmanager/api/v1.0/'; //网关   //测试环境
+const wuhanIpAddress = 'http://172.31.193.126:2818/wuhanmanager/api/v1.0/';   //测试环境
     // const wuhanIpAddress = 'http://172.31.193.151:9110/api/v1.0/';
 // const wuhanIpAddress = 'http://172.29.39.63:9120/api/v1.0/';
 // const wuhanIpAddress = 'http://172.29.38.234:8080/api/v1.0/';
 // const wuhanIpAddress = 'http://172.31.193.127:2809/api/v1.0/';
 
+
 // const wuhanIpAddress = 'http://172.31.193.126:9110/api/v1.0/';
 
 // const wuhanIpAddress = 'http://172.31.193.126:9110/api/v1.0/';
+
+
+// const wuhanIpAddress = 'http://172.31.193.126:9110/api/v1.0/';
+ //const wuhanIpAddress = ipAdress+"/wuhanmanager"+'/api/v1.0/';
 
 
 //tab1导出
@@ -74,7 +80,7 @@ export const SHOP_ORDER_API = wuhanIpAddress + 'shopOrderApi';
 
 //export const URL_NAME =ipAdress+'/api/v1.0';
 export const URL_NAME = ipAdress;
-export const URL_NAME_YD = "http://172.29.34.70:2815";
+export const URL_NAME_YD = "http://172.29.35.136:2815";
 
 export const SHOP_YEAR = URL_NAME+'/shopOrderType'; 
 export const ORDER_TYPESERVICE = SHOP_YEAR+'/getShopOrderTypeList';
@@ -83,8 +89,8 @@ export const ORDER_DELETE = SHOP_YEAR+'/deleteShopOrderType';
 export const ORDER_AddSERVICE = SHOP_YEAR+'/addShopOrderType';
 
 
-export const PLANT_YEAR = URL_NAME+'/Plant'; 
-export const STATUS_YEAR = URL_NAME+'/status';  
+export const PLANT_YEAR = URL_NAME+'/basicdata/Plant'; 
+export const STATUS_YEAR = URL_NAME+'/basicdata/status';  
 export const PLANT_GETLIST = PLANT_YEAR+'/getPlantByList'; 
 export const PLANT_ADDLIST = PLANT_YEAR+'/addPlant';
 export const PLANT_UPDATELIST = PLANT_YEAR+'/updatePlant';
@@ -92,6 +98,9 @@ export const PLANT_DELETELIST = PLANT_YEAR+'/deletePlant';
 
 export const STATUS_GETLIST = STATUS_YEAR+'/getStatusList';
 export const STATUS_ADDLIST = STATUS_YEAR+'/addStatus';
+export const STATUS_UPDATELIST = STATUS_YEAR+'/updateStatus';
+export const STATUS_DELTELIST = STATUS_YEAR+'/deleteStatusList';
+
 export const TIMER_YEAR = URL_NAME+'/abi/singleLineInfoDay';                        //报警曲线多天
 export const USER_INFO_SERVICE = URL_NAME+'/userInfo';                              //用户服务
 export const EQT_SERVICE = URL_NAME +'/basicdata/eqt';                                         //设备服务
@@ -117,7 +126,7 @@ export const RULE_INST_SERVICE = URL_NAME +'/basicdata/ruleInst';               
 export const CUSTOMIZED_TYPE_SERVICE = URL_NAME +'/basicdata/customizedType';                  //自定义类型服务
 export const RULE_TYPE_ITEM_SERVICE = URL_NAME +'/basicdata/ruleTypeItem';                  //规则自定义类型
 export const KPI_SERVICE = URL_NAME +'/basicdata/KPI';                                         //KPI指标
-export const SHIFT_SERVICE = URL_NAME +'/basicdata/ShiftCategory';                             //班次配置
+export const SHIFT_SERVICE = URL_NAME +'/basicdata/shiftCategory';                             //班次配置
 export const OPERATION_SERVICE = URL_NAME +'/basicdata/Operation';                             //工序配置
 export const ORG_STRUCTURE_SERVICE = URL_NAME + '/basicdata/orgStructure';                  //组织结构
 export const RESOURCE_SERVICE = URL_NAME +'/basicdata/Resource';                             //资源配置
@@ -315,7 +324,7 @@ export const UPDATE_RULE_TYPE_ITEM = RULE_TYPE_ITEM_SERVICE+'/updateRuleTypeItem
 export const DELETE_RULE_TYPE_ITEM = RULE_TYPE_ITEM_SERVICE+'/deleteRuleTypeItem';   //删除规则自定义类型
 export const IMPORT_RULE_TYPE_ITEM = RULE_TYPE_ITEM_SERVICE+'/import';              //导入规则自定义类型
 export const EXPORT_RULE_TYPE_ITEM = RULE_TYPE_ITEM_SERVICE+'/export';              //导出规则自定义类型
-export const PRO_TYPE_ITEM_LIST = URL_NAME+'/prodLine/getProdLineList ';    //组织编码
+export const PRO_TYPE_ITEM_LIST = URL_NAME+'/basicdata/prodLine/getProdLineList ';    //组织编码
  
 export const ACTINOTYPE = URL_NAME +'/action/export';                                //行动方案导出excel
 export const GETACTIONTYPE = URL_NAME +'/ruleInst/getActionRuleInst';                      //行动方案数据
@@ -374,7 +383,6 @@ export const ADDDEPLOY = DEPLOYS+'/addRouter';                                  
 export const UPDATEDEPLOY = DEPLOYS+'/updateRouter';                                             //更新工艺配置
 export const DELETEDEPLOY = DEPLOYS+'/deleteRouter';                                             //删除工艺配置
 export const SETETEDEPLOY = DEPLOYS+'/selectRouterOption';
-  // prodLine/getProdLineList
 export const ROUTER = ROUTERSTEP+'/findRouterStepList';                                          //工艺步骤
 export const UPDATEROUTER = ROUTERSTEP+'/updateRouterStep';                                      //更新工艺步骤
 export const DELETEROUTER = ROUTERSTEP+'/deleteRouterStep';                                      //删除工艺步骤

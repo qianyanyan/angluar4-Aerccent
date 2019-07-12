@@ -271,6 +271,9 @@ export class OrderTypeComponent implements OnInit, OnDestroy {
             create_order_by_scada: true,
             last_update_by:'1'
         }
+        this.indeterminate = false;
+        this.upData = [];
+        this.checkList =[]
     }
 
     showUpdate(): void {

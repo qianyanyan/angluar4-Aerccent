@@ -8,13 +8,16 @@
   <nz-table #ajaxTable   [nzData]="dataSet" [nzFrontPagination]="false" [nzShowPagination]="false">
       <thead>
         <tr>
-          <th>工厂</th>
+          <!-- <th>工厂</th>
           <th>ERP订单</th>
-          <th>订单批次</th>
+          <th>订单批次</th> -->
+          <th>产出资源</th>
           <th>产出物料</th>
           <th>产出数量</th>
           <th>单位</th>
           <th>产出批次</th>
+          <th>记账日期</th>
+          <th>系统日期</th>
           <th>同步状态</th>
           <th *ngIf="isQuantity">HL数量</th>
           <th *ngIf="isQuantity">OG\浸出率</th>
@@ -28,13 +31,16 @@
   
       <tbody>
         <tr *ngFor="let data of ajaxTable.data">
-            <td>{{data.plantCode}}</td>
+            <!-- <td>{{data.plantCode}}</td>
             <td>{{data.erpOrder}}</td>
-            <td>{{data.scadaOrderId}}</td>
+            <td>{{data.scadaOrderId}}</td> -->
+            <td>{{data.resourceName}}</td>
             <td>{{data.matlName}}</td>
             <td>{{data.quantity}}</td>
             <td>{{data.unitName}}</td>
             <td>{{data.erpBatchNumber}}</td>
+            <td>{{data.shiftDate}}</td>
+            <td>{{data.captureDate}}</td>
             <td> 
               <span *ngIf="data.sapSyncStatus=='1'">
                 已同步
@@ -54,8 +60,8 @@
             <td *ngIf="isGowhere">{{data.dstErpOrder}}</td>
             <td *ngIf="isGowhere">{{data.dstScadaOrderId}}</td>
          <td>
-            <button nz-button [nzType]="'primary'" (click)="showUpdate(data.id)">修改</button>
-            <button nz-button [nzType]="'primary'" (click)="delete(data.id)">删除</button>
+            <button *ngIf="data.sapSyncStatus!='1'" nz-button [nzType]="'primary'" (click)="showUpdate(data.id)">修改</button>
+            <button *ngIf="data.sapSyncStatus!='1'" nz-button [nzType]="'primary'" (click)="delete(data.id)">删除</button>
           </td>
         </tr>
       </tbody>

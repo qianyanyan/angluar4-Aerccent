@@ -293,6 +293,9 @@ export class FactoryComponent implements OnInit, OnDestroy {
             is_valid: true,
             last_update_by:'1'
         }
+        this.indeterminate = false;
+        this.upData = [];
+        this.checkList =[]
     }
 
     showUpdate(): void {

@@ -1,11 +1,60 @@
-
 <nz-spin nzTip="Loading..."  style="text-align: center;" [nzSpinning]="loading">
     <div class="page-box">
-        <button *ngIf="optionNum>1 && this.search.plantCode && this.search.shopOrderTypeId" class="page-previous" (click)="pagePrevious()"><i nz-icon type="left"
+        <button nz-button [nzType]="'primary'" *ngIf="optionNum>1 && this.search.plantCode && this.search.shopOrderTypeId" class="page-previous" (click)="pagePrevious()"><i nz-icon type="left"
                 theme="outline"></i>上一页</button>
-        <button (click)="pageNext()"*ngIf="this.search.plantCode && this.search.shopOrderTypeId && pages!=optionNum"  class="page-next">下一页<i nz-icon type="right" theme="outline"></i></button>
-        <label nz-checkbox [(ngModel)]="isQuantity">查看浸出物</label>
+                <!-- <button nz-button [nzType]="'primary'" (click)="showAdd()">新增</button> -->
+        <button nz-button [nzType]="'primary'" (click)="pageNext()" *ngIf="this.search.plantCode && this.search.shopOrderTypeId && pages!=optionNum"  class="page-next">下一页<i nz-icon type="right" theme="outline"></i></button>
+        <label nz-checkbox [(ngModel)]="isQuantity" (click)="getDate()">查看浸出物</label>
+      
     </div>
+    <form nz-form class="ant-advanced-search-form" nz-row [nzGutter]="24">
+        <div >
+          <div nz-col [nzSpan]="4" >
+            <nz-form-item nzFlex>
+              <label>工厂: </label>
+              <label>
+                    {{shopOrderHeader?shopOrderHeader.plantName:''}}
+              </label>
+            </nz-form-item>
+          </div>
+          <div nz-col [nzSpan]="4" >
+                <nz-form-item nzFlex>
+                  <label>ERP订单: </label>
+                  <label>
+                        {{shopOrderHeader?shopOrderHeader.erpOrder:''}}
+                  </label>
+                </nz-form-item>
+              </div>
+              <div nz-col [nzSpan]="4" >
+                  <nz-form-item nzFlex>
+                    <label>订单批次: </label>
+                    <label>
+                          {{shopOrderHeader?shopOrderHeader.scadaOrderId:''}}
+                    </label>
+                  </nz-form-item>
+              </div>
+
+              <div nz-col [nzSpan]="6" >
+                <nz-form-item nzFlex>
+                  <label>订单物料: </label>
+                  <label>
+                        {{shopOrderHeader?shopOrderHeader.matlName:''}}
+                  </label>
+                </nz-form-item>
+              </div>
+              <div nz-col [nzSpan]="6" >
+                <nz-form-item nzFlex>
+                  <label>订单开始时间: </label>
+                  <label>
+                        {{shopOrderHeader?shopOrderHeader.actualStartDateTime:''}}
+                  </label>
+                </nz-form-item>
+              </div>
+        </div>
+</form>
+         
+
+       
     <input-detail [search]="search" [optionNum]="optionNum"   [activeGi]="activeGi" [isQuantity]="isQuantity" [selectList]="giList"
         (changeGi)="searchData(true)" #inputDetail></input-detail>
     <output-detail [search]="search" [isQuantity]="isQuantity" [activeGr]="activeGr"[isGowhere]="isGowhere" (checkEmitter)="onCheckedChange($event)" [selectList]='grList' (changeGr)="searchData(true)"

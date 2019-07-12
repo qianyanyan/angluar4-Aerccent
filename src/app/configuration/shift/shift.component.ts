@@ -223,7 +223,7 @@ field:any;
       start_hour: "",
       end_hour: "",
       remark: "",
-      is_valid: false
+      is_valid: true
     };
     this.update = {
       id: "",
@@ -233,8 +233,11 @@ field:any;
       start_hour: "",
       end_hour: "",
       remark: "",
-      is_valid: false
+      is_valid: true
     };
+    this.indeterminate = false;
+    this.upData = [];
+    this.checkList =[]
   }
 
   // showUpdate(data: any): void {

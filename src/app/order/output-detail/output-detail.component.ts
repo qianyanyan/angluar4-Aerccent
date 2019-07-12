@@ -15,6 +15,14 @@ import { OrderDataService } from '../orderDataService';
 
 export class OutputDetailComponent implements OnInit, OnDestroy {
   @Input() search: any;
+  trendSize:string;
+  height:string;
+  optionNum = 1;
+  loading = false;
+  pages = 1;
+  plantCode:'';
+  erpOrder:'';
+  scadaOrderId:'';
   @Input() isQuantity: Boolean;
   @Input() activeGr: boolean;
   @Input() isGowhere: boolean;
@@ -29,6 +37,7 @@ export class OutputDetailComponent implements OnInit, OnDestroy {
     });
   }
   @Output() changeGr: EventEmitter<any> = new EventEmitter();//创建实力
+  
   //声明事件发射器
   @Output() checkEmitter = new EventEmitter<boolean>();
   dataSet = [];
@@ -109,8 +118,6 @@ export class OutputDetailComponent implements OnInit, OnDestroy {
   }
 
   toggle() {
-    //this.isGowhere = !this.isGowhere;
-    //发射事件
     this.checkEmitter.emit(this.isGowhere);
   }
 
@@ -243,11 +250,6 @@ export class OutputDetailComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {}
-
-  
-  searchData() {
-
-  }
 
   clearData() {
 

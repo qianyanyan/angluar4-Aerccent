@@ -172,10 +172,11 @@
                 <th nzShowSort nzSortKey="b.brand_code">品牌编码</th>
                 <th nzShowSort nzSortKey="b.brand_short_name">品牌缩写</th>
                 <th nzShowSort nzSortKey="bd.brand_name">品牌名称</th>
+                <th nzShowSort nzSortKey="b.is_valid">状态</th>
                 <th nzShowSort nzSortKey="b.creation_date">创建时间</th>
                 <th nzShowSort nzSortKey="b.last_update">更新时间</th>
                 <th nzShowSort nzSortKey="us.account_name">更新人</th>
-                <th nzShowSort nzSortKey="b.is_valid">激活</th>
+                
                  <!-- <th style="width:160px">操作</th> -->
                 </tr> 
             </thead>
@@ -185,11 +186,12 @@
                     <td>{{data.brand_code}}</td>
                     <td>{{data.brand_short_name}}</td>
                     <td>{{data.brand_name}}</td>
+                    <td *ngIf='data.is_valid == 1'>激活</td>
+                    <td *ngIf='data.is_valid == 0'>未激活</td>
                     <td>{{data.creation_date}}</td>
                     <td>{{data.last_update}}</td>
                     <td>{{data.account_name}}</td>
-                    <td *ngIf='data.is_valid == 1'>激活</td>
-                    <td *ngIf='data.is_valid == 0'>未激活</td>
+                   
                     <!-- <td> 
                         <button nz-button [nzType]="'primary'" (click)="showUpdate(data)">修改</button>
                         <button nz-button [nzType]="'primary'" (click)="delete(data.brand_id)">删除</button>

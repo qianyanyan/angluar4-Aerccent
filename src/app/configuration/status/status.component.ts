@@ -243,6 +243,9 @@ field:any;
       remark: "",
       is_valid: false
     };
+    this.indeterminate = false;
+    this.upData = [];
+    this.checkList =[]
   }
   hideUpdate(): any {
     this.setInit();

@@ -235,8 +235,8 @@
          <td>{{data.status_group}}</td>
          <td>{{data.current_revision}}</td>
          <td>{{data.default_status}}</td>
-         <td>{{data.creation_dt}}</td>
-         <td>{{data.last_update_dt}}</td>
+         <td>{{data.creation_date}}</td>
+         <td>{{data.last_update}}</td>
          <td>{{data.account_name}}</td>
         
        </tr>
@@ -311,7 +311,7 @@
        <div nz-col [nzSpan]="24">
           <nz-form-item nzFlex>
               <label>工厂名称</label>
-              <nz-select name="update.plant_code"   nzShowSearch
+              <nz-select name="update.plant_name"   nzShowSearch
               nzAllowClear style="width: 100%;" nzPlaceHolder="请选择工厂名称"
               [(ngModel)]="update.plant_code" >
               <nz-option *ngFor="let option of listPlaneOption" [nzLabel]="option.plant_name"

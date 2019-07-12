@@ -4,8 +4,8 @@ import { DataService } from "../../DataService";
 import {
     STATUS_GETLIST,
     STATUS_ADDLIST,
-    UPDATE_SHIFT,
-    DELETE_SHIFT,
+    STATUS_UPDATELIST,
+    STATUS_DELTELIST,
     EQT_PLAN_LIST
 } from '../../app.constants';
 import { ResService } from '../../core/common/res.service';
@@ -41,15 +41,15 @@ export class StatusService extends ResService {
     updateStatus(param:any) : Promise<any> {
         let params =   this.setStatusParams(param);
         params.set("id", param.id);
-         return this.http.post(UPDATE_SHIFT,params).toPromise()
+         return this.http.post(STATUS_UPDATELIST,params).toPromise()
          .then(this.extractData)
          .catch(this.handleError);
      }
 
-     deleteStatus(_id:any,): Promise<any> {
+     deleteStatus(ids:any,): Promise<any> {
         let params =new URLSearchParams();
-        params.set("shiftCategory_ids",JSON.stringify(_id) );
-         return this.http.post(DELETE_SHIFT,params).toPromise()
+        params.set("ids",JSON.stringify(ids) );
+         return this.http.post(STATUS_DELTELIST,params).toPromise()
          .then(this.extractData)
          .catch(this.handleError);
      }

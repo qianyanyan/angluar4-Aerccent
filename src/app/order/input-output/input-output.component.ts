@@ -1,4 +1,5 @@
-import { Component, OnInit, OnDestroy ,Input, ViewChild} from "@angular/core";
+import { Component , OnInit, OnDestroy ,Input, ViewChild} from "@angular/core";
+
 import { LocalStorage } from "../../core/common/local.storage";
 import { OutputDetailComponent } from '../output-detail/output-detail.component';
 import { InputDetailComponent } from '../input-detail/input-detail.component';
@@ -9,7 +10,8 @@ import { AllOrderService } from '../allOrder.service';
   styleUrls: ["./input-output.component.less"],
   providers: []
 })
-export class InputOutputComponent implements OnInit, OnDestroy {
+export class InputOutputComponent implements OnInit, OnDestroy{
+    shopOrderHeader:any=null;
     @Input() search: any;
     trendSize:string;
     height:string;
@@ -18,6 +20,7 @@ export class InputOutputComponent implements OnInit, OnDestroy {
     isGowhere = false;
     loading = false;
     giList = [];
+   
     grList = [];
     activeGi = false;
     activeGr = false;
@@ -44,6 +47,12 @@ export class InputOutputComponent implements OnInit, OnDestroy {
         this.optionNum --;
         this.searchData(true);
     }
+    getDate(){
+        if(!this.isQuantity){
+         return
+        }
+        this.searchData(true);
+    }
     pageNext() {
         this.optionNum ++;
         this.searchData(true);
@@ -51,6 +60,10 @@ export class InputOutputComponent implements OnInit, OnDestroy {
 
     onCheckedChange(isChecked: boolean) {
         this.isGowhere = isChecked;
+        if(!this.isGowhere){
+            return
+           }
+        this.searchData(true);
     }
  
 
@@ -67,6 +80,10 @@ export class InputOutputComponent implements OnInit, OnDestroy {
         this.search.isQuantity = this.isQuantity;
         this.allOrderService.selectGiGrList(this.search, this.optionNum).then(result => {
             if (result.code == 200 && result.data) {
+                if(result.data.shopOrderData){
+                    this.shopOrderHeader = result.data.shopOrderData;
+                
+                 }
                 if (result.data.gi) {
                     
                     if (result.data.gi.gigrList instanceof Array) {
